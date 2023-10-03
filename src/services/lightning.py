@@ -71,7 +71,4 @@ class Lightning(BaseModel):
         return LightningStub(self.channel)
 
     def get_info(self):
-        print(self.macaroon_path)
-        print(self.tlscert_path)
-        print(self.url)
         return self.stub.GetInfo(GetInfoRequest())
