@@ -29,14 +29,14 @@ version = "0.1.0"
 
 [tool.poetry.dependencies]
 fastapi = "^0.103.2"
-googleapis-common-protos = "^1.60.0"
-grpcio = "^1.59.0"
-grpcio-tools = "^1.59.0"
+fastapi-cachette = "^0.1.4"
+fastapi-csrf-protect = "^0.3.2"
+googleapis-common-protos = "1.60.0"
+grpcio = "^1.48.0"
+grpcio-tools = "^1.48.0"
 python = "^3.9"
 orjson = "^3.9.7"
 uvicorn = "^0.23.2"
-fastapi-csrf-protect = "^0.3.2"
-fastapi-cachette = "^0.1.4"
 
 [tool.poetry.group.dev]
 optional = true
