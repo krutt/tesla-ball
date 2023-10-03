@@ -2,6 +2,11 @@
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+include = '\.pyi?$'
+line-length = 100
+target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
+
 [tool.mypy]
 disallow_untyped_calls = true
 disallow_untyped_defs = true
@@ -15,6 +20,10 @@ authors = [
 description = "Lightning Service Provider built on top of FastAPI asynchronous web framework"
 license = "MIT"
 name = "tesla-ball"
+packages = [
+  {include="serve.py"},
+  {include="src"}
+]
 readme = "README.md"
 version = "0.1.0"
 

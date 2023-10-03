@@ -95,9 +95,7 @@ app.add_middleware(
 
 
 @app.exception_handler(CsrfProtectError)
-def csrf_protect_exception_handler(
-    request: Request, exc: CsrfProtectError
-) -> ORJSONResponse:
+def csrf_protect_exception_handler(request: Request, exc: CsrfProtectError) -> ORJSONResponse:
     return ORJSONResponse(status_code=exc.status_code, content={"detail": exc.message})
 
 
