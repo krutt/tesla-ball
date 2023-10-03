@@ -13,6 +13,14 @@
 Module detailing environment variables used by server and services
 """
 
+### Load dotenv envionment if `python-dotenv` is installed ###
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+except ImportError:
+    pass
+
 ### Local modules ###
 from os import environ
 from typing import Optional
