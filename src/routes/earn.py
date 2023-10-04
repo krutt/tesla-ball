@@ -14,16 +14,9 @@ Module defining earning opportunity endpoints using Lightning's force-closures a
 up lazy capital for a reward
 """
 
-### Standard packages ###
-from typing import Dict
-
 ### Third-party packages ###
 from fastapi.responses import ORJSONResponse
 from fastapi.routing import APIRouter
-
-### Local modules ###
-from src.configs import LND_HOST_URL
-from src.services.lightning import Lightning
 
 ### Routing ###
 router: APIRouter = APIRouter(
@@ -33,13 +26,4 @@ router: APIRouter = APIRouter(
 )
 
 # TODO: define routes
-
-
-@router.get("", response_class=ORJSONResponse)
-def get_earn() -> Dict[str, str]:
-    lightning: Lightning = Lightning()
-    print(lightning.get_info())
-    return {"status": "OK"}
-
-
 __all__ = ["router"]

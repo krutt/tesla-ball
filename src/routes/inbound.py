@@ -14,8 +14,16 @@ Module detailing inbound liquidity purchase endpoints used for creating channels
 and requester's node
 """
 
+### Standard packages ###
+from typing import Dict
+
 ### Third-party packages ###
-from fastapi import APIRouter
+from fastapi.routing import APIRouter
+from fastapi.responses import ORJSONResponse
+
+### Local modules ###
+from src.configs import LND_HOST_URL
+from src.services.lightning import Lightning
 
 ### Routing ###
 router: APIRouter = APIRouter(
@@ -25,5 +33,13 @@ router: APIRouter = APIRouter(
 )
 
 # TODO: define routes
+
+
+@router.get("", response_class=ORJSONResponse)
+def get_earn() -> Dict[str, str]:
+    lightning: Lightning = Lightning()
+    print(lightning.get_info())
+    return {"status": "OK"}
+
 
 __all__ = ["router"]

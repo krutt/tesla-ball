@@ -32,11 +32,15 @@ from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
 from src.services.lightning_pb2 import GetInfoRequest
 from src.services.lightning_pb2_grpc import LightningStub
 
+
 class MacaroonMetadataPlugin(AuthMetadataPlugin, BaseModel):
     """Metadata plugin to include macaroon in metadata of each RPC request"""
+
     macaroon: str
+
     def __call__(self, _, callback: Callable):
-        callback([('macaroon', self.macaroon)], None)
+        callback([("macaroon", self.macaroon)], None)
+
 
 class Lightning(BaseModel):
     macaroon_path: StrictStr = LND_MACAROON_PATH
@@ -72,5 +76,6 @@ class Lightning(BaseModel):
 
     def get_info(self):
         return self.stub.GetInfo(GetInfoRequest())
+
 
 __all__ = ["Lightning"]
