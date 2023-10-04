@@ -7,80 +7,8 @@
 	xml:space="preserve"
 	xmlns="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
-	<defs>
-		<linearGradient
-			id="gradient-1"
-			x1="0%"
-			x2="100%"
-			y1="50%"
-			y2="50%">
-			<stop
-				offset="0%"
-				stop-color="rgb(147, 197, 253)"
-				/>
-			<stop
-				offset="25%"
-				stop-color="rgb(255, 237, 213)"
-				/>
-			<stop
-				offset="50%"
-				stop-color="rgb(243, 244, 246)"
-				/>
-			<stop
-				offset="75%"
-				stop-color="rgb(100, 116, 139)"
-				/>
-			<stop
-				offset="100%"
-				stop-color="rgb(180, 83, 9)"
-				/>
-			<stop
-				offset="100%"
-				stop-color="rgb(192, 38, 211)"
-				/>
-			<stop
-				offset="100%"
-				stop-color="rgb(217, 119, 6)"
-				/>			
-		</linearGradient>
-		<linearGradient
-			id="gradient-2"
-			x1="0%"
-			x2="100%"
-			y1="50%"
-			y2="50%">
-			<stop
-				offset="0%"
-				stop-color="rgb(127, 29, 29)"
-				/>
-			<stop
-				offset="25%"
-				stop-color="rgb(38, 38, 38)"
-				/>
-			<stop
-				offset="50%"
-				stop-color="rgb(22, 163, 74)"
-				/>
-			<stop
-				offset="75%"
-				stop-color="rgb(21, 94, 117)"
-				/>
-			<stop
-				offset="100%"
-				stop-color="rgb(113, 63, 18)"
-				/>
-			<stop
-				offset="100%"
-				stop-color="rgb(191, 219, 254)"
-				/>
-			<stop
-				offset="100%"
-				stop-color="rgb(239, 68, 68)"
-				/>			
-		</linearGradient>
-	</defs>
 	<g
-		fill="url(#gradient-1)"
+		fill="currentColor"
 		>
 		<path
 			d="
@@ -142,7 +70,7 @@
 				C487.346,103.782,383.565,0,256.001,0z"/>
 	</g>
 	<g
-		fill="url(#gradient-2)"
+		fill="currentColor"
 		>
 		<path
 			d="
@@ -163,7 +91,7 @@
 			"/>
 	</g>
 	<g
-		fill="white"
+		fill="currentColor"
 		>
 		<path
 			d="
@@ -183,7 +111,7 @@
 			"/>
 	</g>
 	<g
-		fill="white"
+		fill="currentColor"
 		>
 		<path
 			d="
@@ -203,7 +131,7 @@
 			"/>
 	</g>
 	<g
-		fill="white"
+		fill="currentColor"
 		>
 		<path
 			d="
@@ -223,7 +151,7 @@
 			"/>
 	</g>
 	<g
-		fill="white"
+		fill="currentColor"
 		>
 		<path
 			d="
@@ -244,7 +172,7 @@
 			"/>
 	</g>
 	<g
-		fill="white"
+		fill="currentColor"
 		>
 		<path
 			d="
@@ -266,7 +194,7 @@
 			"/>
 	</g>
 	<g
-		fill="white"
+		fill="currentColor"
 		>
 		<path
 			d="
@@ -281,7 +209,7 @@
 			"/>
 	</g>
 	<g
-		fill="white"
+		fill="currentColor"
 		>
 		<path
 			d="
