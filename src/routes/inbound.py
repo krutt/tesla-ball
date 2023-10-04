@@ -22,7 +22,6 @@ from fastapi.routing import APIRouter
 from fastapi.responses import ORJSONResponse
 
 ### Local modules ###
-from src.configs import LND_HOST_URL
 from src.services.lightning import Lightning
 
 ### Routing ###
