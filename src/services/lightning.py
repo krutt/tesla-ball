@@ -72,3 +72,5 @@ class Lightning(BaseModel):
 
     def get_info(self):
         return self.stub.GetInfo(GetInfoRequest())
+
+__all__ = ["Lightning"]
