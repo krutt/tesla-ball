@@ -29,7 +29,12 @@ from pydantic import BaseModel, StrictStr
 
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
-from src.services.lightning_pb2 import GetInfoRequest
+from src.services.lightning_pb2 import (
+    ListChannelsRequest,
+    ListChannelsResponse,
+    GetInfoRequest,
+    GetInfoResponse
+)
 from src.services.lightning_pb2_grpc import LightningStub
 
 
@@ -74,8 +79,11 @@ class Lightning(BaseModel):
     def stub(self) -> LightningStub:
         return LightningStub(self.channel)
 
-    def get_info(self):
+    def get_info(self) -> GetInfoResponse:
         return self.stub.GetInfo(GetInfoRequest())
+    
+    def list_channels(self) -> ListChannelsResponse:
+        return self.stub.ListChannels(ListChannelsRequest())
 
 
 __all__ = ["Lightning"]
