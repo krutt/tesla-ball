@@ -20,6 +20,7 @@ from typing import Dict
 ### Third-party packages ###
 from fastapi.routing import APIRouter
 from fastapi.responses import ORJSONResponse
+from pydantic import BaseModel, StrictInt, StrictStr
 
 ### Local modules ###
 from src.services.lightning import Lightning
@@ -31,14 +32,26 @@ router: APIRouter = APIRouter(
     responses={404: {"description": "Not Found"}},
 )
 
-# TODO: define routes
+
+class InboundPurchase(BaseModel):
+    amount: StrictInt
+    host: StrictStr
+    pubkey: StrictStr
 
 
 @router.get("", response_class=ORJSONResponse)
-def get_earn() -> Dict[str, str]:
+def check_purchase_info() -> Dict[str, str]:
     lightning: Lightning = Lightning()
     print(lightning.get_info())
-    return {"status": "OK"}
+    return {"detail": "OK"}
+
+
+@router.post("", response_class=ORJSONResponse)
+def request_inbound_channel(purchase: InboundPurchase) -> Dict[str, str]:
+    lightning: Lightning = Lightning()
+    print(lightning.connect_peer(host=purchase.host, pubkey=purchase.pubkey))
+    print(lightning.open_channel(amount=purchase.amount, pubkey=purchase.pubkey, sat_per_byte=20))
+    return {"detail": "OK"}
 
 
 __all__ = ["router"]

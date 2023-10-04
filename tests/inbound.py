@@ -9,16 +9,30 @@
 # HISTORY:
 # *************************************************************
 
+### Standard packages ###
+from typing import Dict, Union
+
 ### Third-party packages ###
 from fastapi.testclient import TestClient
 from httpx import Response
+from orjson import dumps
 
 ### Local modules ###
-from . import test_tesla_ball
+from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
+
+
+def test_check_inbound_liquidity_info(test_tesla_ball: TestClient) -> None:
+    response: Response = test_tesla_ball.get("/inbound")
+    assert response.status_code == 200
+    assert response.json() == {"detail": "OK"}
 
 
 def test_create_inbound_liquidity_request(test_tesla_ball: TestClient) -> None:
-    response: Response = test_tesla_ball.get("/inbound")
+    body: Dict[str, Union[int, str]] = {
+        "amount": 20_000,
+        "host": LND_TARGET_HOST,
+        "pubkey": LND_TARGET_PUBKEY,
+    }
+    response: Response = test_tesla_ball.post("/inbound", data=dumps(body))
     assert response.status_code == 200
-    assert response.json() == {"status": "OK"}
-    print(response.json())
+    assert response.json() == {"detail": "OK"}

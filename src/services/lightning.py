@@ -25,15 +25,20 @@ from grpc import (
     secure_channel,
     ssl_channel_credentials,
 )
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, StrictInt, StrictStr, validate_arguments
 
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
 from src.services.lightning_pb2 import (
+    ChannelPoint,
+    ConnectPeerRequest,
+    ConnectPeerResponse,
+    LightningAddress,
     ListChannelsRequest,
     ListChannelsResponse,
     GetInfoRequest,
     GetInfoResponse,
+    OpenChannelRequest,
 )
 from src.services.lightning_pb2_grpc import LightningStub
 
@@ -83,11 +88,28 @@ class Lightning(BaseModel):
     def stub(self) -> LightningStub:
         return LightningStub(self.channel)  # type: ignore[no-untyped-call]
 
+    @validate_arguments
+    def connect_peer(self, host: StrictStr, pubkey: StrictStr) -> ConnectPeerResponse:
+        addr: LightningAddress = LightningAddress(host=host, pubkey=pubkey)
+        return self.stub.ConnectPeer(ConnectPeerRequest(addr=addr, perm=True, timeout=10))
+
     def get_info(self) -> GetInfoResponse:
         return self.stub.GetInfo(GetInfoRequest())
 
     def list_channels(self) -> ListChannelsResponse:
         return self.stub.ListChannels(ListChannelsRequest())
+
+    @validate_arguments
+    def open_channel(
+        self, amount: StrictInt, pubkey: StrictStr, sat_per_byte: StrictInt
+    ) -> ChannelPoint:
+        return self.stub.OpenChannelSync(
+            OpenChannelRequest(
+                local_funding_amount=amount,
+                node_pubkey=bytes.fromhex(pubkey),
+                sat_per_byte=sat_per_byte,
+            )
+        )
 
 
 __all__ = ["Lightning"]

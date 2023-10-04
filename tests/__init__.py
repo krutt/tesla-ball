@@ -11,12 +11,27 @@
 
 ### Standard Packages ###
 from pytest import fixture
+from os import environ
+from typing import Optional
 
 ### Third-Party Packages ###
 from fastapi.testclient import TestClient
 
 ### Local modules ###
 from serve import app
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv("test.env")
+except ImportError:
+    pass
+
+LND_HOST_URL: str = environ.get("LND_HOST_URL", "localhost:10009")
+LND_MACAROON_PATH: Optional[str] = environ.get("LND_MACAROON_PATH", None)
+LND_TARGET_HOST: Optional[str] = environ.get("LND_TARGET_HOST", None)
+LND_TARGET_PUBKEY: Optional[str] = environ.get("LND_TARGET_PUBKEY", None)
+LND_TLSCERT_PATH: Optional[str] = environ.get("LND_TLSCERT_PATH", None)
 
 
 @fixture
@@ -28,3 +43,13 @@ def test_tesla_ball() -> TestClient:
     :returns: TestClient
     """
     return TestClient(app)
+
+
+__all__ = [
+    "LND_HOST_URL",
+    "LND_MACAROON_PATH",
+    "LND_TARGET_HOST",
+    "LND_TARGET_PUBKEY",
+    "LND_TLSCERT_PATH",
+    "test_tesla_ball",
+]
