@@ -56,7 +56,9 @@ def request_inbound_channel(purchase: InboundPurchase, response: ORJSONResponse)
         response.status_code = 502
         return {"detail": "Failed to connect to peer"}
     try:
-        print(lightning.open_channel(amount=purchase.amount, pubkey=purchase.pubkey, sat_per_byte=20))
+        print(
+            lightning.open_channel(amount=purchase.amount, pubkey=purchase.pubkey, sat_per_byte=20)
+        )
     except RpcError:
         response.status_code = 502
         return {"detail": "Unable to open new channel"}
