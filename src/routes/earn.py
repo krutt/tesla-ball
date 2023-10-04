@@ -15,7 +15,6 @@ up lazy capital for a reward
 """
 
 ### Third-party packages ###
-from fastapi.responses import ORJSONResponse
 from fastapi.routing import APIRouter
 
 ### Routing ###

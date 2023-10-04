@@ -15,7 +15,7 @@ on the Lightning liquidity network
 """
 
 ### Third-party packages ###
-from fastapi import APIRouter
+from fastapi.routing import APIRouter
 
 ### Routing ###
 router: APIRouter = APIRouter(
