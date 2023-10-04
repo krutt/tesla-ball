@@ -29,18 +29,7 @@ share/python-wheels/
 MANIFEST
 
 # Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-pythonenv*
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+**.env
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
