@@ -20,6 +20,7 @@ from typing import Dict
 ### Third-party packages ###
 from fastapi.routing import APIRouter
 from fastapi.responses import ORJSONResponse
+from grpc import RpcError
 from pydantic import BaseModel, StrictInt, StrictStr
 
 ### Local modules ###
@@ -47,10 +48,18 @@ def check_purchase_info() -> Dict[str, str]:
 
 
 @router.post("", response_class=ORJSONResponse)
-def request_inbound_channel(purchase: InboundPurchase) -> Dict[str, str]:
+def request_inbound_channel(purchase: InboundPurchase, response: ORJSONResponse) -> Dict[str, str]:
     lightning: Lightning = Lightning()
-    print(lightning.connect_peer(host=purchase.host, pubkey=purchase.pubkey))
-    print(lightning.open_channel(amount=purchase.amount, pubkey=purchase.pubkey, sat_per_byte=20))
+    try:
+        print(lightning.connect_peer(host=purchase.host, pubkey=purchase.pubkey))
+    except RpcError:
+        response.status_code = 502
+        return {"detail": "Failed to connect to peer"}
+    try:
+        print(lightning.open_channel(amount=purchase.amount, pubkey=purchase.pubkey, sat_per_byte=20))
+    except RpcError:
+        response.status_code = 502
+        return {"detail": "Unable to open new channel"}
     return {"detail": "OK"}
 
 
