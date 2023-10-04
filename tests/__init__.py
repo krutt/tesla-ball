@@ -18,6 +18,7 @@ from fastapi.testclient import TestClient
 ### Local modules ###
 from serve import app
 
+
 @fixture
 def test_tesla_ball() -> TestClient:
     """

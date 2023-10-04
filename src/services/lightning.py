@@ -12,7 +12,7 @@
 
 ### Standard packages ###
 from binascii import hexlify
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 ### Third-party packages ###
 from grpc import (
@@ -33,7 +33,7 @@ from src.services.lightning_pb2 import (
     ListChannelsRequest,
     ListChannelsResponse,
     GetInfoRequest,
-    GetInfoResponse
+    GetInfoResponse,
 )
 from src.services.lightning_pb2_grpc import LightningStub
 
@@ -43,13 +43,13 @@ class MacaroonMetadataPlugin(AuthMetadataPlugin, BaseModel):
 
     macaroon: str
 
-    def __call__(self, _, callback: Callable):
+    def __call__(self, _: Any, callback: Callable) -> Any:
         callback([("macaroon", self.macaroon)], None)
 
 
 class Lightning(BaseModel):
-    macaroon_path: StrictStr = LND_MACAROON_PATH
-    tlscert_path: StrictStr = LND_TLSCERT_PATH
+    macaroon_path: Optional[StrictStr] = LND_MACAROON_PATH
+    tlscert_path: Optional[StrictStr] = LND_TLSCERT_PATH
     url: StrictStr = LND_HOST_URL
 
     @property
@@ -65,23 +65,27 @@ class Lightning(BaseModel):
 
     @property
     def creds(self) -> ChannelCredentials:
+        if not self.macaroon_path:
+            raise ValueError("Macaroon path is empty.")
         auth_creds: Optional[CallCredentials] = None
         with open(self.macaroon_path, "rb") as macaroon_file:
             macaroon_bytes: bytes = macaroon_file.read()
             macaroon: str = hexlify(macaroon_bytes).decode()
             auth_creds = metadata_call_credentials(MacaroonMetadataPlugin(macaroon=macaroon))
         cert_creds: Optional[ChannelCredentials] = None
+        if not self.tlscert_path:
+            raise ValueError("TLS Certificate path is empty.")
         with open(self.tlscert_path, "rb") as tlscert_file:
             cert_creds = ssl_channel_credentials(tlscert_file.read())
         return composite_channel_credentials(cert_creds, auth_creds)
 
     @property
     def stub(self) -> LightningStub:
-        return LightningStub(self.channel)
+        return LightningStub(self.channel)  # type: ignore[no-untyped-call]
 
     def get_info(self) -> GetInfoResponse:
         return self.stub.GetInfo(GetInfoRequest())
-    
+
     def list_channels(self) -> ListChannelsResponse:
         return self.stub.ListChannels(ListChannelsRequest())
 

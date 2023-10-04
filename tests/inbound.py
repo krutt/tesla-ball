@@ -10,13 +10,14 @@
 # *************************************************************
 
 ### Third-party packages ###
-from fastapi.responses import Response
 from fastapi.testclient import TestClient
+from httpx import Response
 
 ### Local modules ###
 from . import test_tesla_ball
 
-def test_create_inbound_liquidity_request(test_tesla_ball: TestClient):
+
+def test_create_inbound_liquidity_request(test_tesla_ball: TestClient) -> None:
     response: Response = test_tesla_ball.get("/inbound")
     assert response.status_code == 200
     assert response.json() == {"status": "OK"}

@@ -11,6 +11,10 @@ target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
 disallow_untyped_calls = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
+exclude = [
+  "src/services/lightning_pb2_grpc.py",
+  "src/services/lightning_pb2.py"
+]
 ignore_missing_imports = true
 
 [tool.poetry]
