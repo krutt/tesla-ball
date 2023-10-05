@@ -43,9 +43,10 @@
 	</defs>
 	
 	<g
+		fill="currentColor"
 		id="tesla-ball-text"
-		stroke="black"
-		fill="black"
+		stroke="currentColor"
+		stroke-width="2"
 		>
     <text x="55%" y="45%">
       Tesla
