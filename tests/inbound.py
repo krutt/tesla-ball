@@ -32,6 +32,7 @@ def test_create_inbound_liquidity_request(test_tesla_ball: TestClient) -> None:
         "amount": 20_000,
         "host": LND_TARGET_HOST or "",
         "pubkey": LND_TARGET_PUBKEY or "",
+        # TODO: Sat Per Byte
     }
     response: Response = test_tesla_ball.post("/inbound", content=dumps(body))
     assert response.status_code == 200
