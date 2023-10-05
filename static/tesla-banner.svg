@@ -48,10 +48,16 @@
 		stroke="currentColor"
 		stroke-width="2"
 		>
-    <text x="55%" y="45%">
+    <text
+			x="55%"
+			y="45%"
+			>
       Tesla
     </text>
-    <text x="55%" y="65%">
+    <text
+			x="55%"
+			y="65%"
+			>
       Ball
     </text>
   </g>
