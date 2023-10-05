@@ -36,4 +36,7 @@ def test_create_inbound_liquidity_request(test_tesla_ball: TestClient) -> None:
     }
     response: Response = test_tesla_ball.post("/inbound", content=dumps(body))
     assert response.status_code == 200
-    assert response.json() == {"detail": "OK"}
+    assert "txid" in response.json().keys()
+    txid: str = response.json().get("txid", None)
+    assert txid not in ("", None)
+    assert len(txid) == 64
