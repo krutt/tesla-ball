@@ -15,6 +15,7 @@ and requester's node
 """
 
 ### Standard packages ###
+from binascii import hexlify
 from typing import Dict
 
 ### Third-party packages ###
@@ -24,13 +25,13 @@ from grpc import RpcError
 from pydantic import BaseModel, StrictInt, StrictStr
 
 ### Local modules ###
-from src.services.lightning import Lightning
+from src.services.lightning import ChannelPoint, Lightning
 
 ### Routing ###
 router: APIRouter = APIRouter(
     prefix="/inbound",
     tags=["Inbound liquidity purchase endpoints"],
-    responses={404: {"description": "Not Found"}},
+    responses={404: {"detail": "Not Found"}},
 )
 
 
@@ -51,18 +52,23 @@ def check_purchase_info() -> Dict[str, str]:
 def request_inbound_channel(purchase: InboundPurchase, response: ORJSONResponse) -> Dict[str, str]:
     lightning: Lightning = Lightning()
     try:
-        print(lightning.connect_peer(host=purchase.host, pubkey=purchase.pubkey))
-    except RpcError:
-        response.status_code = 502
-        return {"detail": "Failed to connect to peer"}
+        lightning.connect_peer(host=purchase.host, pubkey=purchase.pubkey)
+    except RpcError as err:
+        if "already connected to peer: " not in str(err):
+            response.status_code = 502
+            return {"detail": "Failed to connect to peer"}
     try:
-        print(
-            lightning.open_channel(amount=purchase.amount, pubkey=purchase.pubkey, sat_per_byte=20)
+        channel_point: ChannelPoint = lightning.open_channel(
+            amount=purchase.amount, pubkey=purchase.pubkey, sat_per_byte=20
         )
-    except RpcError:
-        response.status_code = 502
-        return {"detail": "Unable to open new channel"}
-    return {"detail": "OK"}
+        return {"txid": hexlify(channel_point.funding_txid_bytes).decode()}
+    except RpcError as err:
+        if "Number of pending channels exceed maximum" in str(err):
+            response.status_code = 503
+            return {"detail": "Cannot open any more channels at current block, try again later."}
+        else:
+            response.status_code = 502
+            return {"detail": "Unable to open new channel"}
 
 
 __all__ = ["router"]

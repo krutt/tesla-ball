@@ -36,6 +36,8 @@ from src.services.lightning_pb2 import (
     LightningAddress,
     ListChannelsRequest,
     ListChannelsResponse,
+    ListPeersRequest,
+    ListPeersResponse,
     GetInfoRequest,
     GetInfoResponse,
     OpenChannelRequest,
@@ -90,19 +92,26 @@ class Lightning(BaseModel):
 
     @validate_arguments
     def connect_peer(self, host: StrictStr, pubkey: StrictStr) -> ConnectPeerResponse:
-        addr: LightningAddress = LightningAddress(host=host, pubkey=pubkey)
-        return self.stub.ConnectPeer(ConnectPeerRequest(addr=addr, perm=True, timeout=10))
+        addr: LightningAddress = LightningAddress(pubkey=pubkey, host=host)
+        return self.stub.ConnectPeer(ConnectPeerRequest(addr=addr, perm=True, timeout=0))
 
     def get_info(self) -> GetInfoResponse:
+        """Fetch node policy and information"""
         return self.stub.GetInfo(GetInfoRequest())
 
     def list_channels(self) -> ListChannelsResponse:
+        """List all open channels"""
         return self.stub.ListChannels(ListChannelsRequest())
+
+    def list_peers(self) -> ListPeersResponse:
+        """List all active, currently connected peers"""
+        return self.stub.ListPeers(ListPeersRequest())
 
     @validate_arguments
     def open_channel(
         self, amount: StrictInt, pubkey: StrictStr, sat_per_byte: StrictInt
     ) -> ChannelPoint:
+        """Open a channel to an existing peer"""
         return self.stub.OpenChannelSync(
             OpenChannelRequest(
                 local_funding_amount=amount,
@@ -112,4 +121,4 @@ class Lightning(BaseModel):
         )
 
 
-__all__ = ["Lightning"]
+__all__ = ["ChannelPoint", "Lightning"]
