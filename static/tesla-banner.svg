@@ -2,11 +2,11 @@
 <svg
 	height="512px"
 	version="1.1"
-	viewBox="0 0 1024 512"
+	viewBox="0 0 900 512"
 	xml:space="preserve"
 	xmlns="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
-	width="1024px"
+	width="900px"
 	>
 	<defs>
 		<linearGradient
@@ -37,7 +37,7 @@
 			}
 			g#tesla-ball-text > text {
 				font-family: 'Monoton', sans-serif;
-				font-size: 140px;
+				font-size: 110px;
 			}
 		</style>
 	</defs>
@@ -47,10 +47,10 @@
 		stroke="black"
 		fill="black"
 		>
-    <text x="50%" y="50%">
+    <text x="55%" y="45%">
       Tesla
     </text>
-    <text x="50%" y="80%">
+    <text x="55%" y="65%">
       Ball
     </text>
   </g>
@@ -65,7 +65,7 @@
 			l152.559,54.26
 			L408.555,403.184z
 		"
-		fill="#8ED7E0" 
+		fill="#8ED7E0"
 	/>
 	<g
 		transform="scale(1.25 1.25) translate(-50 -40)"
