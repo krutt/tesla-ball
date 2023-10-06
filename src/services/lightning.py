@@ -29,7 +29,7 @@ from pydantic import BaseModel, StrictInt, StrictStr, validate_arguments
 
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
-from src.services.lightning_pb2 import (
+from src.protos.lightning_pb2 import (
     ChannelPoint,
     ConnectPeerRequest,
     ConnectPeerResponse,
@@ -42,7 +42,7 @@ from src.services.lightning_pb2 import (
     GetInfoResponse,
     OpenChannelRequest,
 )
-from src.services.lightning_pb2_grpc import LightningStub
+from src.protos.lightning_pb2_grpc import LightningStub
 
 
 class MacaroonMetadataPlugin(AuthMetadataPlugin, BaseModel):
