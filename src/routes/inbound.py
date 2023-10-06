@@ -16,13 +16,13 @@ and requester's node
 
 ### Standard packages ###
 from binascii import hexlify
-from typing import Dict
+from typing import Dict, Optional
 
 ### Third-party packages ###
 from fastapi.routing import APIRouter
 from fastapi.responses import ORJSONResponse
 from grpc import RpcError
-from pydantic import BaseModel, StrictInt, StrictStr
+from pydantic import BaseModel, Field, StrictInt, StrictStr
 
 ### Local modules ###
 from src.services.lightning import ChannelPoint, Lightning
@@ -36,9 +36,18 @@ router: APIRouter = APIRouter(
 
 
 class InboundPurchase(BaseModel):
-    amount: StrictInt
-    host: StrictStr
-    pubkey: StrictStr
+    fee_rate: Optional[StrictInt] = Field(
+        alias="feeRate",
+        description="the on-chain fee rate for the channel opening transaction in satoshis/vbyte. if not set, will default to next-block fee rate.",
+    )
+    node_uri: StrictStr = Field(
+        alias="nodeUri",
+        description="connection information to your node with the following format `pubkey@host:port`",
+    )
+    remote_balance: StrictInt = Field(
+        alias="remoteBalance",
+        description="the amount of liquidity desired on this side of the channel, in satoshis inbound toward `nodeUri` field",
+    )
 
 
 @router.get("", response_class=ORJSONResponse)
@@ -51,15 +60,17 @@ def check_purchase_info() -> Dict[str, str]:
 @router.post("", response_class=ORJSONResponse)
 def request_inbound_channel(purchase: InboundPurchase, response: ORJSONResponse) -> Dict[str, str]:
     lightning: Lightning = Lightning()
+    pubkey, host = purchase.node_uri.split("@")
+    host = host.replace(":9735", "")
     try:
-        lightning.connect_peer(host=purchase.host, pubkey=purchase.pubkey)
+        lightning.connect_peer(host=host, pubkey=pubkey)
     except RpcError as err:
         if "already connected to peer: " not in str(err):
             response.status_code = 502
             return {"detail": "Failed to connect to peer"}
     try:
         channel_point: ChannelPoint = lightning.open_channel(
-            amount=purchase.amount, pubkey=purchase.pubkey, sat_per_byte=20
+            amount=purchase.remote_balance, pubkey=pubkey, sat_per_byte=purchase.fee_rate
         )
         return {"txid": hexlify(channel_point.funding_txid_bytes).decode()}
     except RpcError as err:

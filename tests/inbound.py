@@ -40,10 +40,9 @@ def test_check_inbound_liquidity_info(test_tesla_ball: TestClient) -> None:
 
 def test_create_inbound_liquidity_request(test_tesla_ball: TestClient) -> None:
     body: Dict[str, Union[int, str]] = {
-        "amount": 20_000,
-        "host": LND_TARGET_HOST or "",
-        "pubkey": LND_TARGET_PUBKEY or "",
-        # TODO: Sat Per Byte
+        "feeRate": 3,
+        "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
+        "remoteBalance": 200_000,
     }
     response: Response = test_tesla_ball.post("/inbound", content=dumps(body))
     assert response.status_code == 200
