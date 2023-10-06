@@ -31,6 +31,9 @@ MANIFEST
 # Environments
 **.env
 
+# Generated protobuf modules
+src/protos
+
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
