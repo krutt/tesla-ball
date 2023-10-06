@@ -24,7 +24,7 @@ from src.middlewares import SchedulerMiddleware
 
 
 class TickSchedulerMiddleware(SchedulerMiddleware):
-    def __init__(self, app: ASGIApp, scheduler: AsyncScheduler) -> "TickSchedulerMiddleware":
+    def __init__(self, app: ASGIApp, scheduler: AsyncScheduler) -> None:
         self.app = app
         self.interval = 1
         self.scheduler = scheduler

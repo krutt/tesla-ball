@@ -10,7 +10,7 @@
 # *************************************************************
 
 ### Standard packages ###
-from typing import Dict, Union
+from typing import Dict, Generator, Union
 
 ### Third-party packages ###
 from fastapi.testclient import TestClient
@@ -24,12 +24,12 @@ from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
 
 ### Module-specific teardown ###
 @fixture(scope="module", autouse=True)
-def teardown() -> None:
+def teardown() -> Generator:
     yield
     from src.services.lightning import Lightning
 
     lightning: Lightning = Lightning()
-    print(lightning.disconnect_peer(LND_TARGET_PUBKEY))
+    print(lightning.disconnect_peer(LND_TARGET_PUBKEY or ""))
 
 
 def test_check_inbound_liquidity_info(test_tesla_ball: TestClient) -> None:

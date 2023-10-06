@@ -35,7 +35,7 @@ class SchedulerMiddleware(ABC):
 
     def __init__(
         self, app: ASGIApp, scheduler: AsyncScheduler, task: Callable, interval: int = 3_600
-    ) -> "SchedulerMiddleware":
+    ) -> None:
         self.app = app
         self.interval = interval
         self.scheduler = scheduler

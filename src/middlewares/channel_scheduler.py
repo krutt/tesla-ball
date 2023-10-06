@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.9
 # coding:utf-8
 # Copyright (C) 2023 All rights reserved.
-# FILENAME:    ~~/src/tasks/open_channel.py
+# FILENAME:    ~~/src/middlewares/channel_scheduler.py
 # VERSION: 	   0.1.0
 # CREATED: 	   2023-10-06 19:33
 # AUTHOR: 	   Sitt Guruvanich <aekazitt+github@gmail.com>
@@ -12,19 +12,26 @@
 
 ### Standard packages ###
 from binascii import hexlify
-from uuid import UUID4 as UUID, uuid4 as uuid
+from uuid import UUID, uuid4 as uuid
 
 ### Third-party packages ###
+### v3.10.4 API ###
+from apscheduler.schedulers.asyncio import AsyncIOScheduler as AsyncScheduler
+
+### TODO: v4.0.0a3 API ###
+# from apscheduler import AsyncScheduler
 from grpc import RpcError
 from pydantic import BaseModel, Field, StrictInt, StrictStr
+from starlette.types import ASGIApp
 
 ### Local modules ###
+from src.middlewares import SchedulerMiddleware
 from src.services.lightning import ChannelPoint, Lightning
 
 
 class InboundTicket(BaseModel):
     bolt11: StrictStr
-    fee_rate: StrictStr
+    fee_rate: StrictInt
     host: StrictStr
     pubkey: StrictStr
     remote_balance: StrictInt
@@ -45,7 +52,8 @@ def task(inbound_ticket: InboundTicket) -> None:
             pubkey=inbound_ticket.pubkey,
             sat_per_byte=inbound_ticket.fee_rate,
         )
-        return {"txid": hexlify(channel_point.funding_txid_bytes).decode()}
+        # return {"txid": hexlify(channel_point.funding_txid_bytes).decode()}
+        pass
     except RpcError as err:
         if "Number of pending channels exceed maximum" in str(err):
             # response.status_code = 503
@@ -57,4 +65,12 @@ def task(inbound_ticket: InboundTicket) -> None:
             pass
 
 
-__all__ = ["task"]
+class ChannelSchedulerMiddleware(SchedulerMiddleware):
+    def __init__(self, app: ASGIApp, scheduler: AsyncScheduler) -> None:
+        self.app = app
+        self.interval = 300  # 5 minutes
+        self.scheduler = scheduler
+        self.task = task
+
+
+__all__ = ["ChannelSchedulerMiddleware"]

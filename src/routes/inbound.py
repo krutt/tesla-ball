@@ -70,7 +70,9 @@ def request_inbound_channel(purchase: InboundPurchase, response: ORJSONResponse)
             return {"detail": "Failed to connect to peer"}
     try:
         channel_point: ChannelPoint = lightning.open_channel(
-            amount=purchase.remote_balance, pubkey=pubkey, sat_per_byte=purchase.fee_rate
+            amount=purchase.remote_balance,
+            pubkey=pubkey,
+            sat_per_byte=purchase.fee_rate or 6,  # TODO: fetch economy fee from mempool-space
         )
         return {"txid": hexlify(channel_point.funding_txid_bytes).decode()}
     except RpcError as err:
