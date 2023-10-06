@@ -11,7 +11,8 @@
 # *************************************************************
 
 ### Standard packages ###
-from os import mkdir, path, remove, rmdir, walk
+from os import mkdir, remove, rmdir, walk
+from os.path import exists, join
 from typing import List
 
 ### Third-party packages
@@ -19,13 +20,17 @@ from grpc_tools.protoc import main as compile
 from pendulum import now
 
 
+def recursive_remove(directory: str) -> None:
+    if exists(directory):
+        for root, dirs, files in walk(directory):
+            list(map(lambda file: remove(join(root, file)), files))
+            list(map(lambda dir: recursive_remove(join(root, dir)), dirs))
+        rmdir(directory)
+
+
 def main() -> None:
     target_dir: str = "src/protos"
-    if path.exists(target_dir):
-        for root, dirs, files in walk(target_dir):
-            list(map(lambda file: remove(path.join(root, file)), files))
-            list(map(lambda dir: rmdir(path.join(root, dir)), dirs))
-        rmdir(target_dir)
+    recursive_remove(target_dir)
     mkdir(target_dir)
     compile_args: List[str] = []
     compile_args.append(f"--proto_path=src")
