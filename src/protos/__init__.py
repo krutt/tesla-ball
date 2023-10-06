@@ -3,7 +3,7 @@
 # Copyright (C) 2023 All rights reserved.
 # FILENAME:    ~~/src/protos/__init__.py
 # VERSION: 	   0.1.0
-# CREATED: 	   2023-10-06 09:31
+# CREATED: 	   2023-10-06 09:42
 # AUTHOR: 	   Sitt Guruvanich <aekazitt+github@gmail.com>
 # DESCRIPTION:
 #
