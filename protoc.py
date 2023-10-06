@@ -32,12 +32,13 @@ def main() -> None:
     target_dir: str = "src/protos"
     recursive_remove(target_dir)
     mkdir(target_dir)
-    compile_args: List[str] = []
-    compile_args.append("--proto_path=src")
-    compile_args.append("--grpc_python_out=src")
-    compile_args.append("--python_out=src")
-    compile_args.append("protos/lightning.proto")
 
+    compile_args: List[str] = [
+        "--proto_path=src",
+        "--grpc_python_out=src",
+        "--python_out=src",
+        "protos/lightning.proto",
+    ]
     compile(compile_args)
 
     with open(f"./{ target_dir }/__init__.py", "w+") as f:
