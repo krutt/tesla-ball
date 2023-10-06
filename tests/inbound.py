@@ -16,9 +16,20 @@ from typing import Dict, Union
 from fastapi.testclient import TestClient
 from httpx import Response
 from orjson import dumps
+from pytest import fixture
 
 ### Local modules ###
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
+
+
+### Module-specific teardown ###
+@fixture(scope="module", autouse=True)
+def teardown() -> None:
+    yield
+    from src.services.lightning import Lightning
+
+    lightning: Lightning = Lightning()
+    print(lightning.disconnect_peer(LND_TARGET_PUBKEY))
 
 
 def test_check_inbound_liquidity_info(test_tesla_ball: TestClient) -> None:

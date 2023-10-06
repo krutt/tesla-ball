@@ -33,6 +33,8 @@ from src.protos.lightning_pb2 import (
     ChannelPoint,
     ConnectPeerRequest,
     ConnectPeerResponse,
+    DisconnectPeerRequest,
+    DisconnectPeerResponse,
     LightningAddress,
     ListChannelsRequest,
     ListChannelsResponse,
@@ -94,6 +96,10 @@ class Lightning(BaseModel):
     def connect_peer(self, host: StrictStr, pubkey: StrictStr) -> ConnectPeerResponse:
         addr: LightningAddress = LightningAddress(pubkey=pubkey, host=host)
         return self.stub.ConnectPeer(ConnectPeerRequest(addr=addr, perm=True, timeout=0))
+
+    @validate_arguments
+    def disconnect_peer(self, pubkey: StrictStr) -> DisconnectPeerResponse:
+        return self.stub.DisconnectPeer(DisconnectPeerRequest(pub_key=pubkey))
 
     def get_info(self) -> GetInfoResponse:
         """Fetch node policy and information"""
