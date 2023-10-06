@@ -11,6 +11,11 @@
 # *************************************************************
 
 ### Third-Party Packages ###
+### v3.10.4 API ###
+from apscheduler.schedulers.asyncio import AsyncIOScheduler as AsyncScheduler
+
+### TODO: v4.0.0a3 API ###
+# from apscheduler import AsyncScheduler
 from fastapi import FastAPI, Request
 from fastapi_cachette import Cachette
 from fastapi_csrf_protect import CsrfProtect
@@ -23,6 +28,7 @@ from starlette.responses import RedirectResponse
 
 ### Local Modules ###
 from src.configs import REDIS_URL, SECRET_KEY
+from src.middlewares import TickSchedulerMiddleware
 from src.routes import earn_router, inbound_router, swap_router
 
 ### Initiate FastAPI App ###
@@ -90,6 +96,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+scheduler: AsyncScheduler = AsyncScheduler()
+app.add_middleware(TickSchedulerMiddleware, scheduler=scheduler)
 
 ### Exception Handlers ###
 
