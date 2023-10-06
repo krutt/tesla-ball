@@ -25,6 +25,7 @@ description = "Lightning Service Provider built on top of FastAPI asynchronous w
 license = "MIT"
 name = "tesla-ball"
 packages = [
+  {include="protoc.py"},
   {include="serve.py"},
   {include="src"}
 ]
