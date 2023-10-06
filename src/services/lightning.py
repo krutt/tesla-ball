@@ -30,6 +30,7 @@ from pydantic import BaseModel, StrictInt, StrictStr, validate_arguments
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
 from src.protos.lightning_pb2 import (
+    AddInvoiceResponse,
     ChannelPoint,
     ConnectPeerRequest,
     ConnectPeerResponse,
@@ -38,10 +39,13 @@ from src.protos.lightning_pb2 import (
     LightningAddress,
     ListChannelsRequest,
     ListChannelsResponse,
+    ListInvoiceRequest,
+    ListInvoiceResponse,
     ListPeersRequest,
     ListPeersResponse,
     GetInfoRequest,
     GetInfoResponse,
+    Invoice,
     OpenChannelRequest,
 )
 from src.protos.lightning_pb2_grpc import LightningStub
@@ -93,6 +97,10 @@ class Lightning(BaseModel):
         return LightningStub(self.channel)  # type: ignore[no-untyped-call]
 
     @validate_arguments
+    def add_invoice(self, value: StrictInt, memo: StrictStr = "") -> AddInvoiceResponse:
+        return self.stub.AddInvoice(Invoice(value=value, memo=memo))
+
+    @validate_arguments
     def connect_peer(self, host: StrictStr, pubkey: StrictStr) -> ConnectPeerResponse:
         addr: LightningAddress = LightningAddress(pubkey=pubkey, host=host)
         return self.stub.ConnectPeer(ConnectPeerRequest(addr=addr, perm=True, timeout=0))
@@ -108,6 +116,9 @@ class Lightning(BaseModel):
     def list_channels(self) -> ListChannelsResponse:
         """List all open channels"""
         return self.stub.ListChannels(ListChannelsRequest())
+
+    def list_invoices(self) -> ListInvoiceResponse:
+        return self.stub.ListInvoices(ListInvoiceRequest())
 
     def list_peers(self) -> ListPeersResponse:
         """List all active, currently connected peers"""
