@@ -45,6 +45,7 @@ pendulum = "^2.1.2"
 python = "^3.9"
 pyyaml = "^6.0.1"
 schedule = "^1.2.1"
+tortoise-orm = {extras = ["asyncpg"], version = "^0.20.0"}
 uvicorn = "^0.23.2"
 
 [tool.poetry.group.dev]
