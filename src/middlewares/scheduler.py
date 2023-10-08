@@ -55,9 +55,7 @@ class SchedulerMiddleware(ABC):
             #     await self.scheduler.start_in_background()
             #     await self.app(scope, receive, send)
 
-            await self.app(scope, receive, send)
-        else:
-            await self.app(scope, receive, send)
+        await self.app(scope, receive, send)
 
 
 __all__ = ["SchedulerMiddleware"]
