@@ -26,6 +26,7 @@ license = "MIT"
 name = "tesla-ball"
 packages = [
   {include="protoc.py"},
+  {include="migrate.py"},
   {include="serve.py"},
   {include="src"}
 ]
@@ -61,6 +62,7 @@ python-dotenv = "^1.0.0"
 
 [tool.poetry.scripts]
 compile-protos = "protoc:main"
+migrate = "migrate:main"
 
 [tool.pytest.ini_options]
 addopts = "--strict-markers --tb=short -s"

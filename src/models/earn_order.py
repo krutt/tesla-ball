@@ -17,10 +17,10 @@ from tortoise.fields import IntField
 from tortoise.models import Model
 
 
-class EarnOrder(Model):
+class Earn_Order(Model):
     """Class mapping Object Relation to table `earn_order`"""
 
     id: IntField = IntField(pk=True)
 
 
-__all__ = ["EarnOrder"]
+__all__ = ["Earn_Order"]
