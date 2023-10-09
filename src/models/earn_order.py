@@ -16,9 +16,9 @@
 from tortoise.fields import IntField
 from tortoise.models import Model
 
+
 class EarnOrder(Model):
-    """Class mapping Object Relation to table `earn_order`
-    """
+    """Class mapping Object Relation to table `earn_order`"""
 
     id: IntField = IntField(pk=True)
 
