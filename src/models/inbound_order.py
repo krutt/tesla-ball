@@ -9,7 +9,7 @@
 #
 # HISTORY:
 # *************************************************************
-"""Module defining `InboundOrder` ORM-model
+"""Module defining `Inbound_Order` ORM-model
 """
 
 ### Third-party packages ###

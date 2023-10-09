@@ -9,7 +9,7 @@
 #
 # HISTORY:
 # *************************************************************
-"""Module defining `SwapOrder` ORM-model
+"""Module defining `Swap_Order` ORM-model
 """
 
 ### Third-party packages ###

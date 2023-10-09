@@ -9,7 +9,7 @@
 #
 # HISTORY:
 # *************************************************************
-"""Module defining `EarnOrder` ORM-model
+"""Module defining `Earn_Order` ORM-model
 """
 
 ### Third-party packages ###
