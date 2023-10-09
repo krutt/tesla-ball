@@ -11,6 +11,7 @@
 # *************************************************************
 
 ### Standard packages ###
+from argparse import ArgumentParser, Namespace
 from asyncio import run
 
 ### Third-party packages
@@ -23,10 +24,34 @@ from src.configs import DATABASE_NAME, DATABASE_URL
 
 
 def main() -> None:
-    run(migrate())
+    parser: ArgumentParser = ArgumentParser()
+    action = parser.add_mutually_exclusive_group()  # type: ignore[undefined]
+    action.add_argument(
+        "--drop",
+        action="store_const",
+        const="drop",
+        default="upgrade",
+        dest="action",
+        help="Drop tables",
+    )
+    action.add_argument(
+        "--upgrade",
+        action="store_const",
+        const="migrate",
+        dest="action",
+        help="Migrate the latest changes",
+    )
+    action.add_argument(
+        "--init", action="store_const", const="init", dest="action", help="Initiate database"
+    )
+    action.add_argument(
+        "--inspect", action="store_const", const="inspect", dest="action", help="Inspect database"
+    )
+    args: Namespace = parser.parse_args()
+    run(migrate(args.action))
 
 
-async def migrate() -> None:
+async def migrate(action: str) -> None:
     command: Command = Command(
         tortoise_config={
             "apps": {
@@ -39,8 +64,16 @@ async def migrate() -> None:
         }
     )
     await command.init()
-    await command.init_db(safe=True)
-    await command.migrate(DATABASE_NAME)
+    if action == "drop":
+        await command.downgrade(delete=True, version=0)
+    elif action == "init":
+        await command.init_db(safe=True)
+    elif action == "inspect":
+        print('"""')
+        print(await command.inspectdb())
+        print('"""')
+    elif action == "upgrade":
+        await command.migrate(DATABASE_NAME)
 
 
 if __name__ == "__main__":
