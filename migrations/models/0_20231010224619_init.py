@@ -10,15 +10,24 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
     "content" JSONB NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "earn_order" (
-    "id" SERIAL NOT NULL PRIMARY KEY
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "order_id" UUID NOT NULL,
+    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON TABLE "earn_order" IS 'Class mapping Object Relation to table `earn_order`';
 CREATE TABLE IF NOT EXISTS "inbound_order" (
-    "id" SERIAL NOT NULL PRIMARY KEY
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "order_id" UUID NOT NULL,
+    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON TABLE "inbound_order" IS 'Class mapping Object Relation to table `inbound_order`';
 CREATE TABLE IF NOT EXISTS "swap_order" (
-    "id" SERIAL NOT NULL PRIMARY KEY
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "order_id" UUID NOT NULL,
+    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP
 );
 COMMENT ON TABLE "swap_order" IS 'Class mapping Object Relation to table `swap_order`';"""
 
