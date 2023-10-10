@@ -20,5 +20,6 @@ class OrderState(str, Enum):
     """
 
     PENDING: str = "pending"
+    PAID: str = "paid"
     COMPLETED: str = "completed"
     REJECTED: str = "rejected"
