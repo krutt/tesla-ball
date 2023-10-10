@@ -37,7 +37,7 @@ def main() -> None:
     action.add_argument(
         "--upgrade",
         action="store_const",
-        const="migrate",
+        const="upgrade",
         dest="action",
         help="Migrate the latest changes",
     )
