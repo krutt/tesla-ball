@@ -11,7 +11,7 @@
 # *************************************************************
 
 ### Local modules ###
-from src.middlewares.scheduler import SchedulerMiddleware
+from src.middlewares.channel_scheduler import ChannelSchedulerMiddleware
 from src.middlewares.tick_scheduler import TickSchedulerMiddleware
 
-__all__ = ["SchedulerMiddleware", "TickSchedulerMiddleware"]
+__all__ = ["ChannelSchedulerMiddleware", "TickSchedulerMiddleware"]

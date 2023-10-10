@@ -28,7 +28,7 @@ from tortoise.contrib.fastapi import register_tortoise
 
 ### Local Modules ###
 from src.configs import DATABASE_URL, DATABASE_NAME, SECRET_KEY
-from src.middlewares import TickSchedulerMiddleware
+from src.middlewares import ChannelSchedulerMiddleware
 from src.routes import earn_router, inbound_router, swap_router
 
 ### Initiate FastAPI App ###
@@ -86,7 +86,7 @@ app.add_middleware(
 )
 
 scheduler: AsyncScheduler = AsyncScheduler()
-app.add_middleware(TickSchedulerMiddleware, scheduler=scheduler)
+app.add_middleware(ChannelSchedulerMiddleware, scheduler=scheduler)
 
 ### Register Tortoise ORM to FastAPI app ###
 

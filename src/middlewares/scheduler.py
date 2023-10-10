@@ -13,7 +13,6 @@
 ### Standard packages ###
 from abc import ABC, ABCMeta
 from typing import Callable
-from uuid import uuid4 as uuid
 
 ### Third-party packages ###
 ### v3.10.4 API ###

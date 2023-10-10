@@ -20,7 +20,7 @@ from starlette.types import ASGIApp
 from pendulum import now
 
 ### Local modules ###
-from src.middlewares import SchedulerMiddleware
+from src.middlewares.scheduler import SchedulerMiddleware
 
 
 class TickSchedulerMiddleware(SchedulerMiddleware):
