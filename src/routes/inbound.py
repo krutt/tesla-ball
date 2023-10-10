@@ -51,7 +51,9 @@ class InboundPurchase(BaseModel):
 
 
 @router.get("", response_class=ORJSONResponse)
-async def check_purchase_info(orderId: UUID, response: ORJSONResponse) -> Dict[str, Union[UUID, int, str]]:
+async def check_purchase_info(
+    orderId: UUID, response: ORJSONResponse
+) -> Dict[str, Union[UUID, int, str]]:
     try:
         inbound_order: InboundOrder = await InboundOrder.get(order_id=orderId)
         return {
