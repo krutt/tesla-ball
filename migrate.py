@@ -65,7 +65,10 @@ async def migrate(action: str) -> None:
     if action == "drop":
         await command.downgrade(delete=True, version=0)
     elif action == "init":
-        await command.init_db(safe=True)
+        try:
+            await command.init_db(safe=True)
+        except FileExistsError:
+            print(f"[ERROR] Database (name='{ DATABASE_NAME }') is already initiated.")
     elif action == "inspect":
         print('"""')
         print(await command.inspectdb())
