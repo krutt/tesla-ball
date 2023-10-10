@@ -37,10 +37,12 @@ class InboundOrder(Model):
     ### Data fields ###
     fee_rate: int = IntField(default=6)  # tentative, economy fee in 2023
     host: str = CharField(max_length=255)
+    invoice: str = CharField(max_length=255, null=True)
     port: int = IntField(default=9735)
     pubkey: str = CharField(max_length=66)
     remote_balance: int = IntField(default=20_000)  # defaults to minimum channel open size for LND
     state: str = CharEnumField(OrderState, default=OrderState.PENDING)
+    txid: str = CharField(max_length=255, null=True)
 
     ### Datetime fields ###
     created_at: datetime = DatetimeField(auto_now_add=True)
