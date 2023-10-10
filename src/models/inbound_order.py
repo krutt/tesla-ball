@@ -37,7 +37,7 @@ class InboundOrder(Model):
     ### Data fields ###
     fee_rate: int = IntField(default=6)  # tentative, economy fee in 2023
     host: str = CharField(max_length=255)
-    invoice: str = CharField(max_length=255, null=True)
+    invoice: str = CharField(max_length=379, null=True)
     port: int = IntField(default=9735)
     pubkey: str = CharField(max_length=66)
     remote_balance: int = IntField(default=20_000)  # defaults to minimum channel open size for LND
