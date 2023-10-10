@@ -12,18 +12,29 @@
 """Module defining `SwapOrder` ORM-model
 """
 
+### Standard packages ###
+from datetime import datetime
+from uuid import UUID, uuid4 as uuid
+
 ### Third-party packages ###
-from tortoise.fields import IntField
+from tortoise.fields import DatetimeField, IntField, UUIDField
 from tortoise.models import Model
 
 
 class SwapOrder(Model):
-    """Class mapping Object Relation to table `swap_order`"""
+    """Class mapping Object Relation to table `swap_order`
+    """
 
     class Meta:
         table: str = "swap_order"
 
-    id: IntField = IntField(pk=True)
+    ### Identifier fields ###
+    id: int = IntField(pk=True)
+    order_id: UUID = UUIDField(default=uuid())  # Set once at creation, never changed
+
+    ### Datetime fields ###
+    created_at: datetime = DatetimeField(auto_now_add=True)
+    updated_at: datetime = DatetimeField(auto_now=True)
 
 
 __all__ = ["SwapOrder"]
