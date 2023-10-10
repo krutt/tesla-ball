@@ -58,12 +58,12 @@ async def check_purchase_info(
     orderId: UUID, response: ORJSONResponse
 ) -> Dict[str, Union[UUID, int, str]]:
     try:
-        inbound_order: InboundOrder = await InboundOrder.get(order_id=orderId)
+        order: InboundOrder = await InboundOrder.get(order_id=orderId)
         return {
-            "feeRate": inbound_order.fee_rate,
-            "orderId": inbound_order.order_id,
-            "remoteBalance": inbound_order.remote_balance,
-            "state": inbound_order.state,
+            "feeRate": order.fee_rate,
+            "orderId": order.order_id,
+            "remoteBalance": order.remote_balance,
+            "state": order.state,
         }
     except DoesNotExist:
         response.status_code = 404
