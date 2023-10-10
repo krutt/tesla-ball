@@ -56,9 +56,9 @@ PORT: int = int(environ.get("PORT", 8080))
 SECRET_KEY: str = environ.get("SECRET_KEY", "itsasecrettoeverybody")
 
 __all__ = [
-    "DATABASE_NGIN",
     "DATABASE_HOST",
     "DATABASE_NAME",
+    "DATABASE_NGIN",
     "DATABASE_PASS",
     "DATABASE_PORT",
     "DATABASE_URL",
