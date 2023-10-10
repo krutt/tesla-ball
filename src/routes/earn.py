@@ -21,7 +21,7 @@ from fastapi.routing import APIRouter
 router: APIRouter = APIRouter(
     prefix="/earn",
     tags=["Earn endpoint"],
-    responses={404: {"description": "Not Found"}},
+    responses={404: {"detail": "Not Found"}},
 )
 
 # TODO: define routes

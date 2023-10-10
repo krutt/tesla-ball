@@ -21,7 +21,7 @@ from fastapi.routing import APIRouter
 router: APIRouter = APIRouter(
     prefix="/swap",
     tags=["Swap endpoints for swapping bitcoin from base-chain to Lightninng liquidity network"],
-    responses={404: {"description": "Not Found"}},
+    responses={404: {"detail": "Not Found"}},
 )
 
 # TODO: define routes
