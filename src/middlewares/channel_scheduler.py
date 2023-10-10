@@ -31,7 +31,7 @@ from src.services.lightning import ChannelPoint, Lightning
 
 async def task() -> None:
     lightning: Lightning = Lightning()
-    orders: List[InboundOrder] = await InboundOrder.filter(state=OrderState.PAID)
+    orders: List[InboundOrder] = await InboundOrder.filter(state=OrderState.PENDING)
     for order in orders:
         try:
             lightning.connect_peer(host=order.host, pubkey=order.pubkey)
@@ -60,9 +60,9 @@ async def task() -> None:
 
 
 class ChannelSchedulerMiddleware(SchedulerMiddleware):
-    def __init__(self, app: ASGIApp, scheduler: AsyncScheduler) -> None:
+    def __init__(self, app: ASGIApp, interval: int, scheduler: AsyncScheduler) -> None:
         self.app = app
-        self.interval = 300  # 5 minutes
+        self.interval = interval
         self.scheduler = scheduler
         self.task = task
 
