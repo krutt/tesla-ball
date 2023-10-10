@@ -15,17 +15,17 @@ and requester's node
 """
 
 ### Standard packages ###
-from binascii import hexlify
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
+from uuid import UUID
 
 ### Third-party packages ###
 from fastapi.routing import APIRouter
 from fastapi.responses import ORJSONResponse
-from grpc import RpcError
 from pydantic import BaseModel, Field, StrictInt, StrictStr
+from tortoise.exceptions import DoesNotExist, IntegrityError, ValidationError
 
 ### Local modules ###
-from src.services.lightning import ChannelPoint, Lightning
+from src.models import InboundOrder
 
 ### Routing ###
 router: APIRouter = APIRouter(
@@ -51,37 +51,36 @@ class InboundPurchase(BaseModel):
 
 
 @router.get("", response_class=ORJSONResponse)
-def check_purchase_info() -> Dict[str, str]:
-    lightning: Lightning = Lightning()
-    print(lightning.get_info())
-    return {"detail": "OK"}
+async def check_purchase_info(orderId: UUID, response: ORJSONResponse) -> Dict[str, Union[UUID, int, str]]:
+    try:
+        inbound_order: InboundOrder = await InboundOrder.get(order_id=orderId)
+        return {
+            "feeRate": inbound_order.fee_rate,
+            "orderId": inbound_order.order_id,
+            "remoteBalance": inbound_order.remote_balance,
+            "state": inbound_order.state,
+        }
+    except DoesNotExist:
+        response.status_code = 404
+        return {"detail": "Not found"}
 
 
 @router.post("", response_class=ORJSONResponse)
-def request_inbound_channel(purchase: InboundPurchase, response: ORJSONResponse) -> Dict[str, str]:
-    lightning: Lightning = Lightning()
-    pubkey, host = purchase.node_uri.split("@")
-    host = host.replace(":9735", "")
+async def request_inbound_channel(
+    purchase: InboundPurchase, response: ORJSONResponse
+) -> Dict[str, Union[UUID, str]]:
+    pubkey, url = purchase.node_uri.split("@")
+    host, port_str = url.split(":")
+    port: int = int(port_str)
     try:
-        lightning.connect_peer(host=host, pubkey=pubkey)
-    except RpcError as err:
-        if "already connected to peer: " not in str(err):
-            response.status_code = 502
-            return {"detail": "Failed to connect to peer"}
-    try:
-        channel_point: ChannelPoint = lightning.open_channel(
-            amount=purchase.remote_balance,
-            pubkey=pubkey,
-            sat_per_byte=purchase.fee_rate or 6,  # TODO: fetch economy fee from mempool-space
-        )
-        return {"txid": hexlify(channel_point.funding_txid_bytes).decode()}
-    except RpcError as err:
-        if "Number of pending channels exceed maximum" in str(err):
-            response.status_code = 503
-            return {"detail": "Cannot open any more channels at current block, try again later."}
-        else:
-            response.status_code = 502
-            return {"detail": "Unable to open new channel"}
+        inbound_order: InboundOrder = await InboundOrder.create(host=host, port=port, pubkey=pubkey)
+        return {"orderId": inbound_order.order_id}
+    except ValidationError as err:
+        response.status_code = 400
+        return {"detail": str(err)}
+    except IntegrityError:
+        response.status_code = 502
+        return {"detail": "Unable to receive order"}
 
 
 __all__ = ["router"]

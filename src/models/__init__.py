@@ -16,6 +16,7 @@ Module listing all usable ORM models to be imported by server and middlewares
 ### Local modules ###
 from src.models.earn_order import EarnOrder
 from src.models.inbound_order import InboundOrder
+from src.models.order_state import OrderState
 from src.models.swap_order import SwapOrder
 
-__all__ = ["EarnOrder", "InboundOrder", "SwapOrder"]
+__all__ = ["EarnOrder", "InboundOrder", "OrderState", "SwapOrder"]
