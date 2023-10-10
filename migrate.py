@@ -28,16 +28,23 @@ def main() -> None:
         "--drop",
         action="store_const",
         const="drop",
-        default="upgrade",
+        default="generate",
         dest="action",
         help="Drop tables",
+    )
+    action.add_argument(
+        "--generate",
+        action="store_const",
+        const="generate",
+        dest="action",
+        help="Migrate the latest changes under '~~/migrations/models'",
     )
     action.add_argument(
         "--upgrade",
         action="store_const",
         const="upgrade",
         dest="action",
-        help="Migrate the latest changes",
+        help="Upgrade database to the latest migrations",
     )
     action.add_argument(
         "--init", action="store_const", const="init", dest="action", help="Initiate database"
@@ -45,11 +52,13 @@ def main() -> None:
     action.add_argument(
         "--inspect", action="store_const", const="inspect", dest="action", help="Inspect database"
     )
+    parser.add_argument("name", default="update", help="Name of migration", nargs="?", type=str)
     args: Namespace = parser.parse_args()
-    run(migrate(args.action))
+    name: str = args.name.lower().replace(" ", "_").replace("-", "_")
+    run(migrate(args.action, name))
 
 
-async def migrate(action: str) -> None:
+async def migrate(action: str, name: str) -> None:
     command: Command = Command(
         tortoise_config={
             "apps": {
@@ -64,6 +73,8 @@ async def migrate(action: str) -> None:
     await command.init()
     if action == "drop":
         await command.downgrade(delete=True, version=0)
+    elif action == "generate":
+        await command.migrate(name)
     elif action == "init":
         try:
             await command.init_db(safe=True)
@@ -74,7 +85,7 @@ async def migrate(action: str) -> None:
         print(await command.inspectdb())
         print('"""')
     elif action == "upgrade":
-        await command.migrate(DATABASE_NAME)
+        await command.upgrade(True)
 
 
 if __name__ == "__main__":
