@@ -36,7 +36,6 @@ version = "0.1.0"
 [tool.poetry.dependencies]
 apscheduler = "^3.10.4"
 fastapi = "^0.103.2"
-fastapi-cachette = "^0.1.4"
 fastapi-csrf-protect = "^0.3.2"
 googleapis-common-protos = "1.60.0"
 grpcio = "^1.48.0"
