@@ -138,4 +138,4 @@ class Lightning(BaseModel):
         )
 
 
-__all__ = ["ChannelPoint", "Lightning"]
+__all__ = ["AddInvoiceResponse", "ChannelPoint", "Lightning"]
