@@ -16,6 +16,7 @@ from asyncio import run
 
 ### Third-party packages
 from aerich import Command
+from tortoise.exceptions import DBConnectionError
 
 ### Local modules ###
 from src.configs import DATABASE_NAME, DATABASE_URL
@@ -70,7 +71,11 @@ async def migrate(action: str, name: str) -> None:
             "connections": {"default": f"{ DATABASE_URL }/{ DATABASE_NAME }"},
         }
     )
-    await command.init()
+    try:
+        await command.init()
+    except DBConnectionError as err:
+        print(f"[ERROR] Unable to migrate due to the following error: { err }")
+        return
     if action == "drop":
         await command.downgrade(delete=True, version=0)
     elif action == "generate":
