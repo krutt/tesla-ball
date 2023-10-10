@@ -51,6 +51,9 @@ async def task() -> None:
             if "Number of pending channels exceed maximum" in str(err):
                 print("[WARN] Cannot open any more channels at current block, try again later.")
                 break
+            elif "channels cannot be created before the wallet is fully synced" in str(err):
+                print("[WARN] LND currently not synchronized and therefore cannot open channel.")
+                break
             else:
                 order.state = OrderState.REJECTED
                 await order.save()
