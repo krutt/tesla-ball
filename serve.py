@@ -94,10 +94,11 @@ register_tortoise(
     app,
     db_url=f"{ DATABASE_URL }/{ DATABASE_NAME }",
     generate_schemas=True,  # If true, creates new database at first launch
-    modules={"models": ["src.models"]}
+    modules={"models": ["src.models"]},
 )
 
 ### Exception Handlers ###
+
 
 @app.exception_handler(CsrfProtectError)
 def csrf_protect_exception_handler(request: Request, exc: CsrfProtectError) -> ORJSONResponse:
