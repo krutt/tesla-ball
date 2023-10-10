@@ -78,8 +78,8 @@ async def request_inbound_channel(
     host, port_str = url.split(":")
     port: int = int(port_str)
     try:
-        inbound_order: InboundOrder = await InboundOrder.create(host=host, port=port, pubkey=pubkey)
-        return {"orderId": inbound_order.order_id}
+        order: InboundOrder = await InboundOrder.create(host=host, port=port, pubkey=pubkey)
+        return {"orderId": order.order_id}
     except ValidationError as err:
         response.status_code = 400
         return {"detail": str(err)}
