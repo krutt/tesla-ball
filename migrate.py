@@ -17,8 +17,6 @@ from asyncio import run
 ### Third-party packages
 from aerich import Command
 
-# from pendulum import now
-
 ### Local modules ###
 from src.configs import DATABASE_NAME, DATABASE_URL
 
