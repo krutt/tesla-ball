@@ -9,7 +9,7 @@
 #
 # HISTORY:
 # *************************************************************
-"""Module defining `Inbound_Order` ORM-model
+"""Module defining `InboundOrder` ORM-model
 """
 
 ### Third-party packages ###
@@ -17,10 +17,13 @@ from tortoise.fields import IntField
 from tortoise.models import Model
 
 
-class Inbound_Order(Model):
+class InboundOrder(Model):
     """Class mapping Object Relation to table `inbound_order`"""
+
+    class Meta:
+        table: str = "inbound_order"
 
     id: IntField = IntField(pk=True)
 
 
-__all__ = ["Inbound_Order"]
+__all__ = ["InboundOrder"]
