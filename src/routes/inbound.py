@@ -63,6 +63,7 @@ async def check_purchase_info(
         order: InboundOrder = await InboundOrder.get(order_id=orderId)
         return {
             "feeRate": order.fee_rate,
+            "invoice": order.invoice or "",
             "orderId": order.order_id,
             "remoteBalance": order.remote_balance,
             "state": order.state,
