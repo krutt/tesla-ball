@@ -38,15 +38,18 @@ router: APIRouter = APIRouter(
 class InboundPurchase(BaseModel):
     fee_rate: Optional[StrictInt] = Field(
         alias="feeRate",
-        description="the on-chain fee rate for the channel opening transaction in satoshis/vbyte. if not set, will default to next-block fee rate.",
+        description="the on-chain fee rate for the channel opening transaction in satoshis/vbyte. "
+        "If not set, will default to next-block fee rate.",
     )
     node_uri: StrictStr = Field(
         alias="nodeUri",
-        description="connection information to your node with the following format `pubkey@host:port`",
+        description="connection information to your node with the following format "
+        "`pubkey@host:port`",
     )
     remote_balance: StrictInt = Field(
         alias="remoteBalance",
-        description="the amount of liquidity desired on this side of the channel, in satoshis inbound toward `nodeUri` field",
+        description="the amount of liquidity desired on this side of the channel, in satoshis "
+        "inbound toward `nodeUri` field",
     )
 
 
