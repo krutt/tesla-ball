@@ -67,7 +67,7 @@ async def migrate(action: str, name: str) -> None:
                     "default_connection": "default",
                 }
             },
-            "connections": {"default": DATABASE_URL},
+            "connections": {"default": f"{ DATABASE_URL }/{ DATABASE_NAME }"},
         }
     )
     await command.init()
