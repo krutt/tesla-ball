@@ -31,7 +31,7 @@ from src.services.lightning import ChannelPoint, Lightning
 
 async def task() -> None:
     lightning: Lightning = Lightning()
-    orders: List[InboundOrder] = await InboundOrder.filter(state=OrderState.PENDING)
+    orders: List[InboundOrder] = await InboundOrder.filter(state=OrderState.PAID)
     for order in orders:
         try:
             lightning.connect_peer(host=order.host, pubkey=order.pubkey)
