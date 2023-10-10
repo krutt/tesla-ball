@@ -24,9 +24,10 @@ from fastapi.responses import ORJSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from starlette.responses import RedirectResponse
+from tortoise.contrib.fastapi import register_tortoise
 
 ### Local Modules ###
-from src.configs import SECRET_KEY
+from src.configs import DATABASE_URL, DATABASE_NAME, SECRET_KEY
 from src.middlewares import TickSchedulerMiddleware
 from src.routes import earn_router, inbound_router, swap_router
 
@@ -87,8 +88,16 @@ app.add_middleware(
 scheduler: AsyncScheduler = AsyncScheduler()
 app.add_middleware(TickSchedulerMiddleware, scheduler=scheduler)
 
-### Exception Handlers ###
+### Register Tortoise ORM to FastAPI app ###
 
+register_tortoise(
+    app,
+    db_url=f"{ DATABASE_URL }/{ DATABASE_NAME }",
+    generate_schemas=True,  # If true, creates new database at first launch
+    modules={"models": ["src.models"]}
+)
+
+### Exception Handlers ###
 
 @app.exception_handler(CsrfProtectError)
 def csrf_protect_exception_handler(request: Request, exc: CsrfProtectError) -> ORJSONResponse:
