@@ -31,7 +31,6 @@ if [ "${CMD}" == 'serve' ]; then
   uvicorn serve:app             \
     --host 0.0.0.0 --port $PORT \
     --log-config log_conf.yml   \
-    --lifespan on               \
   &
 elif [ "${CMD}" == 'tunnel' ]; then
   echo "[${LVL}] Creating bash run-time tunnel"

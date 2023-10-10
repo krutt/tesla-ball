@@ -12,7 +12,7 @@ Uvicorn is an ASGI web server implementation for Python with great compatibility
 framework for this project, [FastAPI](https://fastapi.tiangolo.com).
 
 ```bash
-$ uvicorn serve:app --lifespan on --log-config log_conf.yml
+$ uvicorn serve:app --log-config log_conf.yml
 ```
 
 ## Contributions
@@ -61,7 +61,7 @@ Uvicorn allows you to run the ASGI application with hot-reload enabled by adding
 to the command as such:
 
 ```bash
-$ uvicorn serve:app --lifespan on --log-config log_conf.yml --reload
+$ uvicorn serve:app --log-config log_conf.yml --reload
 ```
 
 ## License
