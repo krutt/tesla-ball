@@ -52,7 +52,7 @@ uvicorn = "^0.23.2"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-aerich = "0.7.1"
+aerich = "^0.7.2"
 black = "^23.9.1"
 httpx = "^0.25.0"
 mypy = "^1.5.1"
