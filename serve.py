@@ -17,7 +17,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler as AsyncScheduler
 ### TODO: v4.0.0a3 API ###
 # from apscheduler import AsyncScheduler
 from fastapi import FastAPI, Request
-from fastapi_cachette import Cachette
 from fastapi_csrf_protect import CsrfProtect
 from fastapi_csrf_protect.exceptions import CsrfProtectError
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,7 +26,7 @@ from pydantic import BaseModel
 from starlette.responses import RedirectResponse
 
 ### Local Modules ###
-from src.configs import REDIS_URL, SECRET_KEY
+from src.configs import SECRET_KEY
 from src.middlewares import TickSchedulerMiddleware
 from src.routes import earn_router, inbound_router, swap_router
 
@@ -36,18 +35,6 @@ from src.routes import earn_router, inbound_router, swap_router
 app: FastAPI = FastAPI()
 
 ### Set up Cachette and CsrfProtect ###
-
-
-class CachetteSettings(BaseModel):
-    backend: str = "redis"
-    codec: str = "pickle"
-    redis_url: str = REDIS_URL
-    ttl: int = 3600  # 1 hour
-
-
-@Cachette.load_config
-def get_cachette_config() -> CachetteSettings:
-    return CachetteSettings()
 
 
 class CsrfSettings(BaseModel):
