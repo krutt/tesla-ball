@@ -84,8 +84,7 @@ async def request_inbound_channel(
         order: InboundOrder = await InboundOrder.create(host=host, port=port, pubkey=pubkey)
         lightning: Lightning = Lightning()
         add_invoice_response: AddInvoiceResponse = lightning.add_invoice(
-            memo=f"Invoice for <InboundOrder (order-id={order.order_id})>",
-            value=10_000
+            memo=f"Invoice for <InboundOrder (order-id={order.order_id})>", value=10_000
         )
         order.invoice = add_invoice_response.payment_request
         background_tasks.add_task(order.save)
