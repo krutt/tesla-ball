@@ -11,6 +11,20 @@ WARNING: Currently this project primarily targets Lightning Node Daemon (LND) im
 Uvicorn is an ASGI web server implementation for Python with great compatibility with the chosen
 framework for this project, [FastAPI](https://fastapi.tiangolo.com).
 
+In order to run this server, you must set the following environment variables to your local shell
+with `export` command or by creating `.env` file if you are running with development dependencies
+installed:
+
+```bash
+DATABASE_URL=postgres://localhost:5432/tesladb  # default
+LND_HOST_URL=localhost:10009  # default
+LND_MACAROON_PATH=/Users/path/to/admin.macaroon  # TODO: probably don't need admin-level permission
+LND_TLSCERT_PATH=/Users/path/to/tls.cert
+```
+
+After successfully defining environment variables required, you can then run the server with the 
+following command:
+
 ```bash
 $ uvicorn serve:app --log-config log_conf.yml
 ```
