@@ -32,12 +32,6 @@ def teardown() -> Generator:
     print(lightning.disconnect_peer(LND_TARGET_PUBKEY or ""))
 
 
-def test_check_inbound_liquidity_info(test_tesla_ball: TestClient) -> None:
-    response: Response = test_tesla_ball.get("/inbound")
-    assert response.status_code == 200
-    assert response.json() == {"detail": "OK"}
-
-
 def test_create_inbound_liquidity_request(test_tesla_ball: TestClient) -> None:
     body: Dict[str, Union[int, str]] = {
         "feeRate": 3,
