@@ -15,10 +15,11 @@ from os import environ
 from typing import Optional
 
 ### Third-Party Packages ###
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 ### Local modules ###
-from serve import app
+from src.routes import earn_router, inbound_router, swap_router
 
 try:
     from dotenv import load_dotenv
@@ -42,6 +43,10 @@ def test_tesla_ball() -> TestClient:
     ---
     :returns: TestClient
     """
+    app = FastAPI()
+    app.include_router(earn_router)
+    app.include_router(inbound_router)
+    app.include_router(swap_router)
     return TestClient(app)
 
 
