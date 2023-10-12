@@ -25,7 +25,7 @@ from grpc import (
     secure_channel,
     ssl_channel_credentials,
 )
-from pydantic import BaseModel, StrictInt, StrictStr, validate_arguments
+from pydantic import BaseModel, StrictInt, StrictStr, validate_call
 
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
@@ -96,16 +96,16 @@ class Lightning(BaseModel):
     def stub(self) -> LightningStub:
         return LightningStub(self.channel)  # type: ignore[no-untyped-call]
 
-    @validate_arguments
+    @validate_call
     def add_invoice(self, value: StrictInt, memo: StrictStr = "") -> AddInvoiceResponse:
         return self.stub.AddInvoice(Invoice(value=value, memo=memo))
 
-    @validate_arguments
+    @validate_call
     def connect_peer(self, host: StrictStr, pubkey: StrictStr) -> ConnectPeerResponse:
         addr: LightningAddress = LightningAddress(pubkey=pubkey, host=host)
         return self.stub.ConnectPeer(ConnectPeerRequest(addr=addr, perm=True, timeout=0))
 
-    @validate_arguments
+    @validate_call
     def disconnect_peer(self, pubkey: StrictStr) -> DisconnectPeerResponse:
         return self.stub.DisconnectPeer(DisconnectPeerRequest(pub_key=pubkey))
 
@@ -124,7 +124,7 @@ class Lightning(BaseModel):
         """List all active, currently connected peers"""
         return self.stub.ListPeers(ListPeersRequest())
 
-    @validate_arguments
+    @validate_call
     def open_channel(
         self, amount: StrictInt, pubkey: StrictStr, sat_per_byte: StrictInt
     ) -> ChannelPoint:
