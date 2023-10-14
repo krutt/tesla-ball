@@ -30,13 +30,18 @@ from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
 def setup_teardown() -> Generator:
     run_async(Tortoise.init(db_url="sqlite://./tests/test.db", modules={"models": ["src.models"]}))
     run_async(Tortoise.generate_schemas(True))
-    assert run_async(InboundOrder.all().count()) is None
 
     yield
 
     run_async(InboundOrder.all().delete())
     run_async(Tortoise._drop_databases())
     run_async(Tortoise.close_connections())
+
+
+@mark.asyncio
+async def test_00_precheck_empty_orders(test_tesla_ball: TestClient) -> None:
+    """Pre-checks the table for InboundOrder and asserts count to be null or zero"""
+    assert await InboundOrder.all().count() is 0
 
 
 @mark.asyncio
@@ -54,7 +59,7 @@ async def test_01_create_inbound_order(test_tesla_ball: TestClient) -> None:
     assert response.json().get("invoice", None)[:6] == "lnbcrt"  # lightning bitcoin regtest
     assert response.json().get("orderId", None) is not None
     assert response.json().get("orderId", None) == str(order.order_id)
-    
+
 
 @mark.asyncio
 async def test_02_check_inbound_request(test_tesla_ball: TestClient) -> None:
