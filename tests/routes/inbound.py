@@ -21,7 +21,7 @@ from tortoise import Tortoise, run_async
 
 ### Local modules ###
 # from src.services.lightning import Lightning
-from src.models import InboundOrder
+from src.models import InboundOrder, OrderState
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
 
 
@@ -82,5 +82,5 @@ async def test_02_check_inbound_request(test_tesla_ball: TestClient) -> None:
     assert isinstance(response.json().get("remoteBalance", None), int)
     assert response.json().get("remoteBalance", None) == order.remote_balance
     assert response.json().get("state", None) is not None
-    assert response.json().get("state", None) == "pending"  # not yet paid
+    assert response.json().get("state", None) == OrderState.PENDING  # not yet paid
     assert response.json().get("state", None) == order.state
