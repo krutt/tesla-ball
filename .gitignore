@@ -45,7 +45,7 @@ docs/_build/
 doc/_build/
 
 # Tests
-tests/test.db
+test.db
 
 # Unit test / coverage reports
 htmlcov/

@@ -27,7 +27,7 @@ from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
 ### Module-specific setup-teardown ###
 @fixture(scope="module", autouse=True)
 def setup_teardown() -> Generator:
-    run_async(Tortoise.init(db_url="sqlite://./tests/test.db", modules={"models": ["src.models"]}))
+    run_async(Tortoise.init(db_url="sqlite://./test.db", modules={"models": ["src.models"]}))
     run_async(Tortoise.generate_schemas(True))
 
     yield
