@@ -52,7 +52,7 @@ async def test_01_open_channel(test_tesla_ball: TestClient) -> None:
     order.state = OrderState.OPENING
     await order.save()  # pending -> paid
 
-    ### Run task ###
+    ### Run job ###
     await channel_open_job()
 
     ### Assertion completion ###
