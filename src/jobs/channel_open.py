@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.9
 # coding:utf-8
 # Copyright (C) 2023 All rights reserved.
-# FILENAME:    ~~/src/middlewares/channel_scheduler.py
+# FILENAME:    ~~/src/jobs/channel_open.py
 # VERSION: 	   0.1.0
-# CREATED: 	   2023-10-06 19:33
+# CREATED: 	   2023-10-14 17:12
 # AUTHOR: 	   Sitt Guruvanich <aekazitt+github@gmail.com>
 # DESCRIPTION:
 #
@@ -15,21 +15,14 @@ from binascii import hexlify
 from typing import List
 
 ### Third-party packages ###
-### v3.10.4 API ###
-from apscheduler.schedulers.asyncio import AsyncIOScheduler as AsyncScheduler
-
-### TODO: v4.0.0a3 API ###
-# from apscheduler import AsyncScheduler
 from grpc import RpcError
-from starlette.types import ASGIApp
 
 ### Local modules ###
-from src.middlewares.scheduler import SchedulerMiddleware
 from src.models import OrderState, InboundOrder
 from src.services.lightning import ChannelPoint, Lightning
 
 
-async def task() -> None:
+async def job() -> None:
     lightning: Lightning = Lightning()
     orders: List[InboundOrder] = await InboundOrder.paid()
     for order in orders:
@@ -60,12 +53,4 @@ async def task() -> None:
                 await order.save()
 
 
-class ChannelSchedulerMiddleware(SchedulerMiddleware):
-    def __init__(self, app: ASGIApp, interval: int, scheduler: AsyncScheduler) -> None:
-        self.app = app
-        self.interval = interval
-        self.scheduler = scheduler
-        self.task = task
-
-
-__all__ = ["ChannelSchedulerMiddleware", "task"]
+__all__ = ["job"]

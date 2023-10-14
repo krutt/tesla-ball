@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.9
 # Copyright (C) 2023 All rights reserved.
-# FILENAME:  ~~/tests/tasks/channel.py
+# FILENAME:  ~~/tests/jobs/channel.py
 # VERSION: 	 0.1.0
 # CREATED: 	 2023-10-14 15:20
 # AUTHOR: 	 Sitt Guruvanich <aekazitt+github@gmail.com>
@@ -19,7 +19,7 @@ from tortoise import Tortoise, run_async
 
 ### Local modules ###
 # from src.services.lightning import Lightning
-from src.middlewares.channel_scheduler import task as channel_task
+from src.jobs.channel_open import job as channel_open_job
 from src.models import InboundOrder, OrderState
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
 
@@ -49,11 +49,11 @@ async def test_01_open_channel(test_tesla_ball: TestClient) -> None:
 
     ### Mock payment ###
     assert order.state is OrderState.PENDING
-    order.state = OrderState.PAID
+    order.state = OrderState.OPENING
     await order.save()  # pending -> paid
 
     ### Run task ###
-    await channel_task()
+    await channel_open_job()
 
     ### Assertion completion ###
     order = await InboundOrder.get(order_id=order.order_id)

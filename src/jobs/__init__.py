@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.9
 # coding:utf-8
 # Copyright (C) 2023 All rights reserved.
-# FILENAME:    ~~/src/middlewares/__init__.py
+# FILENAME:    ~~/src/jobs/__init__.py
 # VERSION: 	   0.1.0
-# CREATED: 	   2023-10-06 22:18
+# CREATED: 	   2023-10-14 17:12
 # AUTHOR: 	   Sitt Guruvanich <aekazitt+github@gmail.com>
 # DESCRIPTION:
 #
@@ -11,6 +11,6 @@
 # *************************************************************
 
 ### Local modules ###
-from src.middlewares.scheduler import SchedulerMiddleware
+from src.jobs.channel_open import job as channel_open_job
 
-__all__ = ["SchedulerMiddleware"]
+__all__ = ["channel_open_job"]

@@ -28,7 +28,8 @@ from tortoise.contrib.fastapi import register_tortoise
 
 ### Local Modules ###
 from src.configs import DATABASE_URL, DATABASE_NAME, SECRET_KEY
-from src.middlewares import ChannelSchedulerMiddleware
+from src.jobs import channel_open_job
+from src.middlewares import SchedulerMiddleware
 from src.routes import earn_router, inbound_router, swap_router
 
 ### Initiate FastAPI App ###
@@ -86,7 +87,7 @@ app.add_middleware(
 )
 
 scheduler: AsyncScheduler = AsyncScheduler()
-app.add_middleware(ChannelSchedulerMiddleware, interval=300, scheduler=scheduler)  # 5 minutes
+app.add_middleware(SchedulerMiddleware, interval=10, job=channel_open_job, scheduler=scheduler)
 
 ### Register Tortoise ORM to FastAPI app ###
 
