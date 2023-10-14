@@ -20,7 +20,6 @@ from pytest import fixture, mark
 from tortoise import Tortoise, run_async
 
 ### Local modules ###
-# from src.services.lightning import Lightning
 from src.models import InboundOrder, OrderState
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
 
