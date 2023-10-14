@@ -44,6 +44,9 @@ __pypackages__/
 docs/_build/
 doc/_build/
 
+# Tests
+tests/test.db
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
