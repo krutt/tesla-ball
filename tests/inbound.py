@@ -76,3 +76,6 @@ async def test_02_check_inbound_request(test_tesla_ball: TestClient) -> None:
     assert response.json().get("remoteBalance", None) is not None
     assert isinstance(response.json().get("remoteBalance", None), int)
     assert response.json().get("remoteBalance", None) == order.remote_balance
+    assert response.json().get("state", None) is not None
+    assert response.json().get("state", None) == "pending"  # not yet paid
+    assert response.json().get("state", None) == order.state
