@@ -14,6 +14,7 @@
 
 ### Standard packages ###
 from datetime import datetime
+from typing import List
 from uuid import UUID, uuid4 as uuid
 
 ### Third-party packages ###
@@ -47,6 +48,22 @@ class InboundOrder(Model):
     ### Datetime fields ###
     created_at: datetime = DatetimeField(auto_now_add=True)
     updated_at: datetime = DatetimeField(auto_now=True)
+
+    @classmethod
+    async def completed(cls) -> List["InboundOrder"]:
+        return await cls.filter(state=OrderState.COMPLETED)
+
+    @classmethod
+    async def paid(cls) -> List["InboundOrder"]:
+        return await cls.filter(state=OrderState.PAID)
+
+    @classmethod
+    async def pending(cls) -> List["InboundOrder"]:
+        return await cls.filter(state=OrderState.PENDING)
+
+    @classmethod
+    async def rejected(cls) -> List["InboundOrder"]:
+        return await cls.filter(state=OrderState.REJECTED)
 
 
 __all__ = ["InboundOrder"]
