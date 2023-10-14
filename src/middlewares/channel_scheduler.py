@@ -67,4 +67,4 @@ class ChannelSchedulerMiddleware(SchedulerMiddleware):
         self.task = task
 
 
-__all__ = ["ChannelSchedulerMiddleware"]
+__all__ = ["ChannelSchedulerMiddleware", "task"]
