@@ -58,6 +58,10 @@ class InboundOrder(Model):
         return await cls.filter(state=OrderState.PAID)
 
     @classmethod
+    async def opening(cls) -> List["InboundOrder"]:
+        return await cls.filter(state=OrderState.OPENING)
+
+    @classmethod
     async def pending(cls) -> List["InboundOrder"]:
         return await cls.filter(state=OrderState.PENDING)
 
