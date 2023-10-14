@@ -37,9 +37,8 @@ async def task() -> None:
             lightning.connect_peer(host=order.host, pubkey=order.pubkey)
         except RpcError as err:
             if "already connected to peer: " not in str(err):
-                # order.state = OrderState.COMPLETED
-                # await order.save()
-                pass
+                print("[WARN] Unable to find targeted host or connect to it.")
+                continue
         try:
             channel_point: ChannelPoint = lightning.open_channel(
                 amount=order.remote_balance,
@@ -47,7 +46,7 @@ async def task() -> None:
                 sat_per_byte=order.fee_rate,
             )
             order.txid = hexlify(channel_point.funding_txid_bytes).decode()
-            order.state = OrderState.COMPLETED
+            order.state = OrderState.OPENING
             await order.save()
         except RpcError as err:
             if "Number of pending channels exceed maximum" in str(err):

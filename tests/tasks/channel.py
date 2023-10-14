@@ -20,7 +20,7 @@ from tortoise import Tortoise, run_async
 ### Local modules ###
 # from src.services.lightning import Lightning
 from src.middlewares.channel_scheduler import task as channel_task
-from src.models import InboundOrder
+from src.models import InboundOrder, OrderState
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
 
 
@@ -48,8 +48,8 @@ async def test_01_open_channel(test_tesla_ball: TestClient) -> None:
     order: InboundOrder = await InboundOrder.all().order_by("-id").first()
 
     ### Mock payment ###
-    assert order.state == "pending"
-    order.state = "paid"
+    assert order.state is OrderState.PENDING
+    order.state = OrderState.PAID
     await order.save()  # pending -> paid
 
     ### Run task ###
@@ -57,4 +57,4 @@ async def test_01_open_channel(test_tesla_ball: TestClient) -> None:
 
     ### Assertion completion ###
     order = await InboundOrder.get(order_id=order.order_id)
-    assert order.state == "completed"
+    assert order.state == OrderState.OPENING
