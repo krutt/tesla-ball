@@ -45,11 +45,16 @@ async def test_01_open_channel(test_tesla_ball: TestClient) -> None:
         "remoteBalance": 200_000,
     }
     test_tesla_ball.post("/inbound", content=dumps(body))
-
     order: InboundOrder = await InboundOrder.all().order_by("-id").first()
+
+    ### Mock payment ###
     assert order.state == "pending"
     order.state = "paid"
     await order.save()  # pending -> paid
+
+    ### Run task ###
     await channel_task()
+
+    ### Assertion completion ###
     order = await InboundOrder.get(order_id=order.order_id)
     assert order.state == "completed"
