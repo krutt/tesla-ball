@@ -36,6 +36,7 @@ from src.protos.lightning_pb2 import (
     ConnectPeerResponse,
     DisconnectPeerRequest,
     DisconnectPeerResponse,
+    FeeLimit,
     LightningAddress,
     ListChannelsRequest,
     ListChannelsResponse,
@@ -47,6 +48,13 @@ from src.protos.lightning_pb2 import (
     GetInfoResponse,
     Invoice,
     OpenChannelRequest,
+    PaymentHash,
+    PayReq,
+    PayReqString,
+    SendRequest,
+    SendResponse,
+    WalletBalanceRequest,
+    WalletBalanceResponse,
 )
 from src.protos.lightning_pb2_grpc import LightningStub
 
@@ -102,11 +110,18 @@ class Lightning(BaseModel):
 
     @validate_call
     def connect_peer(self, host: StrictStr, pubkey: StrictStr) -> ConnectPeerResponse:
+        """Connect to a remote lnd peer"""
         addr: LightningAddress = LightningAddress(pubkey=pubkey, host=host)
         return self.stub.ConnectPeer(ConnectPeerRequest(addr=addr, perm=True, timeout=0))
 
     @validate_call
+    def decode_pay_req(self, payment_request: StrictStr) -> PayReq:
+        """Decode a payment request"""
+        return self.stub.DecodePayReq(PayReqString(pay_req=payment_request))
+
+    @validate_call
     def disconnect_peer(self, pubkey: StrictStr) -> DisconnectPeerResponse:
+        """Disconnect a remote peer identified by public key"""
         return self.stub.DisconnectPeer(DisconnectPeerRequest(pub_key=pubkey))
 
     def get_info(self) -> GetInfoResponse:
@@ -125,6 +140,12 @@ class Lightning(BaseModel):
         return self.stub.ListPeers(ListPeersRequest())
 
     @validate_call
+    def lookup_invoice(self, r_hash: StrictStr) -> Invoice:
+        """Lookup an existing invoice by its payment hash"""
+        payment_hash: PaymentHash = PaymentHash(r_hash_str=r_hash)
+        return self.stub.LookupInvoice(payment_hash)
+
+    @validate_call
     def open_channel(
         self, amount: StrictInt, pubkey: StrictStr, sat_per_byte: StrictInt
     ) -> ChannelPoint:
@@ -137,5 +158,18 @@ class Lightning(BaseModel):
             )
         )
 
+    @validate_call
+    def send_payment(
+        self, payment_request: StrictStr, fee_limit_msat: StrictInt = 1_000
+    ) -> SendResponse:
+        """Send a payment over lightning"""
+        fee_limit: FeeLimit = FeeLimit(fixed_msat=fee_limit_msat)
+        return self.stub.SendPaymentSync(
+            SendRequest(fee_limit=fee_limit, payment_request=payment_request)
+        )
 
-__all__ = ["AddInvoiceResponse", "ChannelPoint", "Lightning"]
+    def wallet_balance(self) -> WalletBalanceResponse:
+        return self.stub.WalletBalance(WalletBalanceRequest())
+
+
+__all__ = ["AddInvoiceResponse", "ChannelPoint", "Invoice", "Lightning", "SendResponse"]

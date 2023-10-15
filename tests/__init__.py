@@ -28,6 +28,10 @@ try:
 except ImportError:
     pass
 
+
+LND_EXTERNAL_MACAROON: Optional[str] = environ.get("LND_EXTERNAL_MACAROON", None)
+LND_EXTERNAL_TLSCERT: Optional[str] = environ.get("LND_EXTERNAL_TLSCERT", None)
+LND_EXTERNAL_URL: Optional[str] = environ.get("LND_EXTERNAL_URL", None)
 LND_HOST_URL: str = environ.get("LND_HOST_URL", "localhost:10009")
 LND_MACAROON_PATH: Optional[str] = environ.get("LND_MACAROON_PATH", None)
 LND_TARGET_HOST: Optional[str] = environ.get("LND_TARGET_HOST", None)
@@ -51,6 +55,9 @@ def test_tesla_ball() -> TestClient:
 
 
 __all__ = [
+    "LND_EXTERNAL_MACAROON",
+    "LND_EXTERNAL_TLSCERT",
+    "LND_EXTERNAL_URL",
     "LND_HOST_URL",
     "LND_MACAROON_PATH",
     "LND_TARGET_HOST",
