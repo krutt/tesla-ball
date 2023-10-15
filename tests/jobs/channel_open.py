@@ -8,6 +8,7 @@
 #
 # HISTORY:
 # *************************************************************
+
 ### Standard packages ###
 from typing import Dict, Generator, Union
 
@@ -18,7 +19,6 @@ from pytest import fixture, mark
 from tortoise import Tortoise, run_async
 
 ### Local modules ###
-# from src.services.lightning import Lightning
 from src.jobs.channel_open import job as channel_open_job
 from src.models import InboundOrder, OrderState
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
