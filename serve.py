@@ -87,8 +87,12 @@ app.add_middleware(
 )
 
 scheduler: AsyncScheduler = AsyncScheduler()
-app.add_middleware(SchedulerMiddleware, interval=300, job=channel_open_job, scheduler=scheduler)  # 10 minutes
-app.add_middleware(SchedulerMiddleware, interval=600, job=invoice_check_job, scheduler=scheduler)  # 5 minutes
+app.add_middleware(
+    SchedulerMiddleware, interval=300, job=channel_open_job, scheduler=scheduler
+)  # 10 minutes
+app.add_middleware(
+    SchedulerMiddleware, interval=600, job=invoice_check_job, scheduler=scheduler
+)  # 5 minutes
 
 ### Register Tortoise ORM to FastAPI app ###
 
