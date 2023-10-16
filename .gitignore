@@ -44,8 +44,10 @@ __pypackages__/
 docs/_build/
 doc/_build/
 
-# Tests
+# Databases generated when running tests
 test.db
+test.db-shm
+test.db-wal
 
 # Unit test / coverage reports
 htmlcov/
