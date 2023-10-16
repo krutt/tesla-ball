@@ -51,6 +51,8 @@ from src.protos.lightning_pb2 import (
     PaymentHash,
     PayReq,
     PayReqString,
+    PendingChannelsRequest,
+    PendingChannelsResponse,
     SendRequest,
     SendResponse,
     WalletBalanceRequest,
@@ -158,6 +160,10 @@ class Lightning(BaseModel):
             )
         )
 
+    def pending_channels(self) -> PendingChannelsResponse:
+        """Display information pertaining to pending channels"""
+        return self.stub.PendingChannels(PendingChannelsRequest())
+
     @validate_call
     def send_payment(
         self, payment_request: StrictStr, fee_limit_msat: StrictInt = 1_000
@@ -172,4 +178,12 @@ class Lightning(BaseModel):
         return self.stub.WalletBalance(WalletBalanceRequest())
 
 
-__all__ = ["AddInvoiceResponse", "ChannelPoint", "Invoice", "Lightning", "SendResponse"]
+__all__ = [
+    "AddInvoiceResponse",
+    "ChannelPoint",
+    "Invoice",
+    "Lightning",
+    "ListChannelsResponse",
+    "PendingChannelsResponse",
+    "SendResponse",
+]

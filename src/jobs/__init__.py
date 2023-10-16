@@ -13,5 +13,6 @@
 ### Local modules ###
 from src.jobs.channel_open import job as channel_open_job
 from src.jobs.invoice_check import job as invoice_check_job
+from src.jobs.txn_confirm import job as txn_confirm_job
 
-__all__ = ["channel_open_job", "invoice_check_job"]
+__all__ = ["channel_open_job", "invoice_check_job", "txn_confirm_job"]
