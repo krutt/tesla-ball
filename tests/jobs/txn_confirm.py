@@ -30,6 +30,7 @@ from tests import (
     LND_EXTERNAL_URL,
     LND_TARGET_HOST,
     LND_TARGET_PUBKEY,
+    TEST_BLOCK_TIME,
     test_tesla_ball,
 )
 
@@ -67,7 +68,7 @@ async def test_01_check_pending_channels(test_tesla_ball: TestClient) -> None:
     order = await InboundOrder.get(order_id=order.order_id)
     assert order.state == OrderState.OPENING
 
-    sleep(6)  # test environment blocktime x 6
+    sleep(TEST_BLOCK_TIME * 6)  # wait for 6 confirmations
     await txn_confirm_job()
     order = await InboundOrder.get(order_id=order.order_id)
     assert order.state == OrderState.COMPLETED
