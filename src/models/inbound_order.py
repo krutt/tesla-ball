@@ -12,28 +12,18 @@
 """Module defining `InboundOrder` ORM-model
 """
 
-### Standard packages ###
-from datetime import datetime
-from typing import List
-from uuid import UUID, uuid4 as uuid
-
 ### Third-party packages ###
-from tortoise.fields import CharField, CharEnumField, DatetimeField, IntField, UUIDField
-from tortoise.models import Model
+from tortoise.fields import CharField, IntField
 
 ### Local modules ###
-from src.models.order_state import OrderState
+from src.models.order import Order
 
 
-class InboundOrder(Model):
+class InboundOrder(Order):
     """Class mapping Object Relation to table `inbound_order`"""
 
     class Meta:
         table: str = "inbound_order"
-
-    ### Identifier fields ###
-    id: int = IntField(pk=True)
-    order_id: UUID = UUIDField(default=uuid())  # Set once at creation, never changed
 
     ### Data fields ###
     fee_rate: int = IntField(default=6)  # tentative, economy fee in 2023
@@ -42,32 +32,7 @@ class InboundOrder(Model):
     port: int = IntField(default=9735)
     pubkey: str = CharField(max_length=66)
     remote_balance: int = IntField(default=20_000)  # defaults to minimum channel open size for LND
-    state: str = CharEnumField(OrderState, default=OrderState.PENDING)
     txid: str = CharField(max_length=255, null=True)
-
-    ### Datetime fields ###
-    created_at: datetime = DatetimeField(auto_now_add=True)
-    updated_at: datetime = DatetimeField(auto_now=True)
-
-    @classmethod
-    async def completed(cls) -> List["InboundOrder"]:
-        return await cls.filter(state=OrderState.COMPLETED)
-
-    @classmethod
-    async def paid(cls) -> List["InboundOrder"]:
-        return await cls.filter(state=OrderState.PAID)
-
-    @classmethod
-    async def opening(cls) -> List["InboundOrder"]:
-        return await cls.filter(state=OrderState.OPENING)
-
-    @classmethod
-    async def pending(cls) -> List["InboundOrder"]:
-        return await cls.filter(state=OrderState.PENDING)
-
-    @classmethod
-    async def rejected(cls) -> List["InboundOrder"]:
-        return await cls.filter(state=OrderState.REJECTED)
 
 
 __all__ = ["InboundOrder"]

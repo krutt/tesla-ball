@@ -12,28 +12,15 @@
 """Module defining `EarnOrder` ORM-model
 """
 
-### Standard packages ###
-from datetime import datetime
-from uuid import UUID, uuid4 as uuid
-
-### Third-party packages ###
-from tortoise.fields import DatetimeField, IntField, UUIDField
-from tortoise.models import Model
+### Local modules ###
+from src.models.order import Order
 
 
-class EarnOrder(Model):
+class EarnOrder(Order):
     """Class mapping Object Relation to table `earn_order`"""
 
     class Meta:
         table: str = "earn_order"
-
-    ### Identifier fields ###
-    id: int = IntField(pk=True)
-    order_id: UUID = UUIDField(default=uuid())  # Set once at creation, never changed
-
-    ### Datetime fields ###
-    created_at: datetime = DatetimeField(auto_now_add=True)
-    updated_at: datetime = DatetimeField(auto_now=True)
 
 
 __all__ = ["EarnOrder"]
