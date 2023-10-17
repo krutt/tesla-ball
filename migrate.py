@@ -29,6 +29,7 @@ def main() -> None:
         "--downgrade",
         action="store_const",
         const="downgrade",
+        default="generate",
         dest="action",
         help="Downgrade the latest migration",
     )
