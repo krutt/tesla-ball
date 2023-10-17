@@ -26,12 +26,11 @@ def main() -> None:
     parser: ArgumentParser = ArgumentParser()
     action = parser.add_mutually_exclusive_group()  # type: ignore[undefined]
     action.add_argument(
-        "--drop",
+        "--downgrade",
         action="store_const",
-        const="drop",
-        default="generate",
+        const="downgrade",
         dest="action",
-        help="Drop tables",
+        help="Downgrade the latest migration",
     )
     action.add_argument(
         "--generate",
@@ -76,8 +75,8 @@ async def migrate(action: str, name: str) -> None:
     except DBConnectionError as err:
         print(f"[ERROR] Unable to migrate due to the following error: { err }")
         return
-    if action == "drop":
-        await command.downgrade(delete=True, version=0)
+    if action == "downgrade":
+        await command.downgrade(delete=True, version=-1)
     elif action == "generate":
         await command.migrate(name)
     elif action == "init":
