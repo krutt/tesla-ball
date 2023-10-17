@@ -54,9 +54,9 @@ async def test_01_create_inbound_order(test_tesla_ball: TestClient) -> None:
     assert response.status_code == 200
     order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
     assert order is not None
-    assert response.json().get("invoice", None) is not None
-    assert len(response.json().get("invoice", None)) == 379  # regtest invoice length
-    assert response.json().get("invoice", None)[:6] == "lnbcrt"  # lightning bitcoin regtest
+    assert response.json().get("bolt11", None) is not None
+    assert len(response.json().get("bolt11", None)) == 379  # regtest invoice length
+    assert response.json().get("bolt11", None)[:6] == "lnbcrt"  # lightning bitcoin regtest
     assert response.json().get("orderId", None) is not None
     assert response.json().get("orderId", None) == str(order.order_id)
 
@@ -67,11 +67,11 @@ async def test_02_check_inbound_request(test_tesla_ball: TestClient) -> None:
     assert order is not None
     response: Response = test_tesla_ball.get(f"/inbound?orderId={ order.order_id }")
     assert response.status_code == 200
-    assert response.json().get("invoice", None) is not None
-    assert isinstance(response.json().get("invoice", None), str)
-    assert len(response.json().get("invoice", None)) == 379
-    assert response.json().get("invoice", None)[:6] == "lnbcrt"  # lightning bitcoin regtest
-    assert response.json().get("invoice", None) == order.invoice
+    assert response.json().get("bolt11", None) is not None
+    assert isinstance(response.json().get("bolt11", None), str)
+    assert len(response.json().get("bolt11", None)) == 379
+    assert response.json().get("bolt11", None)[:6] == "lnbcrt"  # lightning bitcoin regtest
+    assert response.json().get("bolt11", None) == order.bolt11
     assert response.json().get("feeRate", None) is not None
     assert isinstance(response.json().get("feeRate", None), int)
     assert response.json().get("feeRate", None) == order.fee_rate

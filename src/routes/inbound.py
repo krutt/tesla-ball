@@ -62,8 +62,8 @@ async def check_purchase_info(
     try:
         order: InboundOrder = await InboundOrder.get(order_id=orderId)
         return {
+            "bolt11": order.bolt11 or "",
             "feeRate": order.fee_rate,
-            "invoice": order.invoice or "",
             "orderId": order.order_id,
             "remoteBalance": order.remote_balance,
             "state": order.state,
@@ -86,9 +86,9 @@ async def request_inbound_channel(
         add_invoice_response: AddInvoiceResponse = lightning.add_invoice(
             memo=f"Invoice for <InboundOrder (order-id={order.order_id})>", value=10_000
         )
-        order.invoice = add_invoice_response.payment_request
+        order.bolt11 = add_invoice_response.payment_request
         background_tasks.add_task(order.save)
-        return {"orderId": order.order_id, "invoice": order.invoice}
+        return {"bolt11": order.bolt11, "orderId": order.order_id}
     except ValidationError as err:
         response.status_code = 400
         return {"detail": str(err)}

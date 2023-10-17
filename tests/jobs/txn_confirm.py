@@ -61,7 +61,7 @@ async def test_01_check_pending_channels(test_tesla_ball: TestClient) -> None:
     lightning: Lightning = Lightning(
         macaroon_path=LND_EXTERNAL_MACAROON, tlscert_path=LND_EXTERNAL_TLSCERT, url=LND_EXTERNAL_URL
     )
-    lightning.send_payment(order.invoice)
+    lightning.send_payment(order.bolt11)
     await invoice_check_job()
     order = await InboundOrder.get(order_id=order.order_id)
     assert order.state == OrderState.PAID

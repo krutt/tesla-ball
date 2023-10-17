@@ -26,9 +26,9 @@ class InboundOrder(Order):
         table: str = "inbound_order"
 
     ### Data fields ###
+    bolt11: str = CharField(max_length=379, null=True)  # type: ignore[assignment]
     fee_rate: int = IntField(default=6)
     host: str = CharField(max_length=255)  # type: ignore[assignment]
-    invoice: str = CharField(max_length=379, null=True)  # type: ignore[assignment]
     port: int = IntField(default=9735)
     pubkey: str = CharField(max_length=66)  # type: ignore[assignment]
     remote_balance: int = IntField(default=20_000)

@@ -82,7 +82,7 @@ async def test_02_check_invoice_after_paid(test_tesla_ball: TestClient) -> None:
     lightning: Lightning = Lightning(
         macaroon_path=LND_EXTERNAL_MACAROON, tlscert_path=LND_EXTERNAL_TLSCERT, url=LND_EXTERNAL_URL
     )
-    lightning.send_payment(order.invoice)
+    lightning.send_payment(order.bolt11)
 
     ### Run job ###
     await invoice_check_job()

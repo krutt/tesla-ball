@@ -22,7 +22,7 @@ async def job() -> None:
     lightning: Lightning = Lightning()
     orders: List[InboundOrder] = await InboundOrder.pending()  # type: ignore[assignment]
     for order in orders:
-        payment_request: PayReq = lightning.decode_pay_req(order.invoice)
+        payment_request: PayReq = lightning.decode_pay_req(order.bolt11)
         invoice: Invoice = lightning.lookup_invoice(payment_request.payment_hash)
         if invoice.state in (0, 3):  # OPEN, ACCEPTED
             continue
