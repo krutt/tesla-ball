@@ -26,13 +26,13 @@ class InboundOrder(Order):
         table: str = "inbound_order"
 
     ### Data fields ###
-    fee_rate: int = IntField(default=6)  # tentative, economy fee in 2023
-    host: str = CharField(max_length=255)
-    invoice: str = CharField(max_length=379, null=True)
+    fee_rate: int = IntField(default=6)
+    host: str = CharField(max_length=255)  # type: ignore[assignment]
+    invoice: str = CharField(max_length=379, null=True)  # type: ignore[assignment]
     port: int = IntField(default=9735)
-    pubkey: str = CharField(max_length=66)
-    remote_balance: int = IntField(default=20_000)  # defaults to minimum channel open size for LND
-    txid: str = CharField(max_length=255, null=True)
+    pubkey: str = CharField(max_length=66)  # type: ignore[assignment]
+    remote_balance: int = IntField(default=20_000)
+    txid: str = CharField(max_length=255, null=True)  # type: ignore[assignment]
 
 
 __all__ = ["InboundOrder"]

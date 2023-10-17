@@ -10,7 +10,7 @@
 # *************************************************************
 
 ### Standard packages ###
-from typing import Dict, Generator, Union
+from typing import Dict, Generator, Optional, Union
 
 ### Third-party packages ###
 from fastapi.testclient import TestClient
@@ -32,7 +32,7 @@ def setup_teardown() -> Generator:
 
     yield
 
-    run_async(InboundOrder.all().delete())
+    # run_async(InboundOrder.all().delete())
     run_async(Tortoise._drop_databases())
     run_async(Tortoise.close_connections())
 
@@ -52,7 +52,8 @@ async def test_01_create_inbound_order(test_tesla_ball: TestClient) -> None:
     }
     response: Response = test_tesla_ball.post("/inbound", content=dumps(body))
     assert response.status_code == 200
-    order: InboundOrder = await InboundOrder.all().order_by("-id").first()
+    order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
+    assert order is not None
     assert response.json().get("invoice", None) is not None
     assert len(response.json().get("invoice", None)) == 379  # regtest invoice length
     assert response.json().get("invoice", None)[:6] == "lnbcrt"  # lightning bitcoin regtest
@@ -62,7 +63,8 @@ async def test_01_create_inbound_order(test_tesla_ball: TestClient) -> None:
 
 @mark.asyncio
 async def test_02_check_inbound_request(test_tesla_ball: TestClient) -> None:
-    order: InboundOrder = await InboundOrder.all().order_by("-id").first()
+    order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
+    assert order is not None
     response: Response = test_tesla_ball.get(f"/inbound?orderId={ order.order_id }")
     assert response.status_code == 200
     assert response.json().get("invoice", None) is not None

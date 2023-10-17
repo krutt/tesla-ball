@@ -20,7 +20,7 @@ from src.services.lightning import Invoice, Lightning, PayReq
 
 async def job() -> None:
     lightning: Lightning = Lightning()
-    orders: List[InboundOrder] = await InboundOrder.pending()
+    orders: List[InboundOrder] = await InboundOrder.pending()  # type: ignore[assignment]
     for order in orders:
         payment_request: PayReq = lightning.decode_pay_req(order.invoice)
         invoice: Invoice = lightning.lookup_invoice(payment_request.payment_hash)

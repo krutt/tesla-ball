@@ -11,7 +11,7 @@
 
 ### Standard packages ###
 from time import sleep
-from typing import Dict, Generator, Union
+from typing import Dict, Generator, Optional, Union
 
 ### Third-party packages ###
 from fastapi.testclient import TestClient
@@ -43,7 +43,7 @@ def setup_teardown() -> Generator:
 
     yield
 
-    run_async(InboundOrder.all().delete())
+    # run_async(InboundOrder.all().delete())
     run_async(Tortoise._drop_databases())
     run_async(Tortoise.close_connections())
 
@@ -56,7 +56,8 @@ async def test_01_check_pending_channels(test_tesla_ball: TestClient) -> None:
         "remoteBalance": 200_000,
     }
     test_tesla_ball.post("/inbound", content=dumps(body))
-    order: InboundOrder = await InboundOrder.all().order_by("-id").first()
+    order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
+    assert order is not None
     lightning: Lightning = Lightning(
         macaroon_path=LND_EXTERNAL_MACAROON, tlscert_path=LND_EXTERNAL_TLSCERT, url=LND_EXTERNAL_URL
     )

@@ -24,7 +24,7 @@ from src.services.lightning import ChannelPoint, Lightning
 
 async def job() -> None:
     lightning: Lightning = Lightning()
-    orders: List[InboundOrder] = await InboundOrder.paid()
+    orders: List[InboundOrder] = await InboundOrder.paid()  # type: ignore[assignment]
     for order in orders:
         try:
             lightning.connect_peer(host=order.host, pubkey=order.pubkey)

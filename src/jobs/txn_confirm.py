@@ -20,7 +20,7 @@ from src.services.lightning import Lightning, ListChannelsResponse, PendingChann
 
 async def job() -> None:
     lightning: Lightning = Lightning()
-    orders: List[InboundOrder] = await InboundOrder.opening()
+    orders: List[InboundOrder] = await InboundOrder.opening()  # type: ignore[assignment]
     funding_txids: List[str] = list(map(lambda order: order.txid, orders))
     pending_response: PendingChannelsResponse = lightning.pending_channels()
     for channel in pending_response.pending_open_channels:
@@ -35,10 +35,10 @@ async def job() -> None:
     response: ListChannelsResponse = lightning.list_channels()
     funded_txids: List[str] = []
     for channel in response.channels:
-        dixt, _ = channel.channel_point.split(":")
-        dixt_twos: List[str] = [dixt[i : i + 2] for i in range(0, len(dixt), 2)]
-        txid_twos: List[str] = list(reversed(dixt_twos))
-        txid: str = "".join(txid_twos)
+        dixt, _ = channel.channel_point.split(":")  # type: ignore[no-redef]
+        dixt_twos: List[str] = [dixt[i : i + 2] for i in range(0, len(dixt), 2)]  # type: ignore[no-redef]
+        txid_twos: List[str] = list(reversed(dixt_twos))  # type: ignore[no-redef]
+        txid: str = "".join(txid_twos)  # type: ignore[no-redef]
         if txid in funding_txids:
             funded_txids.append(txid)
     for txid in funded_txids:
