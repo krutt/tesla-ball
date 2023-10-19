@@ -30,7 +30,7 @@ from tortoise.contrib.fastapi import register_tortoise
 from src.configs import DATABASE_URL, DATABASE_NAME, SECRET_KEY
 from src.jobs import channel_open_job, invoice_check_job, txn_confirm_job
 from src.middlewares import SchedulerMiddleware
-from src.routes import earn_router, inbound_router, swap_router
+from src.routes import earn_router, inbound_router, info_router, swap_router
 
 ### Initiate FastAPI App ###
 
@@ -53,6 +53,7 @@ def get_csrf_config() -> CsrfSettings:
 
 app.include_router(earn_router)
 app.include_router(inbound_router)
+app.include_router(info_router)
 app.include_router(swap_router)
 
 

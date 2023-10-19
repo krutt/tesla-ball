@@ -13,6 +13,7 @@
 ### Local modules ###
 from src.routes.earn import router as earn_router
 from src.routes.inbound import router as inbound_router
+from src.routes.info import router as info_router
 from src.routes.swap import router as swap_router
 
-__all__ = ["earn_router", "inbound_router", "swap_router"]
+__all__ = ["earn_router", "inbound_router", "info_router", "swap_router"]

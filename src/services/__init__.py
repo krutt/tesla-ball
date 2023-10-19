@@ -11,6 +11,24 @@
 # *************************************************************
 
 ### Local modules ###
-from src.services.lightning import Lightning
+from src.services.lightning import (
+    AddInvoiceResponse,
+    ChannelPoint,
+    GetInfoResponse,
+    Invoice,
+    Lightning,
+    ListChannelsResponse,
+    PendingChannelsResponse,
+    SendResponse,
+)
 
-__all__ = ["Lightning"]
+__all__ = [
+    "AddInvoiceResponse",
+    "ChannelPoint",
+    "GetInfoResponse",
+    "Invoice",
+    "Lightning",
+    "ListChannelsResponse",
+    "PendingChannelsResponse",
+    "SendResponse",
+]

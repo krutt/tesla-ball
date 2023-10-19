@@ -181,6 +181,7 @@ class Lightning(BaseModel):
 __all__ = [
     "AddInvoiceResponse",
     "ChannelPoint",
+    "GetInfoResponse",
     "Invoice",
     "Lightning",
     "ListChannelsResponse",

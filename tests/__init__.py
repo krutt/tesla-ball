@@ -19,7 +19,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 ### Local modules ###
-from src.routes import earn_router, inbound_router, swap_router
+from src.routes import earn_router, inbound_router, info_router, swap_router
 
 try:
     from dotenv import load_dotenv
@@ -51,6 +51,7 @@ def test_tesla_ball() -> TestClient:
     app = FastAPI()
     app.include_router(earn_router)
     app.include_router(inbound_router)
+    app.include_router(info_router)
     app.include_router(swap_router)
     return TestClient(app)
 
