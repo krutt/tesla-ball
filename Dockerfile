@@ -5,10 +5,15 @@ LABEL mantainer="Sitt Guruvanich <aekazitt+github@gmail.com> (@aekasitt)"
 ARG WEB_CONCURRENCY
 ENV WEB_CONCURRENCY=${WEB_CONCURRENCY:-5}
 
-### Set up Package Manager for Python dependencies ###
+### Get Certificates for HTTP requests ###
+RUN apt update \
+  && apt install -y --no-install-recommends ca-certificates
+
+### Add source-code to targeted build ###
 WORKDIR /usr/src/app
-COPY pyproject.toml /usr/src/app/pyproject.toml
-COPY poetry.lock /usr/src/app/poetry.lock
+ADD . .
+
+### Set up Package Manager for Python dependencies ###
 RUN pip install --upgrade pip               \
   && pip install --no-cache-dir poetry      \
   && poetry config virtualenvs.create false \
@@ -21,8 +26,6 @@ RUN apt update \
 ### Get pgrep and pkill commands ###
 RUN apt install -y --no-install-recommends procps
 
-### Load App sourcecode on to Image ###
-ADD . .
 ### Create Entrypoint and default command ###
 RUN mv entrypoint.sh /usr/local/bin/
 
