@@ -12,7 +12,7 @@ COPY poetry.lock /usr/src/app/poetry.lock
 RUN pip install --upgrade pip               \
   && pip install --no-cache-dir poetry      \
   && poetry config virtualenvs.create false \
-  && poetry install --no-dev --no-root --remove-untracked
+  && poetry install
 
 ### Get Certificates for HTTP requests ###
 RUN apt update \
