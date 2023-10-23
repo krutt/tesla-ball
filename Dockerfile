@@ -1,9 +1,7 @@
-FROM python:3.8.12-slim
-LABEL mantainer="Sitt Guruvanich <aekasitt.g@siamintech.co.th> (@aekasitt)"
+FROM python:3.9.18-slim
+LABEL mantainer="Sitt Guruvanich <aekazitt+github@gmail.com> (@aekasitt)"
 
 ### Parse Arguments ###
-ARG REDIS_URL
-ENV REDIS_URL=${REDIS_URL}
 ARG WEB_CONCURRENCY
 ENV WEB_CONCURRENCY=${WEB_CONCURRENCY:-5}
 
