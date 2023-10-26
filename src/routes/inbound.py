@@ -26,6 +26,7 @@ from pydantic import BaseModel, Field, StrictInt, StrictStr
 from tortoise.exceptions import DoesNotExist, IntegrityError, ValidationError
 
 ### Local modules ###
+from src.configs import LIQUIDITY_FEE_PPM, ONCHAIN_BYTES_EST
 from src.models import InboundOrder
 from src.services.lightning import AddInvoiceResponse, Lightning
 
@@ -80,11 +81,17 @@ async def request_inbound_channel(
     pubkey, url = purchase.node_uri.split("@")
     host, port_str = url.split(":")
     port: int = int(port_str)
+
+    ### Calculate fees for inbound liquidity purchase ###
+    total_fee_sats: int = (purchase.fee_rate * ONCHAIN_BYTES_EST) + (
+        purchase.remote_balance * LIQUIDITY_FEE_PPM / 1e6
+    )
+
     try:
         order: InboundOrder = await InboundOrder.create(host=host, port=port, pubkey=pubkey)
         lightning: Lightning = Lightning()
         add_invoice_response: AddInvoiceResponse = lightning.add_invoice(
-            memo=f"Invoice for <InboundOrder (order-id={order.order_id})>", value=10_000
+            memo=f"Invoice for <InboundOrder (order-id={order.order_id})>", value=total_fee_sats
         )
         order.bolt11 = add_invoice_response.payment_request
         background_tasks.add_task(order.save)
