@@ -9,17 +9,8 @@
 # HISTORY:
 # *************************************************************
 
-### Standard packages ###
-from typing import Generator
-
 ### Third-party packages ###
-from pytest import fixture, mark
-
-
-### Module-specific setup-teardown ###
-@fixture(scope="module", autouse=True)
-def setup_teardown() -> Generator:
-    yield
+from pytest import mark
 
 
 @mark.parametrize(
