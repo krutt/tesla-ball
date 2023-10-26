@@ -51,9 +51,11 @@ if DATABASE_URL is None:
     else:
         DATABASE_URL = f"{ DATABASE_NGIN }://{ DATABASE_HOST }:{ DATABASE_PORT }"
 
+LIQUIDITY_FEE_PPM: int = int(environ.get("LIQUIDITY_FEE_PPM", "1500"))
 LND_HOST_URL: str = environ.get("LND_HOST_URL", "localhost:10009")
 LND_MACAROON_PATH: Optional[str] = environ.get("LND_MACAROON_PATH", None)
 LND_TLSCERT_PATH: Optional[str] = environ.get("LND_TLSCERT_PATH", None)
+ONCHAIN_BYTES_EST: int = int(environ.get("ONCHAIN_BYTES_EST", "300"))
 PORT: int = int(environ.get("PORT", 8080))
 SECRET_KEY: str = environ.get("SECRET_KEY", "itsasecrettoeverybody")
 
