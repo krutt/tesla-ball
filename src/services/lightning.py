@@ -37,6 +37,8 @@ from src.protos.lightning_pb2 import (
     DisconnectPeerRequest,
     DisconnectPeerResponse,
     FeeLimit,
+    FeeReportRequest,
+    FeeReportResponse,
     LightningAddress,
     ListChannelsRequest,
     ListChannelsResponse,
@@ -125,6 +127,10 @@ class Lightning(BaseModel):
     def disconnect_peer(self, pubkey: StrictStr) -> DisconnectPeerResponse:
         """Disconnect a remote peer identified by public key"""
         return self.stub.DisconnectPeer(DisconnectPeerRequest(pub_key=pubkey))
+
+    def fee_report(self) -> FeeReportResponse:
+        """Display the current fee policies of all active channels"""
+        return self.stub.FeeReport(FeeReportRequest())
 
     def get_info(self) -> GetInfoResponse:
         """Fetch node policy and information"""
