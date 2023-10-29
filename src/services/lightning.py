@@ -12,11 +12,10 @@
 
 ### Standard packages ###
 from binascii import hexlify
-from typing import Any, Callable, Optional
+from typing import Optional
 
 ### Third-party packages ###
 from grpc import (
-    AuthMetadataPlugin,
     CallCredentials,
     Channel,
     ChannelCredentials,
@@ -61,15 +60,7 @@ from src.protos.lightning_pb2 import (
     WalletBalanceResponse,
 )
 from src.protos.lightning_pb2_grpc import LightningStub
-
-
-class MacaroonMetadataPlugin(AuthMetadataPlugin, BaseModel):
-    """Metadata plugin to include macaroon in metadata of each RPC request"""
-
-    macaroon: str
-
-    def __call__(self, _: Any, callback: Callable) -> Any:
-        callback([("macaroon", self.macaroon)], None)
+from src.services.macaroon_plugin import MacaroonPlugin
 
 
 class Lightning(BaseModel):
@@ -96,7 +87,7 @@ class Lightning(BaseModel):
         with open(self.macaroon_path, "rb") as macaroon_file:
             macaroon_bytes: bytes = macaroon_file.read()
             macaroon: str = hexlify(macaroon_bytes).decode()
-            auth_creds = metadata_call_credentials(MacaroonMetadataPlugin(macaroon=macaroon))
+            auth_creds = metadata_call_credentials(MacaroonPlugin(macaroon=macaroon))
         cert_creds: Optional[ChannelCredentials] = None
         if not self.tlscert_path:
             raise ValueError("TLS Certificate path is empty.")
@@ -184,13 +175,4 @@ class Lightning(BaseModel):
         return self.stub.WalletBalance(WalletBalanceRequest())
 
 
-__all__ = [
-    "AddInvoiceResponse",
-    "ChannelPoint",
-    "GetInfoResponse",
-    "Invoice",
-    "Lightning",
-    "ListChannelsResponse",
-    "PendingChannelsResponse",
-    "SendResponse",
-]
+__all__ = ["Lightning"]

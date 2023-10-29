@@ -11,16 +11,17 @@
 # *************************************************************
 
 ### Local modules ###
-from src.services.lightning import (
+from src.protos.lightning_pb2 import (
     AddInvoiceResponse,
     ChannelPoint,
     GetInfoResponse,
     Invoice,
-    Lightning,
     ListChannelsResponse,
     PendingChannelsResponse,
     SendResponse,
 )
+from src.services.lightning import Lightning
+from src.services.macaroon_plugin import MacaroonPlugin
 
 __all__ = [
     "AddInvoiceResponse",
@@ -29,6 +30,7 @@ __all__ = [
     "Invoice",
     "Lightning",
     "ListChannelsResponse",
+    "MacaroonPlugin",
     "PendingChannelsResponse",
     "SendResponse",
 ]
