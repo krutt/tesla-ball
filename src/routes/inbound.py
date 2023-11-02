@@ -29,6 +29,7 @@ from tortoise.exceptions import DoesNotExist, IntegrityError, ValidationError
 from src.configs import LIQUIDITY_FEE_PPM, ONCHAIN_BYTES_EST
 from src.models import InboundOrder
 from src.services.lightning import AddInvoiceResponse, Lightning
+from src.services.walletkit import EstimateFeeResponse, WalletKit
 
 ### Routing ###
 router: APIRouter = APIRouter(
@@ -82,10 +83,15 @@ async def request_inbound_channel(
     host, port_str = url.split(":")
     port: int = int(port_str)
 
+    fee_rate: Optional[int] = purchase.fee_rate or None
+    if not fee_rate:
+        wallet_kit: WalletKit = WalletKit()
+        fee_estimate: EstimateFeeResponse = wallet_kit.estimate_fee()
+        fee_rate =  fee_estimate.sat_per_kw / 4_000 # sats per kiloweightunit -> sats per vByte
+    remote_balance: int = purchase.remote_balance
+
     ### Calculate fees for inbound liquidity purchase ###
-    total_fee_sats: int = (purchase.fee_rate * ONCHAIN_BYTES_EST) + (
-        purchase.remote_balance * LIQUIDITY_FEE_PPM / 1e6
-    )
+    total_fee_sats: int = fee_rate * ONCHAIN_BYTES_EST + (remote_balance * LIQUIDITY_FEE_PPM / 1e6)
 
     try:
         order: InboundOrder = await InboundOrder.create(host=host, port=port, pubkey=pubkey)
