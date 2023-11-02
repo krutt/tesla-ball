@@ -24,10 +24,11 @@ from grpc import (
     secure_channel,
     ssl_channel_credentials,
 )
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, StrictInt, StrictStr, validate_call
 
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
+from src.protos.walletkit_pb2 import EstimateFeeRequest, EstimateFeeResponse
 from src.protos.walletkit_pb2_grpc import WalletKitStub
 from src.services import MacaroonPlugin
 
@@ -67,3 +68,7 @@ class WalletKit(BaseModel):
     @property
     def stub(self) -> WalletKitStub:
         return WalletKitStub(self.channel)  # type: ignore[no-untyped-call]
+
+    @validate_call
+    def estimate_fee(self, confirmations: StrictInt = 6) -> EstimateFeeResponse:
+        return self.stub.EstimateFee(EstimateFeeRequest(conf_target=confirmations))
