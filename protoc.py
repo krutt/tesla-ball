@@ -44,6 +44,13 @@ def main() -> None:
         "--proto_path=src",
         "--grpc_python_out=src",
         "--python_out=src",
+        "protos/signer.proto",
+    ]
+    compile(compile_args)
+    compile_args = [
+        "--proto_path=src",
+        "--grpc_python_out=src",
+        "--python_out=src",
         "protos/walletkit.proto",
     ]
     compile(compile_args)
@@ -65,6 +72,11 @@ def main() -> None:
     with open(f"./{ target_dir }/lightning_pb2_grpc.py", "rt") as ink:
         old_text = ink.read()
     with open(f"./{ target_dir }/lightning_pb2_grpc.py", "wt") as quill:
+        new_text: str = old_text.replace("from protos", "from src.protos")
+        quill.write(new_text)
+    with open(f"./{ target_dir }/signer_pb2_grpc.py", "rt") as ink:
+        old_text = ink.read()
+    with open(f"./{ target_dir }/signer_pb2_grpc.py", "wt") as quill:
         new_text: str = old_text.replace("from protos", "from src.protos")
         quill.write(new_text)
     with open(f"./{ target_dir }/walletkit_pb2_grpc.py", "rt") as ink:
