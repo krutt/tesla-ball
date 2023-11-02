@@ -87,7 +87,7 @@ async def request_inbound_channel(
     if not fee_rate:
         wallet_kit: WalletKit = WalletKit()
         fee_estimate: EstimateFeeResponse = wallet_kit.estimate_fee()
-        fee_rate =  fee_estimate.sat_per_kw / 4_000 # sats per kiloweightunit -> sats per vByte
+        fee_rate = fee_estimate.sat_per_kw / 4_000  # sats per kiloweightunit -> sats per vByte
     remote_balance: int = purchase.remote_balance
 
     ### Calculate fees for inbound liquidity purchase ###
