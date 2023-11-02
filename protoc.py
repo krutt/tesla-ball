@@ -79,6 +79,11 @@ def main() -> None:
     with open(f"./{ target_dir }/signer_pb2_grpc.py", "wt") as quill:
         new_text: str = old_text.replace("from protos", "from src.protos")
         quill.write(new_text)
+    with open(f"./{ target_dir }/walletkit_pb2.py", "rt") as ink:
+        old_text = ink.read()
+    with open(f"./{ target_dir }/walletkit_pb2.py", "wt") as quill:
+        new_text: str = old_text.replace("from protos", "from src.protos")
+        quill.write(new_text)
     with open(f"./{ target_dir }/walletkit_pb2_grpc.py", "rt") as ink:
         old_text = ink.read()
     with open(f"./{ target_dir }/walletkit_pb2_grpc.py", "wt") as quill:
