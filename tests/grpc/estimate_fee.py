@@ -20,3 +20,5 @@ def test_01_estimate_fee() -> None:
     assert isinstance(fee_estimate, EstimateFeeResponse)
     assert isinstance(fee_estimate.sat_per_kw, int)
     assert fee_estimate.sat_per_kw == 12500  # testnet
+    sat_per_vbyte = fee_estimate.sat_per_kw / 4_000
+    assert sat_per_vbyte == 3.125
