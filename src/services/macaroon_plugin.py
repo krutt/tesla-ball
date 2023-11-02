@@ -27,4 +27,4 @@ class MacaroonPlugin(AuthMetadataPlugin, BaseModel):
         callback([("macaroon", self.macaroon)], None)
 
 
-__all__ = ["MacaroonMetadataPlugin"]
+__all__ = ["MacaroonPlugin"]
