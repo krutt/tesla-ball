@@ -29,7 +29,7 @@ from pydantic import BaseModel, StrictStr
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
 from src.protos.walletkit_pb2_grpc import WalletKitStub
-from src.services import MacaroonMetadataPlugin
+from src.services import MacaroonPlugin
 
 
 class WalletKit(BaseModel):
@@ -56,7 +56,7 @@ class WalletKit(BaseModel):
         with open(self.macaroon_path, "rb") as macaroon_file:
             macaroon_bytes: bytes = macaroon_file.read()
             macaroon: str = hexlify(macaroon_bytes).decode()
-            auth_creds = metadata_call_credentials(MacaroonMetadataPlugin(macaroon=macaroon))
+            auth_creds = metadata_call_credentials(MacaroonPlugin(macaroon=macaroon))
         cert_creds: Optional[ChannelCredentials] = None
         if not self.tlscert_path:
             raise ValueError("TLS Certificate path is empty.")
