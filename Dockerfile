@@ -1,5 +1,5 @@
 FROM python:3.9.18-slim
-LABEL mantainer="Sitt Guruvanich <aekazitt+github@gmail.com> (@aekasitt)"
+LABEL maintainer="Sitt Guruvanich <aekazitt+github@gmail.com> (@aekasitt)"
 
 ### Parse Arguments ###
 ARG WEB_CONCURRENCY
