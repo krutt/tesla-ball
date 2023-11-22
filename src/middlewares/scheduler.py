@@ -17,7 +17,7 @@ from typing import Callable
 ### v3.10.4 API ###
 from apscheduler.schedulers.asyncio import AsyncIOScheduler as AsyncScheduler
 
-### TODO: v4.0.0a3 API ###
+### TODO: v4.0.0a4 API ###
 # from apscheduler import AsyncScheduler
 # from apscheduler.triggers.interval import IntervalTrigger
 from starlette.types import ASGIApp, Receive, Scope, Send
@@ -43,7 +43,7 @@ class SchedulerMiddleware:
             self.scheduler.add_job(self.job, "interval", seconds=self.interval)
             self.scheduler.start()
 
-            ### TODO:: v4.0.0a3 API ###
+            ### TODO:: v4.0.0a4 API ###
             # async with self.scheduler:
             #     await self.scheduler.add_schedule(
             #         self.job, IntervalTrigger(seconds=self.interval), id=uuid()
