@@ -15,6 +15,7 @@ and requester's node
 """
 
 ### Standard packages ###
+from math import ceil
 from typing import Dict, Optional, Union
 from uuid import UUID
 
@@ -26,7 +27,7 @@ from pydantic import BaseModel, Field, StrictInt, StrictStr
 from tortoise.exceptions import DoesNotExist, IntegrityError, ValidationError
 
 ### Local modules ###
-from src.configs import LIQUIDITY_FEE_PPM, ONCHAIN_BYTES_EST
+from src.configs import LIQUIDITY_FEE_PPM as FEE_PPM, ONCHAIN_BYTES_EST
 from src.models import InboundOrder
 from src.services.lightning import AddInvoiceResponse, Lightning
 from src.services.walletkit import EstimateFeeResponse, WalletKit
@@ -91,7 +92,7 @@ async def request_inbound_channel(
     remote_balance: int = purchase.remote_balance
 
     ### Calculate fees for inbound liquidity purchase ###
-    total_fee_sats: int = fee_rate * ONCHAIN_BYTES_EST + (remote_balance * LIQUIDITY_FEE_PPM / 1e6)
+    total_fee_sats: int = fee_rate * ONCHAIN_BYTES_EST + ceil(remote_balance * FEE_PPM / 1e6)
 
     try:
         order: InboundOrder = await InboundOrder.create(host=host, port=port, pubkey=pubkey)
