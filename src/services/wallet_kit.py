@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.9
 # coding:utf-8
 # Copyright (C) 2023 All rights reserved.
-# FILENAME:    ~~/src/services/walletkit.py
+# FILENAME:    ~~/src/services/wallet_kit.py
 # VERSION: 	   0.1.0
 # CREATED: 	   2023-10-28 18:44
 # AUTHOR: 	   Sitt Guruvanich <aekazitt+github@gmail.com>
@@ -72,3 +72,5 @@ class WalletKit(BaseModel):
     @validate_call
     def estimate_fee(self, confirmations: StrictInt = 6) -> EstimateFeeResponse:
         return self.stub.EstimateFee(EstimateFeeRequest(conf_target=confirmations))
+
+__all__ = ["WalletKit"]

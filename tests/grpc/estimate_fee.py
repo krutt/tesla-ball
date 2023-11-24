@@ -11,7 +11,7 @@
 # *************************************************************
 
 ### Local modules ###
-from src.services.walletkit import EstimateFeeResponse, WalletKit
+from src.services.wallet_kit import EstimateFeeResponse, WalletKit
 
 
 def test_01_estimate_fee() -> None:

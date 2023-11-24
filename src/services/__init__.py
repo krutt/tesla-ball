@@ -22,6 +22,7 @@ from src.protos.lightning_pb2 import (
 )
 from src.services.lightning import Lightning
 from src.services.macaroon_plugin import MacaroonPlugin
+from src.services.wallet_kit import WalletKit
 
 __all__ = [
     "AddInvoiceResponse",

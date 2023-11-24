@@ -30,7 +30,7 @@ from tortoise.exceptions import DoesNotExist, IntegrityError, ValidationError
 from src.configs import LIQUIDITY_FEE_PPM as FEE_PPM, ONCHAIN_BYTES_EST
 from src.models import InboundOrder
 from src.services.lightning import AddInvoiceResponse, Lightning
-from src.services.walletkit import EstimateFeeResponse, WalletKit
+from src.services.wallet_kit import EstimateFeeResponse, WalletKit
 
 ### Routing ###
 router: APIRouter = APIRouter(
