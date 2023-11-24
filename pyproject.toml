@@ -43,6 +43,7 @@ grpcio-tools = "^1.48.0"
 orjson = "^3.9.7"
 pendulum = "^2.1.2"
 python = "^3.9"
+python-bitcoinlib = "^0.12.2"
 pyyaml = "^6.0.1"
 schedule = "^1.2.1"
 tortoise-orm = {extras = ["asyncpg"], version = "^0.20.0"}
