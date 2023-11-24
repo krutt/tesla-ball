@@ -73,4 +73,5 @@ class WalletKit(BaseModel):
     def estimate_fee(self, confirmations: StrictInt = 6) -> EstimateFeeResponse:
         return self.stub.EstimateFee(EstimateFeeRequest(conf_target=confirmations))
 
+
 __all__ = ["WalletKit"]
