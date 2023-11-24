@@ -11,11 +11,11 @@
 # *************************************************************
 
 ### Local modules ###
-from src.services.lightning import FeeReportResponse, Lightning
+from src.services import FeeReportResponse, Lightning
+from tests.grpc import lightning
 
 
-def test_01_fee_report() -> None:
-    lightning: Lightning = Lightning()
+def test_01_fee_report(lightning: Lightning) -> None:
     fee_report: FeeReportResponse = lightning.fee_report()
     assert isinstance(fee_report, FeeReportResponse)
     for channel_fee in fee_report.channel_fees:

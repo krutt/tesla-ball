@@ -9,3 +9,24 @@
 #
 # HISTORY:
 # *************************************************************
+"""Module defining reusable fixtures used for gRPC testing
+"""
+
+### Third-party packages ###
+from pytest import fixture
+
+### Local modules ###
+from src.services import Lightning, WalletKit
+
+
+@fixture(scope="session")
+def lightning() -> Lightning:
+    return Lightning()
+
+
+@fixture(scope="session")
+def wallet_kit() -> WalletKit:
+    return WalletKit()
+
+
+__all__ = ["lightning", "wallet_kit"]
