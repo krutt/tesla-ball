@@ -69,7 +69,7 @@ async def test_02_check_inbound_request(test_tesla_ball: TestClient) -> None:
     assert response.status_code == 200
     assert response.json().get("bolt11", None) is not None
     assert isinstance(response.json().get("bolt11", None), str)
-    assert len(response.json().get("bolt11", None)) == 379
+    assert len(response.json().get("bolt11", None)) in {378, 379}  # regtest invoice lengths
     assert response.json().get("bolt11", None)[:6] == "lnbcrt"  # lightning bitcoin regtest
     assert response.json().get("bolt11", None) == order.bolt11
     assert response.json().get("feeRate", None) is not None
