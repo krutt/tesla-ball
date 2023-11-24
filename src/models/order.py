@@ -40,7 +40,7 @@ class Order(Model):
 
     ### Identifier fields ###
     id: int = IntField(pk=True)
-    order_id: UUID = UUIDField(default=uuid())  # Set once at creation, never changed
+    order_id: UUID = UUIDField(default=uuid)  # Set once at creation, never changed
 
     ### State-machine enumeration field ###
     state: str = CharEnumField(OrderState, default=OrderState.PENDING)
