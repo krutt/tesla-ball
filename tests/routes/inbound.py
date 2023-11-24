@@ -55,7 +55,7 @@ async def test_01_create_inbound_order(test_tesla_ball: TestClient) -> None:
     order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
     assert order is not None
     assert response.json().get("bolt11", None) is not None
-    assert len(response.json().get("bolt11", None)) in {378, 379}  # regtest invoice length
+    assert len(response.json().get("bolt11", None)) in {378, 379}  # regtest invoice lengths
     assert response.json().get("bolt11", None)[:6] == "lnbcrt"  # lightning bitcoin regtest
     assert response.json().get("orderId", None) is not None
     assert response.json().get("orderId", None) == str(order.order_id)
