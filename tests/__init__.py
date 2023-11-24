@@ -10,13 +10,13 @@
 # *************************************************************
 
 ### Standard Packages ###
-from pytest import fixture
 from os import environ
 from typing import Optional
 
 ### Third-Party Packages ###
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from pytest import fixture
 
 ### Local modules ###
 from src.routes import earn_router, inbound_router, info_router, swap_router
