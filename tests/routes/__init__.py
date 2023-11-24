@@ -8,3 +8,30 @@
 #
 # HISTORY:
 # *************************************************************
+"""
+"""
+
+### Standard packages ###
+from typing import Generator
+
+### Third-party packages ###
+from pytest import fixture
+from tortoise import Tortoise, run_async
+
+### Local modules ###
+from tests import TEST_DB_PATH
+
+
+@fixture(scope="module", autouse=True)
+def setup_teardown_database() -> Generator:
+    run_async(Tortoise.init(db_url=TEST_DB_PATH, modules={"models": ["src.models"]}))
+    run_async(Tortoise.generate_schemas(True))
+
+    yield
+
+    # run_async(InboundOrder.all().delete())
+    run_async(Tortoise._drop_databases())
+    run_async(Tortoise.close_connections())
+
+
+__all__ = ["setup_teardown_database"]

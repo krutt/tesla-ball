@@ -38,6 +38,7 @@ LND_TARGET_HOST: Optional[str] = environ.get("LND_TARGET_HOST", None)
 LND_TARGET_PUBKEY: Optional[str] = environ.get("LND_TARGET_PUBKEY", None)
 LND_TLSCERT_PATH: Optional[str] = environ.get("LND_TLSCERT_PATH", None)
 TEST_BLOCK_TIME: int = int(environ.get("TEST_BLOCK_TIME", "5"))
+TEST_DB_PATH: str = environ.get("TEST_DB_PATH", "sqlite://./tests/test.db")
 
 
 @fixture
@@ -65,5 +66,7 @@ __all__ = [
     "LND_TARGET_HOST",
     "LND_TARGET_PUBKEY",
     "LND_TLSCERT_PATH",
+    "TEST_BLOCK_TIME",
+    "TEST_DB_PATH",
     "test_tesla_ball",
 ]

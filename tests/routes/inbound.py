@@ -10,31 +10,18 @@
 # *************************************************************
 
 ### Standard packages ###
-from typing import Dict, Generator, Optional, Union
+from typing import Dict, Optional, Union
 
 ### Third-party packages ###
 from fastapi.testclient import TestClient
 from httpx import Response
 from orjson import dumps
-from pytest import fixture, mark
-from tortoise import Tortoise, run_async
+from pytest import mark
 
 ### Local modules ###
 from src.models import InboundOrder, OrderState
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
-
-
-### Module-specific setup-teardown ###
-@fixture(scope="module", autouse=True)
-def setup_teardown() -> Generator:
-    run_async(Tortoise.init(db_url="sqlite://./tests/test.db", modules={"models": ["src.models"]}))
-    run_async(Tortoise.generate_schemas(True))
-
-    yield
-
-    # run_async(InboundOrder.all().delete())
-    run_async(Tortoise._drop_databases())
-    run_async(Tortoise.close_connections())
+from tests.routes import setup_teardown_database
 
 
 @mark.asyncio
