@@ -82,18 +82,34 @@
   </rect>
   <text
     font-family='Monoton'
-    font-size='120px'
+    font-size='60px'
     text-anchor='left'
     x='260px'
-    y='120px'>
+    y='100px'>
     Tesla
   </text>
   <text
     font-family='Monoton'
-    font-size='120px'
+    font-size='60px'
     text-anchor='left'
     x='260px'
-    y='225px'>
+    y='160px'>
     Ball
+  </text>
+  <text
+    font-family='Courier'
+    font-size='18px'
+    x='265px'
+    y='190px'
+    >
+    Asynchronous Lightning Service Provider
+  </text>
+  <text
+    font-family='Courier'
+    font-size='18px'
+    x='265px'
+    y='215px'
+    >
+    built on top of FastAPI ASGI web framework.
   </text>
 </svg>
