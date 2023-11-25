@@ -32,7 +32,7 @@ from src.protos.walletkit_pb2 import (
     AddrRequest, AddrResponse, EstimateFeeRequest, EstimateFeeResponse
 )
 from src.protos.walletkit_pb2_grpc import WalletKitStub
-from src.services import MacaroonPlugin
+from src.services.macaroon_plugin import MacaroonPlugin
 
 
 class WalletKit(BaseModel):
