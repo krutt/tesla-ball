@@ -72,5 +72,6 @@ class ChainKit(BaseModel):
     @validate_call
     def best_block(self) -> GetBestBlockResponse:
         return self.stub.GetBestBlock(GetBestBlockRequest())
-    
+
+
 __all__ = ["ChainKit"]

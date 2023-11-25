@@ -23,6 +23,7 @@ from src.services import ChainKit, Lightning, WalletKit
 def chain_kit() -> ChainKit:
     return ChainKit()
 
+
 @fixture(scope="session")
 def lightning() -> Lightning:
     return Lightning()

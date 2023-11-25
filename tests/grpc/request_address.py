@@ -14,6 +14,7 @@
 from src.services import AddrResponse, WalletKit
 from tests.grpc import wallet_kit
 
+
 def test_01_request_address(wallet_kit: WalletKit) -> None:
     addr_response: AddrResponse = wallet_kit.request_address()
     assert addr_response.addr is not None

@@ -14,6 +14,7 @@
 from src.services import GetBestBlockResponse, ChainKit
 from tests.grpc import chain_kit
 
+
 def test_01_best_block(chain_kit: ChainKit) -> None:
     best_block: GetBestBlockResponse = chain_kit.best_block()
     assert best_block.block_hash is not None
