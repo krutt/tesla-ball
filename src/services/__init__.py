@@ -22,6 +22,7 @@ from src.protos.lightning_pb2 import (
     SendResponse,
 )
 from src.protos.walletkit_pb2 import (
+    AddrResponse,
     EstimateFeeResponse,
 )
 from src.services.lightning import Lightning
@@ -30,6 +31,7 @@ from src.services.wallet_kit import WalletKit
 
 __all__ = [
     "AddInvoiceResponse",
+    "AddrResponse",
     "ChannelPoint",
     "GetInfoResponse",
     "EstimateFeeResponse",

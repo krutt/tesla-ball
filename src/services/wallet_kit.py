@@ -28,7 +28,9 @@ from pydantic import BaseModel, StrictInt, StrictStr, validate_call
 
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
-from src.protos.walletkit_pb2 import EstimateFeeRequest, EstimateFeeResponse
+from src.protos.walletkit_pb2 import (
+    AddrRequest, AddrResponse, EstimateFeeRequest, EstimateFeeResponse
+)
 from src.protos.walletkit_pb2_grpc import WalletKitStub
 from src.services import MacaroonPlugin
 
@@ -72,6 +74,10 @@ class WalletKit(BaseModel):
     @validate_call
     def estimate_fee(self, confirmations: StrictInt = 6) -> EstimateFeeResponse:
         return self.stub.EstimateFee(EstimateFeeRequest(conf_target=confirmations))
+    
+    @validate_call
+    def request_address(self) -> AddrResponse:
+        return self.stub.NextAddr(AddrRequest())
 
 
 __all__ = ["WalletKit"]
