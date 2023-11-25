@@ -16,8 +16,12 @@
 from pytest import fixture
 
 ### Local modules ###
-from src.services import Lightning, WalletKit
+from src.services import ChainKit, Lightning, WalletKit
 
+
+@fixture(scope="session")
+def chain_kit() -> ChainKit:
+    return ChainKit()
 
 @fixture(scope="session")
 def lightning() -> Lightning:
@@ -29,4 +33,4 @@ def wallet_kit() -> WalletKit:
     return WalletKit()
 
 
-__all__ = ["lightning", "wallet_kit"]
+__all__ = ["chain_kit", "lightning", "wallet_kit"]
