@@ -14,8 +14,31 @@ Module detailing swap endpoints used for swapping bitcoin asset on the base-chai
 on the Lightning liquidity network
 """
 
+### Standard packages ###
+import hashlib
+from binascii import hexlify
+from enum import Enum
+
 ### Third-party packages ###
+from bitcoin.core import Hash160
+from bitcoin.core.script import (
+    CScript,
+    OP_CHECKLOCKTIMEVERIFY,
+    OP_CHECKSIG,
+    OP_DROP,
+    OP_DUP,
+    OP_ELSE,
+    OP_ENDIF,
+    OP_EQUALVERIFY,
+    OP_HASH160,
+    OP_IF,
+)
+from fastapi.responses import PlainTextResponse
 from fastapi.routing import APIRouter
+from pydantic import BaseModel, Field, PositiveInt, StrictStr
+
+### Local modules ###
+from src.services import AddrResponse, ChainKit, GetBestBlockResponse, WalletKit
 
 ### Routing ###
 router: APIRouter = APIRouter(
@@ -24,6 +47,50 @@ router: APIRouter = APIRouter(
     responses={404: {"detail": "Not Found"}},
 )
 
-# TODO: define routes
+
+### Endpoint: schemas ###
+class SwapType(str, Enum):
+    atomic: str = "atomic"
+    submarine: str = "submarine"
+
+
+class SwapRequest(BaseModel):
+    amount: PositiveInt = Field(description="Designated swap amount")
+    claim_pubkey: StrictStr = Field(
+        alias="claimPubkey", description="Public key of keypair needed for claiming"
+    )
+    pre_image: StrictStr = Field(alias="preImage", description="Pre-image for swap")
+    swap_type: SwapType = Field(SwapType.submarine, alias="swapType", description="Type of swap")
+
+
+### Endpoint: routes ###
+@router.post("/", response_class=PlainTextResponse)
+async def create_swap(swap_request: SwapRequest) -> str:
+    if swap_request.swap_type is SwapType.submarine:
+        image: bytes = hashlib.new("ripemd160", swap_request.pre_image.encode("utf-8")).digest()
+        claim_pubkey: bytes = swap_request.claim_pubkey.encode("utf-8")
+
+        chain_kit: ChainKit = ChainKit()
+        best_block: GetBestBlockResponse = chain_kit.best_block()
+        locktime: int = best_block.block_height + 6
+
+        wallet_kit: WalletKit = WalletKit()
+        addr_response: AddrResponse = wallet_kit.request_address()
+        refund_pubkey: bytes = addr_response.addr.encode("utf-8")
+
+        # fmt: off
+        witness: bytes = CScript([
+            OP_IF,
+                OP_HASH160, image, OP_EQUALVERIFY, OP_DUP, OP_HASH160, Hash160(claim_pubkey),
+            OP_ELSE,
+                locktime, OP_CHECKLOCKTIMEVERIFY, OP_DROP, OP_DUP, OP_HASH160, Hash160(refund_pubkey),
+            OP_ENDIF,
+            OP_EQUALVERIFY,
+            OP_CHECKSIG,
+        ])
+        # fmt: on
+
+        return hexlify(witness).decode("utf-8")
+
 
 __all__ = ["router"]
