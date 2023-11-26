@@ -58,6 +58,7 @@ LND_TLSCERT_PATH: Optional[str] = environ.get("LND_TLSCERT_PATH", None)
 ONCHAIN_BYTES_EST: int = int(environ.get("ONCHAIN_BYTES_EST", "300"))
 PORT: int = int(environ.get("PORT", 8080))
 SECRET_KEY: str = environ.get("SECRET_KEY", "itsasecrettoeverybody")
+SWAP_FEERATE: float = float(environ.get("SWAP_FEERATE", "0.5"))
 
 __all__ = [
     "DATABASE_NAME",
