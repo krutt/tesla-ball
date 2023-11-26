@@ -24,7 +24,7 @@ from grpc import (
     secure_channel,
     ssl_channel_credentials,
 )
-from pydantic import BaseModel, StrictInt, StrictStr, validate_call
+from pydantic import BaseModel, StrictBool, StrictInt, StrictStr, validate_call
 
 ### Local modules ###
 from src.configs import LND_HOST_URL, LND_MACAROON_PATH, LND_TLSCERT_PATH
@@ -35,6 +35,8 @@ from src.protos.lightning_pb2 import (
     ConnectPeerResponse,
     DisconnectPeerRequest,
     DisconnectPeerResponse,
+    EstimateFeeRequest,
+    EstimateFeeResponse,
     FeeLimit,
     FeeReportRequest,
     FeeReportResponse,
@@ -118,6 +120,25 @@ class Lightning(BaseModel):
     def disconnect_peer(self, pubkey: StrictStr) -> DisconnectPeerResponse:
         """Disconnect a remote peer identified by public key"""
         return self.stub.DisconnectPeer(DisconnectPeerRequest(pub_key=pubkey))
+
+    @validate_call
+    def estimate_fee(
+        self,
+        address: StrictStr,
+        amount: StrictInt,
+        confirmations: StrictInt = 6,
+        spend_unconfirmed: StrictBool = True,
+    ) -> EstimateFeeResponse:
+        """Asks the chain backend to estimate the fee rate and total fees for a transaction that
+        pays to multiple specified outputs.
+        """
+        return self.stub.EstimateFee(
+            EstimateFeeRequest(
+                AddrToAmount={address: amount},
+                target_conf=confirmations,
+                spend_unconfirmed=spend_unconfirmed,
+            )
+        )
 
     def fee_report(self) -> FeeReportResponse:
         """Display the current fee policies of all active channels"""
