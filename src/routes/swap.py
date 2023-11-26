@@ -16,13 +16,14 @@ on the Lightning liquidity network
 
 ### Standard packages ###
 import hashlib
-from binascii import hexlify
+from hashlib import sha256
 from enum import Enum
 
 ### Third-party packages ###
 from bitcoin.core import Hash160
 from bitcoin.core.script import (
     CScript,
+    OP_0,
     OP_CHECKLOCKTIMEVERIFY,
     OP_CHECKSIG,
     OP_DROP,
@@ -33,12 +34,21 @@ from bitcoin.core.script import (
     OP_HASH160,
     OP_IF,
 )
+from bitcoin.wallet import P2WSHBitcoinAddress
 from fastapi.responses import PlainTextResponse
 from fastapi.routing import APIRouter
 from pydantic import BaseModel, Field, PositiveInt, StrictStr
 
 ### Local modules ###
-from src.services import AddrResponse, ChainKit, GetBestBlockResponse, WalletKit
+from src.services import (
+    AddrResponse,
+    ChainKit,
+    GetBestBlockResponse,
+    Lightning,
+    LightningFeeEstimate,
+    WalletKit,
+)
+from src.configs import SWAP_FEERATE
 
 ### Routing ###
 router: APIRouter = APIRouter(
@@ -71,11 +81,12 @@ async def create_swap(swap_request: SwapRequest) -> str:
         claim_pubkey: bytes = swap_request.claim_pubkey.encode("utf-8")
 
         chain_kit: ChainKit = ChainKit()
+        lightning: Lightning = Lightning()
+        wallet_kit: WalletKit = WalletKit()
+
+        addr_response: AddrResponse = wallet_kit.request_address()
         best_block: GetBestBlockResponse = chain_kit.best_block()
         locktime: int = best_block.block_height + 6
-
-        wallet_kit: WalletKit = WalletKit()
-        addr_response: AddrResponse = wallet_kit.request_address()
         refund_pubkey: bytes = addr_response.addr.encode("utf-8")
 
         # fmt: off
@@ -90,7 +101,20 @@ async def create_swap(swap_request: SwapRequest) -> str:
         ])
         # fmt: on
 
-        return hexlify(witness).decode("utf-8")
+        address: str = str(
+            P2WSHBitcoinAddress.from_scriptPubKey(CScript([OP_0, sha256(witness).digest()]))
+        )
+        fee_estimate: LightningFeeEstimate = lightning.estimate_fee(
+            address, swap_request.amount, confirmations=1
+        )
+        fee_network: int = int(fee_estimate.fee_sat) / int(fee_estimate.feerate_sat_per_byte)
+        fee_service: int = int(swap_request.amount * SWAP_FEERATE / 100)
+
+        value_release: int = fee_network + fee_service + swap_request.amount
+
+        # TODO: add hold invoice
+
+        return address
 
 
 __all__ = ["router"]
