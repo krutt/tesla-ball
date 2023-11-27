@@ -29,40 +29,20 @@ def recursive_remove(directory: str) -> None:
 
 
 def main() -> None:
-    target_dir: str = "src/protos"
-    recursive_remove(target_dir)
-    mkdir(target_dir)
+    proto_modules: str = "src/protos"
+    recursive_remove(proto_modules)
+    mkdir(proto_modules)
 
-    compile_args: List[str] = [
-        "--proto_path=src",
-        "--grpc_python_out=src",
-        "--python_out=src",
-        "protos/lightning.proto",
-    ]
-    compile(compile_args)
-    compile_args = [
-        "--proto_path=src",
-        "--grpc_python_out=src",
-        "--python_out=src",
-        "protos/signer.proto",
-    ]
-    compile(compile_args)
-    compile_args = [
-        "--proto_path=src",
-        "--grpc_python_out=src",
-        "--python_out=src",
-        "protos/walletkit.proto",
-    ]
-    compile(compile_args)
-    compile_args = [
-        "--proto_path=src",
-        "--grpc_python_out=src",
-        "--python_out=src",
-        "protos/chainkit.proto",
-    ]
-    compile(compile_args)
+    for proto_path in {"chainkit", "invoices", "lightning", "signer", "walletkit"}:
+        compile_args: List[str] = [
+            "--proto_path=src",
+            "--grpc_python_out=src",
+            "--python_out=src",
+            f"protos/{ proto_path }.proto",
+        ]
+        compile(compile_args)
 
-    with open(f"./{ target_dir }/__init__.py", "w+") as f:
+    with open(f"./{ proto_modules }/__init__.py", "w+") as f:
         f.write("#!/usr/bin/env python3.9\n")
         f.write("# coding:utf-8\n")
         f.write("# Copyright (C) 2023 All rights reserved.\n")
@@ -75,32 +55,21 @@ def main() -> None:
         f.write("# HISTORY:\n")
         f.write("# *************************************************************\n")
 
-    old_text: str = ""
-    with open(f"./{ target_dir }/lightning_pb2_grpc.py", "rt") as ink:
-        old_text = ink.read()
-    with open(f"./{ target_dir }/lightning_pb2_grpc.py", "wt") as quill:
-        new_text: str = old_text.replace("from protos", "from src.protos")
-        quill.write(new_text)
-    with open(f"./{ target_dir }/signer_pb2_grpc.py", "rt") as ink:
-        old_text = ink.read()
-    with open(f"./{ target_dir }/signer_pb2_grpc.py", "wt") as quill:
-        new_text: str = old_text.replace("from protos", "from src.protos")
-        quill.write(new_text)
-    with open(f"./{ target_dir }/walletkit_pb2.py", "rt") as ink:
-        old_text = ink.read()
-    with open(f"./{ target_dir }/walletkit_pb2.py", "wt") as quill:
-        new_text: str = old_text.replace("from protos", "from src.protos")
-        quill.write(new_text)
-    with open(f"./{ target_dir }/walletkit_pb2_grpc.py", "rt") as ink:
-        old_text = ink.read()
-    with open(f"./{ target_dir }/walletkit_pb2_grpc.py", "wt") as quill:
-        new_text: str = old_text.replace("from protos", "from src.protos")
-        quill.write(new_text)
-    with open(f"./{ target_dir }/chainkit_pb2_grpc.py", "rt") as ink:
-        old_text = ink.read()
-    with open(f"./{ target_dir }/chainkit_pb2_grpc.py", "wt") as quill:
-        new_text: str = old_text.replace("from protos", "from src.protos")
-        quill.write(new_text)
+    for module_path in {
+        "chainkit_pb2_grpc",
+        "invoices_pb2",
+        "invoices_pb2_grpc",
+        "lightning_pb2_grpc",
+        "signer_pb2_grpc",
+        "walletkit_pb2",
+        "walletkit_pb2_grpc",
+    }:
+        old_text: str = ""
+        with open(f"./{ proto_modules }/{ module_path }.py", "rt") as ink:
+            old_text = ink.read()
+        with open(f"./{ proto_modules }/{ module_path }.py", "wt") as quill:
+            new_text: str = old_text.replace("from protos", "from src.protos")
+            quill.write(new_text)
 
 
 if __name__ == "__main__":
