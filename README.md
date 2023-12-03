@@ -3,6 +3,10 @@
 [![Bitcoin-only](https://img.shields.io/badge/bitcoin-only-FF9900?logo=bitcoin)](https://twentyone.world)
 [![LN](https://img.shields.io/badge/lightning-792EE5?logo=lightning)](https://mempool.space/lightning)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Top](https://img.shields.io/github/languages/top/krutt/tesla-ball)](.)
+[![Languages](https://img.shields.io/github/languages/count/krutt/tesla-ball)](.)
+[![Size](https://img.shields.io/github/repo-size/krutt/tesla-ball)](.)
+[![Last commit](https://img.shields.io/github/last-commit/krutt/tesla-ball/master)](.)
 
 ![Tesla Ball Banner](./static/tesla-banner.svg "Tesla Ball Banner")
 
