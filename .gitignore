@@ -57,6 +57,7 @@ test.db-wal
 
 # Shellscripts
 **/*.sh
+!entrypoint.sh
 
 # Unit test / coverage reports
 htmlcov/
