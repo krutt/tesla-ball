@@ -49,6 +49,9 @@ test.db
 test.db-shm
 test.db-wal
 
+# Shellscripts
+**/*.sh
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
