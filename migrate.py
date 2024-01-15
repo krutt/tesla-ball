@@ -16,6 +16,8 @@ from asyncio import run
 
 ### Third-party packages
 from aerich import Command
+from asyncpg import connect
+from asyncpg.exceptions import InvalidCatalogNameError
 from tortoise.exceptions import DBConnectionError
 
 ### Local modules ###
@@ -26,12 +28,26 @@ def main() -> None:
     parser: ArgumentParser = ArgumentParser()
     action = parser.add_mutually_exclusive_group()  # type: ignore[undefined]
     action.add_argument(
+        "--create",
+        action="store_const",
+        const="create",
+        default="generate",
+        dest="action",
+        help="Create database identified by DATABASE_NAME constant."
+    )
+    action.add_argument(
         "--downgrade",
         action="store_const",
         const="downgrade",
-        default="generate",
         dest="action",
         help="Downgrade the latest migration",
+    )
+    action.add_argument(
+        "--dump",
+        action="store_const",
+        const="dump",
+        dest="action",
+        help="Dump database identified by DATABASE_NAME constant."
     )
     action.add_argument(
         "--generate",
@@ -60,6 +76,24 @@ def main() -> None:
 
 
 async def migrate(action: str, name: str) -> None:
+    ### Database creation / destruction ###
+    if action == "create":
+        try:
+            await connect(f"{ DATABASE_URL }/{ DATABASE_NAME }")
+            print(f"[ERROR] Database already exists: { DATABASE_NAME }")
+        except InvalidCatalogNameError:
+            connection = await connect(f"{ DATABASE_URL }/postgres")
+            await connection.execute(f'CREATE DATABASE "{ DATABASE_NAME }";')
+        return
+    elif action == "dump":
+        try:
+            connection = await connect(f"{ DATABASE_URL }/postgres")
+            await connection.execute(f'DROP DATABASE IF EXISTS "{ DATABASE_NAME }";')
+        except InvalidCatalogNameError:
+            print(f"[ERROR] Database does not exist: { DATABASE_NAME }")
+        return
+
+    ### Migration actions ###
     command: Command = Command(
         tortoise_config={
             "apps": {
