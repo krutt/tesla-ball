@@ -45,7 +45,7 @@ from src.services import (
     ChainKit,
     GetBestBlockResponse,
     Lightning,
-    LightningFeeEstimate,
+    LnFeeEstimate,
     WalletKit,
 )
 from src.configs import SWAP_FEERATE
@@ -104,7 +104,7 @@ async def create_swap(swap_request: SwapRequest) -> str:
         address: str = str(
             P2WSHBitcoinAddress.from_scriptPubKey(CScript([OP_0, sha256(witness).digest()]))
         )
-        fee_estimate: LightningFeeEstimate = lightning.estimate_fee(
+        fee_estimate: LnFeeEstimate = lightning.estimate_fee(
             address, swap_request.amount, confirmations=1
         )
         fee_network: int = int(fee_estimate.fee_sat) / int(fee_estimate.feerate_sat_per_byte)
