@@ -1,6 +1,6 @@
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ['poetry-core']
+build-backend = 'poetry.core.masonry.api'
 
 [tool.black]
 extend-exclude = '''.protos/.*'''
@@ -13,59 +13,59 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 exclude = [
-  "src/protos"
+  'src/protos'
 ]
 ignore_missing_imports = true
 
 [tool.poetry]
 authors = [
-  "Sitt Guruvanich <aekazitt+github@gmail.com>"
+  'Sitt Guruvanich <aekazitt+github@gmail.com>'
 ]
-description = "Lightning Service Provider built on top of FastAPI asynchronous web framework"
-license = "MIT"
-name = "tesla-ball"
+description = 'Lightning Service Provider built on top of FastAPI asynchronous web framework'
+license = 'MIT'
+name = 'tesla-ball'
 packages = [
-  {include="protoc.py"},
-  {include="migrate.py"},
-  {include="serve.py"},
-  {include="src"}
+  {include='protoc.py'},
+  {include='migrate.py'},
+  {include='serve.py'},
+  {include='src'}
 ]
-readme = "README.md"
-version = "0.1.0"
+readme = 'README.md'
+version = '0.1.0'
 
 [tool.poetry.dependencies]
-apscheduler = "^3.10.4"
-fastapi = "^0.103.2"
-fastapi-csrf-protect = "^0.3.2"
-googleapis-common-protos = "1.60.0"
-grpcio = "^1.48.0"
-grpcio-tools = "^1.48.0"
-orjson = "^3.9.7"
-pendulum = "^2.1.2"
-python = "^3.9"
-python-bitcoinlib = "^0.12.2"
-pyyaml = "^6.0.1"
-schedule = "^1.2.1"
-tortoise-orm = {extras = ["asyncpg"], version = "^0.20.0"}
-uvicorn = "^0.23.2"
+apscheduler = '^3.10.4'
+fastapi = '^0.103.2'
+fastapi-csrf-protect = '^0.3.2'
+googleapis-common-protos = '1.60.0'
+grpcio = '^1.48.0'
+grpcio-tools = '^1.48.0'
+orjson = '^3.9.7'
+pendulum = '^2.1.2'
+python = '^3.9'
+python-bitcoinlib = '^0.12.2'
+pyyaml = '^6.0.1'
+schedule = '^1.2.1'
+tortoise-orm = {extras = ['asyncpg'], version = '^0.20.0'}
+uvicorn = '^0.23.2'
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-aerich = "^0.7.2"
-black = "^23.9.1"
-httpx = "^0.25.0"
-mypy = "^1.5.1"
-pytest = "^7.4.2"
-pytest-asyncio = "^0.21.1"
-python-dotenv = "^1.0.0"
+aerich = '^0.7.2'
+black = '^23.9.1'
+httpx = '^0.25.0'
+mypy = '^1.5.1'
+pytest = '^7.4.2'
+pytest-asyncio = '^0.21.1'
+python-dotenv = '^1.0.0'
 
 [tool.poetry.scripts]
-compile-protos = "protoc:main"
-migrate = "migrate:main"
+compile-protos = 'protoc:main'
+migrate = 'migrate:main'
 
 [tool.pytest.ini_options]
-addopts = "--strict-markers --tb=short -s"
-python_files = "*.py"
-testpaths = [ "tests" ]
+addopts = '--strict-markers --tb=short -s'
+python_files = '*.py'
+testpaths = [ 'tests' ]
