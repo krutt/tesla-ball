@@ -53,7 +53,7 @@ def main() -> None:
     action.add_argument(
         "--inspect", action="store_const", const="inspect", dest="action", help="Inspect database"
     )
-    parser.add_argument("name", default="update", help="Name of migration", nargs="?", type=str)
+    parser.add_argument("name", default="upgrade", help="Name of migration", nargs="?", type=str)
     args: Namespace = parser.parse_args()
     name: str = args.name.lower().replace(" ", "_").replace("-", "_")
     run(migrate(args.action, name))
