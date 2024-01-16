@@ -15,7 +15,7 @@ from src.services import EstimateFeeResponse, WalletKit
 from tests.grpc import wallet_kit
 
 
-def test_01_estimate_fee(wallet_kit: WalletKit) -> None:
+def test_estimate_fee(wallet_kit: WalletKit) -> None:
     fee_estimate: EstimateFeeResponse = wallet_kit.estimate_fee()
     assert isinstance(fee_estimate, EstimateFeeResponse)
     assert isinstance(fee_estimate.sat_per_kw, int)
