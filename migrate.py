@@ -33,7 +33,7 @@ def main() -> None:
         const="create",
         default="generate",
         dest="action",
-        help="Create database identified by DATABASE_NAME constant."
+        help="Create database identified by DATABASE_NAME constant.",
     )
     action.add_argument(
         "--downgrade",
@@ -47,7 +47,7 @@ def main() -> None:
         action="store_const",
         const="dump",
         dest="action",
-        help="Dump database identified by DATABASE_NAME constant."
+        help="Dump database identified by DATABASE_NAME constant.",
     )
     action.add_argument(
         "--generate",
