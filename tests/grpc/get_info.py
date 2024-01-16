@@ -18,7 +18,7 @@ from src.services.lightning import GetInfoResponse, Lightning
 from tests.grpc import lightning
 
 
-def test_list_channels(lightning: Lightning) -> None:
+def test_get_info(lightning: Lightning) -> None:
     info_response: GetInfoResponse = lightning.get_info()
     assert info_response is not None
     assert info_response.identity_pubkey is not None
