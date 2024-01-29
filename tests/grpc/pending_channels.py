@@ -24,10 +24,10 @@ from tests.grpc import lightning
 
 
 def test_01_empty_pending_channels(lightning: Lightning) -> None:
-  pending_response: PendingChannelsResponse = lightning.pending_channels()
-  assert pending_response is not None
-  assert pending_response.pending_open_channels is not None
-  assert len(pending_response.pending_open_channels) == 0
+  response: PendingChannelsResponse = lightning.pending_channels()
+  assert response is not None
+  assert response.pending_open_channels is not None
+  assert len(response.pending_open_channels) == 0
 
 
 @mark.parametrize(
@@ -47,11 +47,11 @@ def test_02_one_pending_channel(
   assert funding_txid is not None
   assert isinstance(funding_txid, str)
   assert len(funding_txid) == 64
-  pending_response: PendingChannelsResponse = lightning.pending_channels()
-  assert pending_response is not None
-  assert pending_response.pending_open_channels is not None
-  assert len(pending_response.pending_open_channels) == 1
-  channel = pending_response.pending_open_channels[0].channel
+  response: PendingChannelsResponse = lightning.pending_channels()
+  assert response is not None
+  assert response.pending_open_channels is not None
+  assert len(response.pending_open_channels) == 1
+  channel = response.pending_open_channels[0].channel
   assert channel is not None
   assert isinstance(channel.capacity, int)
   assert channel.capacity == remote_balance
