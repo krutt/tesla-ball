@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.9
 # coding:utf-8
-# Copyright (C) 2023 All rights reserved.
+# Copyright (C) 2023-2024 All rights reserved.
 # FILENAME:    ~~/tests/grpc/list_invoices.py
 # VERSION: 	   0.1.0
 # CREATED: 	   2024-01-16 16:53

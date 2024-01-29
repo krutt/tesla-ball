@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.9
 # coding:utf-8
-# Copyright (C) 2023 All rights reserved.
+# Copyright (C) 2023-2024 All rights reserved.
 # FILENAME:    ~~/protoc.py
 # VERSION: 	   0.1.0
 # CREATED: 	   2023-10-06 08:59
@@ -45,7 +45,7 @@ def main() -> None:
   with open(f"./{ proto_modules }/__init__.py", "w+") as f:
     f.write("#!/usr/bin/env python3.9\n")
     f.write("# coding:utf-8\n")
-    f.write("# Copyright (C) 2023 All rights reserved.\n")
+    f.write("# Copyright (C) 2023-2024 All rights reserved.\n")
     f.write("# FILENAME:    ~~/src/protos/__init__.py\n")
     f.write("# VERSION: 	   0.1.0\n")
     f.write(f"# CREATED: 	   { now().format('YYYY-MM-DD HH:mm') }\n")  # type: ignore[no-untyped-call]
