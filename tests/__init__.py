@@ -22,11 +22,11 @@ from pytest import fixture
 from src.routes import earn_router, inbound_router, info_router, swap_router
 
 try:
-    from dotenv import load_dotenv
+  from dotenv import load_dotenv
 
-    load_dotenv("test.env")
+  load_dotenv("test.env")
 except ImportError:
-    pass
+  pass
 
 
 LND_EXTERNAL_MACAROON: Optional[str] = environ.get("LND_EXTERNAL_MACAROON", None)
@@ -43,30 +43,30 @@ TEST_DB_PATH: str = environ.get("TEST_DB_PATH", "sqlite://./tests/test.db")
 
 @fixture
 def test_tesla_ball() -> TestClient:
-    """
-    Sets up a FastAPI TestClient wrapped around Tesla Ball application
+  """
+  Sets up a FastAPI TestClient wrapped around Tesla Ball application
 
-    ---
-    :returns: TestClient
-    """
-    app = FastAPI()
-    app.include_router(earn_router)
-    app.include_router(inbound_router)
-    app.include_router(info_router)
-    app.include_router(swap_router)
-    return TestClient(app)
+  ---
+  :returns: TestClient
+  """
+  app = FastAPI()
+  app.include_router(earn_router)
+  app.include_router(inbound_router)
+  app.include_router(info_router)
+  app.include_router(swap_router)
+  return TestClient(app)
 
 
 __all__ = [
-    "LND_EXTERNAL_MACAROON",
-    "LND_EXTERNAL_TLSCERT",
-    "LND_EXTERNAL_URL",
-    "LND_HOST_URL",
-    "LND_MACAROON_PATH",
-    "LND_TARGET_HOST",
-    "LND_TARGET_PUBKEY",
-    "LND_TLSCERT_PATH",
-    "TEST_BLOCK_TIME",
-    "TEST_DB_PATH",
-    "test_tesla_ball",
+  "LND_EXTERNAL_MACAROON",
+  "LND_EXTERNAL_TLSCERT",
+  "LND_EXTERNAL_URL",
+  "LND_HOST_URL",
+  "LND_MACAROON_PATH",
+  "LND_TARGET_HOST",
+  "LND_TARGET_PUBKEY",
+  "LND_TLSCERT_PATH",
+  "TEST_BLOCK_TIME",
+  "TEST_DB_PATH",
+  "test_tesla_ball",
 ]

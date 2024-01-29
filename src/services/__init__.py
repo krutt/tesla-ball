@@ -13,19 +13,19 @@
 ### Local modules ###
 from src.protos.chainkit_pb2 import GetBestBlockResponse
 from src.protos.lightning_pb2 import (
-    AddInvoiceResponse,
-    FeeReportResponse,
-    ChannelPoint,
-    EstimateFeeResponse as LnFeeEstimate,
-    GetInfoResponse,
-    Invoice,
-    ListChannelsResponse,
-    PendingChannelsResponse,
-    SendResponse,
+  AddInvoiceResponse,
+  FeeReportResponse,
+  ChannelPoint,
+  EstimateFeeResponse as LnFeeEstimate,
+  GetInfoResponse,
+  Invoice,
+  ListChannelsResponse,
+  PendingChannelsResponse,
+  SendResponse,
 )
 from src.protos.walletkit_pb2 import (
-    AddrResponse,
-    EstimateFeeResponse,
+  AddrResponse,
+  EstimateFeeResponse,
 )
 from src.services.chain_kit import ChainKit
 from src.services.lightning import Lightning
@@ -33,20 +33,20 @@ from src.services.macaroon_plugin import MacaroonPlugin
 from src.services.wallet_kit import WalletKit
 
 __all__ = [
-    "AddInvoiceResponse",
-    "AddrResponse",
-    "ChainKit",
-    "ChannelPoint",
-    "GetInfoResponse",
-    "EstimateFeeResponse",
-    "FeeReportResponse",
-    "GetBestBlockResponse",
-    "Invoice",
-    "Lightning",
-    "ListChannelsResponse",
-    "LnFeeEstimate",
-    "MacaroonPlugin",
-    "PendingChannelsResponse",
-    "SendResponse",
-    "WalletKit",
+  "AddInvoiceResponse",
+  "AddrResponse",
+  "ChainKit",
+  "ChannelPoint",
+  "GetInfoResponse",
+  "EstimateFeeResponse",
+  "FeeReportResponse",
+  "GetBestBlockResponse",
+  "Invoice",
+  "Lightning",
+  "ListChannelsResponse",
+  "LnFeeEstimate",
+  "MacaroonPlugin",
+  "PendingChannelsResponse",
+  "SendResponse",
+  "WalletKit",
 ]

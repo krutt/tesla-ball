@@ -24,34 +24,34 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 
 
 class SchedulerMiddleware:
-    app: ASGIApp
-    interval: int
-    job: Callable
-    scheduler: AsyncScheduler
+  app: ASGIApp
+  interval: int
+  job: Callable
+  scheduler: AsyncScheduler
 
-    def __init__(
-        self, app: ASGIApp, job: Callable, scheduler: AsyncScheduler, interval: int = 3_600
-    ) -> None:
-        self.app = app
-        self.interval = interval
-        self.job = job
-        self.scheduler = scheduler
+  def __init__(
+    self, app: ASGIApp, job: Callable, scheduler: AsyncScheduler, interval: int = 3_600
+  ) -> None:
+    self.app = app
+    self.interval = interval
+    self.job = job
+    self.scheduler = scheduler
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if scope["type"] == "lifespan":
-            ### v3.10.4 API ###
-            self.scheduler.add_job(self.job, "interval", seconds=self.interval)
-            self.scheduler.start()
+  async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+    if scope["type"] == "lifespan":
+      ### v3.10.4 API ###
+      self.scheduler.add_job(self.job, "interval", seconds=self.interval)
+      self.scheduler.start()
 
-            ### TODO:: v4.0.0a4 API ###
-            # async with self.scheduler:
-            #     await self.scheduler.add_schedule(
-            #         self.job, IntervalTrigger(seconds=self.interval), id=uuid()
-            #     )
-            #     await self.scheduler.start_in_background()
-            #     await self.app(scope, receive, send)
+      ### TODO:: v4.0.0a4 API ###
+      # async with self.scheduler:
+      #     await self.scheduler.add_schedule(
+      #         self.job, IntervalTrigger(seconds=self.interval), id=uuid()
+      #     )
+      #     await self.scheduler.start_in_background()
+      #     await self.app(scope, receive, send)
 
-        await self.app(scope, receive, send)
+    await self.app(scope, receive, send)
 
 
 __all__ = ["SchedulerMiddleware"]

@@ -19,12 +19,12 @@ from pydantic import BaseModel
 
 
 class MacaroonPlugin(AuthMetadataPlugin, BaseModel):
-    """Metadata plugin to include macaroon in metadata of each RPC request"""
+  """Metadata plugin to include macaroon in metadata of each RPC request"""
 
-    macaroon: str
+  macaroon: str
 
-    def __call__(self, _: Any, callback: Callable) -> Any:
-        callback([("macaroon", self.macaroon)], None)
+  def __call__(self, _: Any, callback: Callable) -> Any:
+    callback([("macaroon", self.macaroon)], None)
 
 
 __all__ = ["MacaroonPlugin"]

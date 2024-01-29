@@ -24,14 +24,14 @@ from tests import TEST_DB_PATH
 
 @fixture(scope="module", autouse=True)
 def setup_teardown_database() -> Generator:
-    run_async(Tortoise.init(db_url=TEST_DB_PATH, modules={"models": ["src.models"]}))
-    run_async(Tortoise.generate_schemas(True))
+  run_async(Tortoise.init(db_url=TEST_DB_PATH, modules={"models": ["src.models"]}))
+  run_async(Tortoise.generate_schemas(True))
 
-    yield
+  yield
 
-    # run_async(InboundOrder.all().delete())
-    run_async(Tortoise._drop_databases())
-    run_async(Tortoise.close_connections())
+  # run_async(InboundOrder.all().delete())
+  run_async(Tortoise._drop_databases())
+  run_async(Tortoise.close_connections())
 
 
 __all__ = ["setup_teardown_database"]

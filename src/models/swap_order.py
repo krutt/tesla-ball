@@ -17,10 +17,10 @@ from src.models.order import Order
 
 
 class SwapOrder(Order):
-    """Class mapping Object Relation to table `swap_order`"""
+  """Class mapping Object Relation to table `swap_order`"""
 
-    class Meta:
-        table: str = "swap_order"
+  class Meta:
+    table: str = "swap_order"
 
 
 __all__ = ["SwapOrder"]

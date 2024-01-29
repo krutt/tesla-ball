@@ -17,10 +17,10 @@ from src.models.order import Order
 
 
 class EarnOrder(Order):
-    """Class mapping Object Relation to table `earn_order`"""
+  """Class mapping Object Relation to table `earn_order`"""
 
-    class Meta:
-        table: str = "earn_order"
+  class Meta:
+    table: str = "earn_order"
 
 
 __all__ = ["EarnOrder"]

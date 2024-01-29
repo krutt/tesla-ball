@@ -16,15 +16,15 @@ from tests.grpc import lightning
 
 
 def test_fee_report(lightning: Lightning) -> None:
-    fee_report: FeeReportResponse = lightning.fee_report()
-    assert isinstance(fee_report, FeeReportResponse)
-    for channel_fee in fee_report.channel_fees:
-        assert isinstance(channel_fee.channel_point, str)
-        assert len(channel_fee.channel_point) == 66
-        assert isinstance(channel_fee.base_fee_msat, int)
-        assert channel_fee.base_fee_msat == 1000
-        assert isinstance(channel_fee.fee_per_mil, int)
-        assert channel_fee.fee_per_mil == 1
-        assert isinstance(channel_fee.fee_rate, float)
-        assert channel_fee.fee_rate == 1e-6
-        assert isinstance(channel_fee.chan_id, int)
+  fee_report: FeeReportResponse = lightning.fee_report()
+  assert isinstance(fee_report, FeeReportResponse)
+  for channel_fee in fee_report.channel_fees:
+    assert isinstance(channel_fee.channel_point, str)
+    assert len(channel_fee.channel_point) == 66
+    assert isinstance(channel_fee.base_fee_msat, int)
+    assert channel_fee.base_fee_msat == 1000
+    assert isinstance(channel_fee.fee_per_mil, int)
+    assert channel_fee.fee_per_mil == 1
+    assert isinstance(channel_fee.fee_rate, float)
+    assert channel_fee.fee_rate == 1e-6
+    assert isinstance(channel_fee.chan_id, int)

@@ -16,14 +16,14 @@ from tests.grpc import lightning
 
 
 def test_wallet_balance(lightning: Lightning) -> None:
-    wallet_balance: WalletBalanceResponse = lightning.wallet_balance()
-    assert wallet_balance is not None
-    assert wallet_balance.total_balance is not None
-    assert isinstance(wallet_balance.total_balance, int)
-    assert wallet_balance.confirmed_balance is not None
-    assert isinstance(wallet_balance.confirmed_balance, int)
-    assert wallet_balance.unconfirmed_balance is not None
-    assert isinstance(wallet_balance.unconfirmed_balance, int)
-    assert wallet_balance.account_balance is not None
-    assert wallet_balance.reserved_balance_anchor_chan is not None
-    assert isinstance(wallet_balance.reserved_balance_anchor_chan, int)
+  wallet_balance: WalletBalanceResponse = lightning.wallet_balance()
+  assert wallet_balance is not None
+  assert wallet_balance.total_balance is not None
+  assert isinstance(wallet_balance.total_balance, int)
+  assert wallet_balance.confirmed_balance is not None
+  assert isinstance(wallet_balance.confirmed_balance, int)
+  assert wallet_balance.unconfirmed_balance is not None
+  assert isinstance(wallet_balance.unconfirmed_balance, int)
+  assert wallet_balance.account_balance is not None
+  assert wallet_balance.reserved_balance_anchor_chan is not None
+  assert isinstance(wallet_balance.reserved_balance_anchor_chan, int)

@@ -26,12 +26,12 @@ from tests import test_tesla_ball
 
 @mark.asyncio
 async def test_01_submarine_swap(test_tesla_ball: TestClient) -> None:
-    params_list: list = ["amount", "claimPubkey", "preImage"]
-    amount: int = 560
-    # TODO: use external lnd to create claim pubkey
-    claim_pubkey: str = "03f8109578aae1e5cfc497e466cf6ae6625497cd31886e87b2f4f54f3f0f46b539"
-    pre_image: str = "".join(choices(ascii_letters, k=64))
-    body: Dict[str, Union[int, str]] = dict(zip(params_list, [amount, claim_pubkey, pre_image]))
-    response: Response = test_tesla_ball.post("/swap", content=dumps(body))
-    assert response.text is not None
-    assert isinstance(response.text, str)
+  params_list: list = ["amount", "claimPubkey", "preImage"]
+  amount: int = 560
+  # TODO: use external lnd to create claim pubkey
+  claim_pubkey: str = "03f8109578aae1e5cfc497e466cf6ae6625497cd31886e87b2f4f54f3f0f46b539"
+  pre_image: str = "".join(choices(ascii_letters, k=64))
+  body: Dict[str, Union[int, str]] = dict(zip(params_list, [amount, claim_pubkey, pre_image]))
+  response: Response = test_tesla_ball.post("/swap", content=dumps(body))
+  assert response.text is not None
+  assert isinstance(response.text, str)

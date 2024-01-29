@@ -21,17 +21,17 @@ from src.services import ChainKit, Lightning, WalletKit
 
 @fixture(scope="session")
 def chain_kit() -> ChainKit:
-    return ChainKit()
+  return ChainKit()
 
 
 @fixture(scope="session")
 def lightning() -> Lightning:
-    return Lightning()
+  return Lightning()
 
 
 @fixture(scope="session")
 def wallet_kit() -> WalletKit:
-    return WalletKit()
+  return WalletKit()
 
 
 __all__ = ["chain_kit", "lightning", "wallet_kit"]

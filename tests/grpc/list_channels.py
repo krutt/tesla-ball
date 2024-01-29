@@ -17,9 +17,9 @@ from tests.grpc import lightning
 
 
 def test_list_channels(lightning: Lightning) -> None:
-    list_channels_response: ListChannelsResponse = lightning.list_channels()
-    assert list_channels_response is not None
-    assert list_channels_response.channels is not None
-    for channel in list_channels_response.channels:
-        assert channel.active is True
-        assert channel.remote_pubkey == PUBKEY
+  list_channels_response: ListChannelsResponse = lightning.list_channels()
+  assert list_channels_response is not None
+  assert list_channels_response.channels is not None
+  for channel in list_channels_response.channels:
+    assert channel.active is True
+    assert channel.remote_pubkey == PUBKEY

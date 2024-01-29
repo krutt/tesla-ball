@@ -2,7 +2,7 @@ from tortoise import BaseDBAsyncClient
 
 
 async def upgrade(db: BaseDBAsyncClient) -> str:
-    return """
+  return """
         CREATE TABLE IF NOT EXISTS "aerich" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "version" VARCHAR(255) NOT NULL,
@@ -33,5 +33,5 @@ COMMENT ON TABLE "swap_order" IS 'Class mapping Object Relation to table `swap_o
 
 
 async def downgrade(db: BaseDBAsyncClient) -> str:
-    return """
+  return """
         """

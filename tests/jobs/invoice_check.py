@@ -24,69 +24,69 @@ from src.jobs.invoice_check import job as invoice_check_job
 from src.models import InboundOrder, OrderState
 from src.services.lightning import Lightning
 from tests import (
-    LND_EXTERNAL_MACAROON,
-    LND_EXTERNAL_TLSCERT,
-    LND_EXTERNAL_URL,
-    LND_TARGET_HOST,
-    LND_TARGET_PUBKEY,
-    test_tesla_ball,
+  LND_EXTERNAL_MACAROON,
+  LND_EXTERNAL_TLSCERT,
+  LND_EXTERNAL_URL,
+  LND_TARGET_HOST,
+  LND_TARGET_PUBKEY,
+  test_tesla_ball,
 )
 
 
 ### Module-specific setup-teardown ###
 @fixture(scope="module", autouse=True)
 def setup_teardown() -> Generator:
-    run_async(Tortoise.init(db_url="sqlite://./test.db", modules={"models": ["src.models"]}))
-    run_async(Tortoise.generate_schemas(True))
+  run_async(Tortoise.init(db_url="sqlite://./test.db", modules={"models": ["src.models"]}))
+  run_async(Tortoise.generate_schemas(True))
 
-    yield
+  yield
 
-    # run_async(InboundOrder.all().delete())
-    run_async(Tortoise._drop_databases())
-    run_async(Tortoise.close_connections())
+  # run_async(InboundOrder.all().delete())
+  run_async(Tortoise._drop_databases())
+  run_async(Tortoise.close_connections())
 
 
 @mark.asyncio
 async def test_01_check_invoice(test_tesla_ball: TestClient) -> None:
-    body: Dict[str, Union[int, str]] = {
-        "feeRate": 3,
-        "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
-        "remoteBalance": 200_000,
-    }
-    test_tesla_ball.post("/inbound", content=dumps(body))
-    order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
-    assert order is not None
-    assert order.state == OrderState.PENDING
+  body: Dict[str, Union[int, str]] = {
+    "feeRate": 3,
+    "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
+    "remoteBalance": 200_000,
+  }
+  test_tesla_ball.post("/inbound", content=dumps(body))
+  order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
+  assert order is not None
+  assert order.state == OrderState.PENDING
 
-    ### Run job ###
-    await invoice_check_job()
+  ### Run job ###
+  await invoice_check_job()
 
-    ### Assertion completion ###
-    order = await InboundOrder.get(order_id=order.order_id)
-    assert order.state == OrderState.PENDING
+  ### Assertion completion ###
+  order = await InboundOrder.get(order_id=order.order_id)
+  assert order.state == OrderState.PENDING
 
 
 @mark.asyncio
 async def test_02_check_invoice_after_paid(test_tesla_ball: TestClient) -> None:
-    body: Dict[str, Union[int, str]] = {
-        "feeRate": 3,
-        "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
-        "remoteBalance": 200_000,
-    }
-    test_tesla_ball.post("/inbound", content=dumps(body))
-    order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
-    assert order is not None
-    assert order.state == OrderState.PENDING
+  body: Dict[str, Union[int, str]] = {
+    "feeRate": 3,
+    "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
+    "remoteBalance": 200_000,
+  }
+  test_tesla_ball.post("/inbound", content=dumps(body))
+  order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
+  assert order is not None
+  assert order.state == OrderState.PENDING
 
-    ### Pay invoice ###
-    lightning: Lightning = Lightning(
-        macaroon_path=LND_EXTERNAL_MACAROON, tlscert_path=LND_EXTERNAL_TLSCERT, url=LND_EXTERNAL_URL
-    )
-    lightning.send_payment(order.bolt11)
+  ### Pay invoice ###
+  lightning: Lightning = Lightning(
+    macaroon_path=LND_EXTERNAL_MACAROON, tlscert_path=LND_EXTERNAL_TLSCERT, url=LND_EXTERNAL_URL
+  )
+  lightning.send_payment(order.bolt11)
 
-    ### Run job ###
-    await invoice_check_job()
+  ### Run job ###
+  await invoice_check_job()
 
-    ### Assertion completion ###
-    order = await InboundOrder.get(order_id=order.order_id)
-    assert order.state == OrderState.PAID
+  ### Assertion completion ###
+  order = await InboundOrder.get(order_id=order.order_id)
+  assert order.state == OrderState.PAID

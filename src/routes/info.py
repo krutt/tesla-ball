@@ -26,18 +26,18 @@ from src.services import GetInfoResponse, Lightning
 
 ### Routing ###
 router: APIRouter = APIRouter(
-    prefix="/info",
-    tags=["Node information endpoint"],
-    responses={404: {"detail": "Not Found"}},
+  prefix="/info",
+  tags=["Node information endpoint"],
+  responses={404: {"detail": "Not Found"}},
 )
 
 
 @router.get("", response_class=ORJSONResponse)
 async def get_info() -> Dict[str, str]:
-    lightning: Lightning = Lightning()
-    info_response: GetInfoResponse = lightning.get_info()
-    node_uri: str = info_response.uris[0]
-    return {"nodeUri": node_uri}
+  lightning: Lightning = Lightning()
+  info_response: GetInfoResponse = lightning.get_info()
+  node_uri: str = info_response.uris[0]
+  return {"nodeUri": node_uri}
 
 
 __all__ = ["router"]

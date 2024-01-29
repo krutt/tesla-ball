@@ -23,51 +23,51 @@ from tortoise.fields import CharEnumField, DatetimeField, IntField, UUIDField
 
 
 class OrderState(str, Enum):
-    """Enumeration Class for `state` column"""
+  """Enumeration Class for `state` column"""
 
-    PENDING: str = "pending"
-    PAID: str = "paid"
-    OPENING: str = "opening"
-    COMPLETED: str = "completed"
-    REJECTED: str = "rejected"
+  PENDING: str = "pending"
+  PAID: str = "paid"
+  OPENING: str = "opening"
+  COMPLETED: str = "completed"
+  REJECTED: str = "rejected"
 
 
 class Order(Model):
-    """Abstract ORM-model to be based upon by subclasses"""
+  """Abstract ORM-model to be based upon by subclasses"""
 
-    class Meta:
-        abstract: bool = True
+  class Meta:
+    abstract: bool = True
 
-    ### Identifier fields ###
-    id: int = IntField(pk=True)
-    order_id: UUID = UUIDField(default=uuid)  # Set once at creation, never changed
+  ### Identifier fields ###
+  id: int = IntField(pk=True)
+  order_id: UUID = UUIDField(default=uuid)  # Set once at creation, never changed
 
-    ### State-machine enumeration field ###
-    state: str = CharEnumField(OrderState, default=OrderState.PENDING)
+  ### State-machine enumeration field ###
+  state: str = CharEnumField(OrderState, default=OrderState.PENDING)
 
-    ### Datetime fields ###
-    created_at: datetime = DatetimeField(auto_now_add=True)
-    updated_at: datetime = DatetimeField(auto_now=True)
+  ### Datetime fields ###
+  created_at: datetime = DatetimeField(auto_now_add=True)
+  updated_at: datetime = DatetimeField(auto_now=True)
 
-    @classmethod
-    async def completed(cls) -> List["Order"]:
-        return await cls.filter(state=OrderState.COMPLETED)
+  @classmethod
+  async def completed(cls) -> List["Order"]:
+    return await cls.filter(state=OrderState.COMPLETED)
 
-    @classmethod
-    async def paid(cls) -> List["Order"]:
-        return await cls.filter(state=OrderState.PAID)
+  @classmethod
+  async def paid(cls) -> List["Order"]:
+    return await cls.filter(state=OrderState.PAID)
 
-    @classmethod
-    async def opening(cls) -> List["Order"]:
-        return await cls.filter(state=OrderState.OPENING)
+  @classmethod
+  async def opening(cls) -> List["Order"]:
+    return await cls.filter(state=OrderState.OPENING)
 
-    @classmethod
-    async def pending(cls) -> List["Order"]:
-        return await cls.filter(state=OrderState.PENDING)
+  @classmethod
+  async def pending(cls) -> List["Order"]:
+    return await cls.filter(state=OrderState.PENDING)
 
-    @classmethod
-    async def rejected(cls) -> List["Order"]:
-        return await cls.filter(state=OrderState.REJECTED)
+  @classmethod
+  async def rejected(cls) -> List["Order"]:
+    return await cls.filter(state=OrderState.REJECTED)
 
 
 __all__ = ["Order", "OrderState"]

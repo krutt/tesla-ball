@@ -19,16 +19,16 @@ from src.services.lightning import Invoice, Lightning, PayReq
 
 
 async def job() -> None:
-    lightning: Lightning = Lightning()
-    orders: List[InboundOrder] = await InboundOrder.pending()  # type: ignore[assignment]
-    for order in orders:
-        payment_request: PayReq = lightning.decode_pay_req(order.bolt11)
-        invoice: Invoice = lightning.lookup_invoice(payment_request.payment_hash)
-        if invoice.state in (0, 3):  # OPEN, ACCEPTED
-            continue
-        elif invoice.state in (1, 2):  # SETTLED, CANCELED
-            order.state = (OrderState.PAID, OrderState.REJECTED)[invoice.state - 1]
-            await order.save()
+  lightning: Lightning = Lightning()
+  orders: List[InboundOrder] = await InboundOrder.pending()  # type: ignore[assignment]
+  for order in orders:
+    payment_request: PayReq = lightning.decode_pay_req(order.bolt11)
+    invoice: Invoice = lightning.lookup_invoice(payment_request.payment_hash)
+    if invoice.state in (0, 3):  # OPEN, ACCEPTED
+      continue
+    elif invoice.state in (1, 2):  # SETTLED, CANCELED
+      order.state = (OrderState.PAID, OrderState.REJECTED)[invoice.state - 1]
+      await order.save()
 
 
 __all__ = ["job"]
