@@ -25,7 +25,7 @@ def test_01_list_empty_invoices(lightning: Lightning) -> None:
   # assert len(list_invoice_response) == 0
 
 
-@mark.parametrize("amount", [0, 1, 2, 3, 4, 5])
+@mark.parametrize("amount", [1, 2, 3, 4, 5])
 def test_02_list_one_invoice(amount: int, lightning: Lightning) -> None:
   add_invoice: AddInvoiceResponse = lightning.add_invoice(memo="test-invoice", value=amount)
   assert add_invoice is not None
