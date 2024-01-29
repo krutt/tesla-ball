@@ -12,17 +12,24 @@
 ### Standard packages ###
 from random import choices
 from string import ascii_letters
-from typing import Dict, Union
+from typing import Dict, Generator, Union
 
 ### Third-party packages ###
+from bitcoin import SelectParams
 from fastapi.testclient import TestClient
 from httpx import Response
-from pytest import mark
+from pytest import fixture, mark
 from orjson import dumps
 
 ### Local modules ###
 from tests import LND_TARGET_PUBKEY, test_tesla_ball
 
+
+@fixture(autouse=True, scope="module")
+def setup_teardown() -> Generator:
+  SelectParams("regtest")
+  yield
+  SelectParams("mainnet")
 
 @mark.asyncio
 async def test_01_submarine_swap(test_tesla_ball: TestClient) -> None:
