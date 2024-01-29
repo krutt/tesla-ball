@@ -45,7 +45,7 @@ def test_01_list_empty_peers(lightning: Lightning) -> None:
     assert isinstance(peer.flap_count, int)
     assert peer.last_flap_ns is not None
     assert isinstance(peer.last_flap_ns, int)
-    assert int(now().format("x")) * 1_000_000 > peer.last_flap_ns
+    assert int(now().format("x")) * 1e6 > peer.last_flap_ns
     assert peer.last_ping_payload is not None
     assert isinstance(peer.last_ping_payload, bytes)
     assert peer.ping_time is not None
