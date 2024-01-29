@@ -108,8 +108,8 @@ class Lightning(BaseModel):
   @validate_call
   def connect_peer(self, host: StrictStr, pubkey: StrictStr) -> ConnectPeerResponse:
     """Connect to a remote lnd peer"""
-    addr: LightningAddress = LightningAddress(pubkey=pubkey, host=host)
-    return self.stub.ConnectPeer(ConnectPeerRequest(addr=addr, perm=True, timeout=0))
+    address: LightningAddress = LightningAddress(pubkey=pubkey, host=host)
+    return self.stub.ConnectPeer(ConnectPeerRequest(addr=address, perm=True, timeout=0))
 
   @validate_call
   def decode_pay_req(self, payment_request: StrictStr) -> PayReq:
