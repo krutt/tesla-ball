@@ -10,29 +10,50 @@
 # HISTORY:
 # *************************************************************
 
+### Standard packages ###
+from typing import Generator
+
 ### Third-party packages ###
-from pytest import mark
+from pytest import fixture, mark
 
 ### Local modules ###
 from src.services.lightning import AddInvoiceResponse, Lightning, ListInvoiceResponse
-from tests.grpc import lightning
+from tests.grpc import external_lightning, lightning
 
 
-def test_01_list_empty_invoices(lightning: Lightning) -> None:
-  list_invoice_response: ListInvoiceResponse = lightning.list_invoices()
-  assert list_invoice_response is not None
-  print(list_invoice_response)
-  # assert len(list_invoice_response) == 0
+### Module-specific setup-teardown ###
+@fixture(scope="module", autouse=True)
+def setup_teardown(external_lightning: Lightning, lightning: Lightning) -> Generator:
+  response: ListInvoiceResponse = lightning.list_invoices()
+  [external_lightning.send_payment(invoice.payment_request) for invoice in response.invoices]
+  yield
+  [external_lightning.send_payment(invoice.payment_request) for invoice in response.invoices]
+
+
+def test_01_list_invoices(lightning: Lightning) -> None:
+  response: ListInvoiceResponse = lightning.list_invoices()
+  assert response is not None
+  if response.invoices is None:
+    for invoice in response.invoices:
+      assert invoice.state == 1  # SETTLED
+
+
+def test_02_list_empty_unsettled_invoices(lightning: Lightning) -> None:
+  response: ListInvoiceResponse = lightning.list_invoices()
+  assert response is not None
+  if response.invoices is not None:
+    unsettled = [*filter(lambda invoice: invoice.state != 1, response.invoices)]
+    assert len(unsettled) == 0
 
 
 @mark.parametrize("amount", [1, 2, 3, 4, 5])
-def test_02_list_one_invoice(amount: int, lightning: Lightning) -> None:
+def test_03_list_one_invoice(amount: int, lightning: Lightning) -> None:
   add_invoice: AddInvoiceResponse = lightning.add_invoice(memo="test-invoice", value=amount)
   assert add_invoice is not None
-  list_invoice_response: ListInvoiceResponse = lightning.list_invoices()
-  assert list_invoice_response is not None
-  assert list_invoice_response.invoices is not None
-  assert len(list_invoice_response.invoices) != 0
-  invoice = list_invoice_response.invoices[-1]  # last added invoice
+  response: ListInvoiceResponse = lightning.list_invoices()
+  assert response is not None
+  assert response.invoices is not None
+  assert len(response.invoices) != 0
+  invoice = response.invoices[-1]  # last added invoice
   assert invoice.memo == "test-invoice"
   assert invoice.value == amount
