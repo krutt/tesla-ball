@@ -31,6 +31,7 @@ def setup_teardown() -> Generator:
   yield
   SelectParams("mainnet")
 
+
 @mark.asyncio
 async def test_01_submarine_swap(test_tesla_ball: TestClient) -> None:
   params_list: list = ["amount", "claimPubkey", "preImage"]
