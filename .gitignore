@@ -55,6 +55,9 @@ test.db-wal
 # Macaroons
 **/*.macaroon
 
+# Ruff
+.ruff_cache
+
 # Shellscripts
 **/*.sh
 !entrypoint.sh
