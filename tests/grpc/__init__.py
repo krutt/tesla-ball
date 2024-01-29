@@ -17,11 +17,19 @@ from pytest import fixture
 
 ### Local modules ###
 from src.services import ChainKit, Lightning, WalletKit
+from tests import LND_EXTERNAL_MACAROON, LND_EXTERNAL_TLSCERT, LND_EXTERNAL_URL
 
 
 @fixture(scope="session")
 def chain_kit() -> ChainKit:
   return ChainKit()
+
+
+@fixture(scope="session")
+def external_lightning() -> Lightning:
+  return Lightning(
+    macaroon_path=LND_EXTERNAL_MACAROON, tlscert_path=LND_EXTERNAL_TLSCERT, url=LND_EXTERNAL_URL
+  )
 
 
 @fixture(scope="session")
@@ -34,4 +42,4 @@ def wallet_kit() -> WalletKit:
   return WalletKit()
 
 
-__all__ = ["chain_kit", "lightning", "wallet_kit"]
+__all__ = ["chain_kit", "external_lightning", "lightning", "wallet_kit"]
