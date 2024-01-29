@@ -60,8 +60,8 @@ router: APIRouter = APIRouter(
 
 ### Endpoint: schemas ###
 class SwapType(str, Enum):
-  atomic: str = "atomic"
-  submarine: str = "submarine"
+  reverse: str = "reverse"  # Lightning -> Chain
+  submarine: str = "submarine"  # Chain -> Lightning
 
 
 class SwapRequest(BaseModel):
