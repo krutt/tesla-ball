@@ -91,14 +91,14 @@ async def create_swap(swap_request: SwapRequest) -> str:
 
     # fmt: off
     witness: bytes = CScript([
-            OP_IF,
-                OP_HASH160, image, OP_EQUALVERIFY, OP_DUP, OP_HASH160, Hash160(claim_pubkey),
-            OP_ELSE,
-                locktime, OP_CHECKLOCKTIMEVERIFY, OP_DROP, OP_DUP, OP_HASH160, Hash160(refund_pubkey),
-            OP_ENDIF,
-            OP_EQUALVERIFY,
-            OP_CHECKSIG,
-        ])
+      OP_IF,
+        OP_HASH160, image, OP_EQUALVERIFY, OP_DUP, OP_HASH160, Hash160(claim_pubkey),
+      OP_ELSE,
+        locktime, OP_CHECKLOCKTIMEVERIFY, OP_DROP, OP_DUP, OP_HASH160, Hash160(refund_pubkey),
+      OP_ENDIF,
+      OP_EQUALVERIFY,
+      OP_CHECKSIG,
+    ])
     # fmt: on
 
     address: str = str(
