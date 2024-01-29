@@ -19,7 +19,6 @@ from pytest import fixture, mark
 from tortoise import Tortoise, run_async
 
 ### Local modules ###
-
 from src.jobs.invoice_check import job as invoice_check_job
 from src.models import InboundOrder, OrderState
 from src.services.lightning import Lightning
