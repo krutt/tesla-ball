@@ -24,7 +24,7 @@ from tests import TEST_DB_PATH
 
 @fixture(scope="module", autouse=True)
 def setup_teardown_database() -> Generator:
-  run_async(Tortoise.init(db_url=TEST_DB_PATH, modules={"models": ["src.models"]}))
+  run_async(Tortoise.init(db_url=TEST_DB_PATH, modules={"models": ["src.schema"]}))
   run_async(Tortoise.generate_schemas(True))
 
   yield

@@ -14,7 +14,7 @@
 from typing import List
 
 ### Local modules ###
-from src.models import InboundOrder, OrderState
+from src.schema import InboundOrder, OrderState
 from src.services.lightning import Lightning, ListChannelsResponse, PendingChannelsResponse
 
 

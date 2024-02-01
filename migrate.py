@@ -98,7 +98,7 @@ async def migrate(action: str, name: str) -> None:
     tortoise_config={
       "apps": {
         "models": {
-          "models": ["aerich.models", "src.models"],
+          "models": ["aerich.models", "src.schema"],
           "default_connection": "default",
         }
       },
