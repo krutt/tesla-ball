@@ -18,7 +18,7 @@ from typing import List
 from grpc import RpcError
 
 ### Local modules ###
-from src.schema import OrderState, InboundOrder
+from src.schema import InboundOrder, OrderState
 from src.services.lightning import ChannelPoint, Lightning
 
 

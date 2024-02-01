@@ -18,8 +18,8 @@ from typing import Dict, Generator, Union
 from bitcoin import SelectParams
 from fastapi.testclient import TestClient
 from httpx import Response
-from pytest import fixture, mark
 from orjson import dumps
+from pytest import fixture, mark
 
 ### Local modules ###
 from tests import LND_TARGET_PUBKEY, test_tesla_ball

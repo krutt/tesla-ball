@@ -17,17 +17,17 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler as AsyncScheduler
 ### TODO: v4.0.0a4 API ###
 # from apscheduler import AsyncScheduler
 from fastapi import FastAPI, Request
-from fastapi_csrf_protect import CsrfProtect
-from fastapi_csrf_protect.exceptions import CsrfProtectError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi_csrf_protect import CsrfProtect
+from fastapi_csrf_protect.exceptions import CsrfProtectError
 from pydantic import BaseModel
 from starlette.responses import RedirectResponse
 from tortoise.contrib.fastapi import register_tortoise
 
 ### Local Modules ###
-from src.configs import DATABASE_URL, DATABASE_NAME, SECRET_KEY
+from src.configs import DATABASE_NAME, DATABASE_URL, SECRET_KEY
 from src.jobs import channel_open_job, invoice_check_job, txn_confirm_job
 from src.middlewares import SchedulerMiddleware
 from src.routes import earn_router, inbound_router, info_router, swap_router

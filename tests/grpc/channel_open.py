@@ -14,8 +14,8 @@
 from binascii import hexlify
 
 ### Third-party packages ###
-from pytest import mark, raises
 from grpc import RpcError
+from pytest import mark, raises
 
 ### Local modules ###
 from src.services.lightning import ChannelPoint, Lightning

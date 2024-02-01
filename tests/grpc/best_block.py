@@ -11,7 +11,7 @@
 # *************************************************************
 
 ### Local modules ###
-from src.services import GetBestBlockResponse, ChainKit
+from src.services import ChainKit, GetBestBlockResponse
 from tests.grpc import chain_kit
 
 

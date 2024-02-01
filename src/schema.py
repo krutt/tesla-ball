@@ -18,8 +18,8 @@ from typing import List
 from uuid import UUID, uuid4 as uuid
 
 ### Third-party packages ###
+from tortoise.fields import CharEnumField, CharField, DatetimeField, IntField, UUIDField
 from tortoise.models import Model
-from tortoise.fields import CharField, CharEnumField, DatetimeField, IntField, UUIDField
 
 
 class OrderState(str, Enum):

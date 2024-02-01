@@ -16,13 +16,12 @@ on the Lightning liquidity network
 
 ### Standard packages ###
 import hashlib
-from hashlib import sha256
 from enum import Enum
+from hashlib import sha256
 
 ### Third-party packages ###
 from bitcoin.core import Hash160
 from bitcoin.core.script import (
-  CScript,
   OP_0,
   OP_CHECKLOCKTIMEVERIFY,
   OP_CHECKSIG,
@@ -33,11 +32,14 @@ from bitcoin.core.script import (
   OP_EQUALVERIFY,
   OP_HASH160,
   OP_IF,
+  CScript,
 )
 from bitcoin.wallet import P2WSHBitcoinAddress
 from fastapi.responses import PlainTextResponse
 from fastapi.routing import APIRouter
 from pydantic import BaseModel, Field, PositiveInt, StrictStr
+
+from src.configs import SWAP_FEERATE
 
 ### Local modules ###
 from src.services import (
@@ -48,7 +50,6 @@ from src.services import (
   LnFeeEstimate,
   WalletKit,
 )
-from src.configs import SWAP_FEERATE
 
 ### Routing ###
 router: APIRouter = APIRouter(

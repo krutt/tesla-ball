@@ -20,8 +20,7 @@ from pytest import fixture, mark
 from tortoise import Tortoise, run_async
 
 ### Local modules ###
-
-from src.jobs import invoice_check_job, channel_open_job, txn_confirm_job
+from src.jobs import channel_open_job, invoice_check_job, txn_confirm_job
 from src.schema import InboundOrder, OrderState
 from src.services.lightning import Lightning
 from tests import (

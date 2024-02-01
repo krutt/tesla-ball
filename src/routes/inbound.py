@@ -21,8 +21,8 @@ from uuid import UUID
 
 ### Third-party packages ###
 from fastapi import BackgroundTasks
-from fastapi.routing import APIRouter
 from fastapi.responses import ORJSONResponse
+from fastapi.routing import APIRouter
 from pydantic import BaseModel, Field, StrictInt, StrictStr
 from tortoise.exceptions import DoesNotExist, IntegrityError, ValidationError
 
