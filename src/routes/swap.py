@@ -18,38 +18,30 @@ on the Lightning liquidity network
 import hashlib
 from enum import Enum
 from hashlib import sha256
+from typing import List
 
 ### Third-party packages ###
-from bitcoin.core import Hash160
 from bitcoin.core.script import (
+  CScript,
   OP_0,
   OP_CHECKLOCKTIMEVERIFY,
   OP_CHECKSIG,
   OP_DROP,
-  OP_DUP,
   OP_ELSE,
   OP_ENDIF,
-  OP_EQUALVERIFY,
+  OP_EQUAL,
   OP_HASH160,
   OP_IF,
-  CScript,
 )
 from bitcoin.wallet import P2WSHBitcoinAddress
-from fastapi.responses import PlainTextResponse
+from fastapi.exceptions import HTTPException
 from fastapi.routing import APIRouter
-from pydantic import BaseModel, Field, PositiveInt, StrictStr
-
-from src.configs import SWAP_FEERATE
+from pydantic import BaseModel, Field, PositiveInt, StrictInt, StrictStr
 
 ### Local modules ###
-from src.services import (
-  AddrResponse,
-  ChainKit,
-  GetBestBlockResponse,
-  Lightning,
-  LnFeeEstimate,
-  WalletKit,
-)
+from src.configs import SWAP_FEERATE
+from src.helpers import encode_cltv
+from src.services import ChainKit, GetBestBlockResponse, Lightning, LnFeeEstimate
 
 ### Routing ###
 router: APIRouter = APIRouter(
@@ -71,51 +63,65 @@ class SwapRequest(BaseModel):
     alias="claimPubkey", description="Public key of keypair needed for claiming"
   )
   pre_image: StrictStr = Field(alias="preImage", description="Pre-image for swap")
+  refund_pubkey: StrictStr = Field(
+    alias="refundPubkey", description="Public of keypair needed for refunding"
+  )
   swap_type: SwapType = Field(SwapType.submarine, alias="swapType", description="Type of swap")
 
 
-### Endpoint: routes ###
-@router.post("/", response_class=PlainTextResponse)
-async def create_swap(swap_request: SwapRequest) -> str:
-  if swap_request.swap_type is SwapType.submarine:
-    image: bytes = hashlib.new("ripemd160", swap_request.pre_image.encode("utf-8")).digest()
-    claim_pubkey: bytes = swap_request.claim_pubkey.encode("utf-8")
+class SwapTicket(BaseModel):
+  expected_amount: StrictInt = Field(alias="expectedAmount", description="")
+  lockup: StrictStr = Field(description="Address in which the bitcoin will be locked up.")
 
+
+### Endpoint: routes ###
+@router.post("/", response_model=SwapTicket)
+async def create_swap(swap: SwapRequest) -> str:
+  if swap.swap_type is SwapType.submarine:
+    claim_buffer: List[int] = [
+      int(swap.claim_pubkey[i : i + 2], 16) for i in range(0, len(swap.claim_pubkey), 2)
+    ]
+    claim: bytes = bytes(bytearray(claim_buffer))
+    image_buffer: List[int] = [
+      int(swap.pre_image[i : i + 2], 16) for i in range(0, len(swap.pre_image), 2)
+    ]
+    image: bytes = hashlib.new("ripemd160", bytearray(image_buffer)).digest()
+    refund_buffer: List[int] = [
+      int(swap.refund_pubkey[i : i + 2], 16) for i in range(0, len(swap.refund_pubkey), 2)
+    ]
+    refund: bytes = bytes(bytearray(refund_buffer))
     chain_kit: ChainKit = ChainKit()
     lightning: Lightning = Lightning()
-    wallet_kit: WalletKit = WalletKit()
-
-    addr_response: AddrResponse = wallet_kit.request_address()
     best_block: GetBestBlockResponse = chain_kit.best_block()
-    locktime: int = best_block.block_height + 6
-    refund_pubkey: bytes = addr_response.addr.encode("utf-8")
+    timeout_blockheight: int = best_block.block_height + 6
+    witness: bytes
+    if swap.swap_type == "submarine":
+      # fmt: off
+      witness = CScript([
+        OP_HASH160, image,
+        OP_EQUAL,
+        OP_IF,
+          claim,
+        OP_ELSE,
+          encode_cltv(timeout_blockheight),
+          OP_CHECKLOCKTIMEVERIFY,
+          OP_DROP,
+          refund,
+        OP_ENDIF,
+        OP_CHECKSIG,
+      ])
+      # fmt: on
+    else:
+      raise HTTPException(412, "Precondition failed")
 
-    # fmt: off
-    witness: bytes = CScript([
-      OP_IF,
-        OP_HASH160, image, OP_EQUALVERIFY, OP_DUP, OP_HASH160, Hash160(claim_pubkey),
-      OP_ELSE,
-        locktime, OP_CHECKLOCKTIMEVERIFY, OP_DROP, OP_DUP, OP_HASH160, Hash160(refund_pubkey),
-      OP_ENDIF,
-      OP_EQUALVERIFY,
-      OP_CHECKSIG,
-    ])
-    # fmt: on
-
-    address: str = str(
+    lockup: str = str(
       P2WSHBitcoinAddress.from_scriptPubKey(CScript([OP_0, sha256(witness).digest()]))
     )
-    fee_estimate: LnFeeEstimate = lightning.estimate_fee(
-      address, swap_request.amount, confirmations=1
-    )
-    fee_network: int = int(fee_estimate.fee_sat) / int(fee_estimate.feerate_sat_per_byte)
-    fee_service: int = int(swap_request.amount * SWAP_FEERATE / 100)
-
-    value_release: int = fee_network + fee_service + swap_request.amount
-
-    # TODO: add hold invoice
-
-    return address
+    fee_estimate: LnFeeEstimate = lightning.estimate_fee(lockup, swap.amount, confirmations=1)
+    fee_network: int = int(fee_estimate.fee_sat / fee_estimate.feerate_sat_per_byte)
+    fee_service: int = int(swap.amount * SWAP_FEERATE / 100)
+    expected_amount: int = fee_network + fee_service + swap.amount
+    return {"expectedAmount": expected_amount, "lockup": lockup}
 
 
 __all__ = ["router"]

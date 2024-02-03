@@ -11,18 +11,20 @@
 
 ### Standard packages ###
 from random import choices
-from string import ascii_letters
-from typing import Dict, Generator, Union
+from typing import Any, Dict, Generator
 
 ### Third-party packages ###
 from bitcoin import SelectParams
+from bitcoin.wallet import CBitcoinAddress
 from fastapi.testclient import TestClient
 from httpx import Response
 from orjson import dumps
 from pytest import fixture, mark
 
 ### Local modules ###
-from tests import LND_TARGET_PUBKEY, test_tesla_ball
+from src.services import AddrResponse, WalletKit
+from tests import test_tesla_ball
+from tests.grpc import wallet_kit
 
 
 @fixture(autouse=True, scope="module")
@@ -33,12 +35,25 @@ def setup_teardown() -> Generator:
 
 
 @mark.asyncio
-async def test_01_submarine_swap(test_tesla_ball: TestClient) -> None:
-  params_list: list = ["amount", "claimPubkey", "preImage"]
-  amount: int = 560
-  claim_pubkey: str = LND_TARGET_PUBKEY
-  pre_image: str = "".join(choices(ascii_letters, k=64))
-  body: Dict[str, Union[int, str]] = dict(zip(params_list, [amount, claim_pubkey, pre_image]))
-  response: Response = test_tesla_ball.post("/swap", content=dumps(body))
-  assert response.text is not None
-  assert isinstance(response.text, str)
+async def test_01_submarine_swap(wallet_kit: WalletKit, test_tesla_ball: TestClient) -> None:
+  addr_response: AddrResponse = wallet_kit.request_address()
+  claim_pubkey: str = CBitcoinAddress(addr_response.addr).to_scriptPubKey().hex()
+  addr_response = wallet_kit.request_address()
+  refund_pubkey: str = CBitcoinAddress(addr_response.addr).to_scriptPubKey().hex()
+  response: Response = test_tesla_ball.post(
+    "/swap",
+    content=dumps(
+      {
+        "amount": 560,
+        "claimPubkey": claim_pubkey,
+        "preImage": "".join(choices("0123456789abcdef", k=64)),
+        "refundPubkey": refund_pubkey,
+      }
+    ),
+  )
+  data: Dict[str, Any] = response.json()
+  assert data is not None
+  assert data.get("expectedAmount", None) is not None
+  assert isinstance(data["expectedAmount"], int)
+  assert data.get("lockup", None) is not None
+  assert isinstance(data["lockup"], str)
