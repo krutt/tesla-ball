@@ -28,7 +28,7 @@ def num_size(value: int) -> int:
   return 0
 
 
-def encode_cltv(value: int) -> str:
+def encode_cltv(value: int) -> bytes:
   buffer_size: int = num_size(value)
   buffer: List[int] = buffer_size * [0x00]
   negative: bool = value < 0
@@ -39,7 +39,7 @@ def encode_cltv(value: int) -> str:
     buffer[buffer_size - 1] = 0x80 if negative else 0x00
   elif negative:
     buffer[buffer_size - 1] |= 0x80
-  return bytearray(buffer).hex()
+  return bytes(bytearray(buffer))
 
 
 __all__ = ["encode_cltv", "num_size"]
