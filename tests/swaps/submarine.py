@@ -13,6 +13,7 @@
 from typing import List
 
 ### Third-party packages ###
+import hashlib
 from bitcoin.core.script import (
   CScript,
   OP_CHECKLOCKTIMEVERIFY,
@@ -24,7 +25,6 @@ from bitcoin.core.script import (
   OP_HASH160,
   OP_IF,
 )
-import hashlib
 from pytest import mark
 
 ### Local modules ###
