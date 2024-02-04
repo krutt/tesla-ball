@@ -94,11 +94,25 @@ class InboundOrder(Order):
   txid: str = CharField(max_length=255, null=True)  # type: ignore[assignment]
 
 
+class SwapType(str, Enum):
+  REVERSE: str = "reverse"
+  SUBMARINE: str = "submarine"
+
+
 class SwapOrder(Order):
   """Class mapping Object Relation to table `swap_order`"""
 
   class Meta:
     table: str = "swap_order"
 
+  ### Data fields ###
+  claim_pubkey: str = CharField(max_length=255)  # type: ignore[assignment]
+  expected_amount: int = IntField(max=25_000_000, min=50_000)
+  lockup: str = CharField(max_length=64)  # type: ignore[assignment]
+  pre_image: str = CharField(max_length=255)  # type: ignore[assignment]
+  refund_pubkey: str = CharField(max_length=255)  # type: ignore[assignment]
+  swap_type: SwapType = CharEnumField(SwapType, default=SwapType.SUBMARINE)
+  txid: str = CharField(max_length=255, null=True)  # type: ignore[assignment]
 
-__all__ = ["EarnOrder", "InboundOrder", "Order", "OrderState", "SwapOrder"]
+
+__all__ = ["EarnOrder", "InboundOrder", "Order", "OrderState", "SwapOrder", "SwapType"]
