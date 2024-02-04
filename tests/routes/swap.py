@@ -15,7 +15,6 @@ from typing import Any, Dict, Generator
 
 ### Third-party packages ###
 from bitcoin import SelectParams
-from bitcoin.wallet import CBitcoinAddress
 from fastapi.testclient import TestClient
 from httpx import Response
 from orjson import dumps
@@ -39,17 +38,17 @@ def setup_teardown() -> Generator:
 @mark.asyncio
 async def test_01_submarine_swap(wallet_kit: WalletKit, test_tesla_ball: TestClient) -> None:
   addr_response: AddrResponse = wallet_kit.request_address()
-  claim_pubkey: str = CBitcoinAddress(addr_response.addr).to_scriptPubKey().hex()
+  claim_address: str = addr_response.addr
   addr_response = wallet_kit.request_address()
-  refund_pubkey: str = CBitcoinAddress(addr_response.addr).to_scriptPubKey().hex()
+  refund_address: str = addr_response.addr
   response: Response = test_tesla_ball.post(
     "/swap",
     content=dumps(
       {
         "amount": 560,
-        "claimPubkey": claim_pubkey,
+        "claimAddress": claim_address,
         "preImage": "".join(choices("0123456789abcdef", k=64)),
-        "refundPubkey": refund_pubkey,
+        "refundAddress": refund_address,
       }
     ),
   )

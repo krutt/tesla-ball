@@ -33,7 +33,7 @@ from bitcoin.core.script import (
   OP_HASH160,
   OP_IF,
 )
-from bitcoin.wallet import P2WSHBitcoinAddress
+from bitcoin.wallet import CBitcoinAddress, P2WSHBitcoinAddress
 from fastapi.exceptions import HTTPException
 from fastapi.routing import APIRouter
 from pydantic import BaseModel, Field, PositiveInt, StrictInt, StrictStr
@@ -61,12 +61,12 @@ class SwapType(str, Enum):
 
 class SwapRequest(BaseModel):
   amount: PositiveInt = Field(description="Designated swap amount")
-  claim_pubkey: StrictStr = Field(
-    alias="claimPubkey", description="Public key of keypair needed for claiming"
+  claim_address: StrictStr = Field(
+    alias="claimAddress", description="Claim address when swap order is completed."
   )
   pre_image: StrictStr = Field(alias="preImage", description="Pre-image for swap")
-  refund_pubkey: StrictStr = Field(
-    alias="refundPubkey", description="Public of keypair needed for refunding"
+  refund_address: StrictStr = Field(
+    alias="refundAddress", description="Refund address when swap order is disputed."
   )
   swap_type: SwapType = Field(SwapType.submarine, alias="swapType", description="Type of swap")
 
@@ -79,9 +79,11 @@ class SwapTicket(BaseModel):
 ### Endpoint: routes ###
 @router.post("/", response_model=SwapTicket)
 async def create_swap(background_tasks: BackgroundTasks, swap: SwapRequest) -> str:
+  claim_pubkey: str = CBitcoinAddress(swap.claim_address).to_scriptPubKey().hex()
+  refund_pubkey: str = CBitcoinAddress(swap.refund_address).to_scriptPubKey().hex()
   if swap.swap_type is SwapType.submarine:
     claim_buffer: List[int] = [
-      int(swap.claim_pubkey[i : i + 2], 16) for i in range(0, len(swap.claim_pubkey), 2)
+      int(claim_pubkey[i : i + 2], 16) for i in range(0, len(claim_pubkey), 2)
     ]
     claim: bytes = bytes(bytearray(claim_buffer))
     image_buffer: List[int] = [
@@ -89,7 +91,7 @@ async def create_swap(background_tasks: BackgroundTasks, swap: SwapRequest) -> s
     ]
     image: bytes = hashlib.new("ripemd160", bytearray(image_buffer)).digest()
     refund_buffer: List[int] = [
-      int(swap.refund_pubkey[i : i + 2], 16) for i in range(0, len(swap.refund_pubkey), 2)
+      int(refund_pubkey[i : i + 2], 16) for i in range(0, len(refund_pubkey), 2)
     ]
     refund: bytes = bytes(bytearray(refund_buffer))
     chain_kit: ChainKit = ChainKit()
@@ -124,11 +126,11 @@ async def create_swap(background_tasks: BackgroundTasks, swap: SwapRequest) -> s
     fee_service: int = int(swap.amount * SWAP_FEERATE / 100)
     expected_amount: int = fee_network + fee_service + swap.amount
     swap_order: SwapOrder = SwapOrder(
-      claim_pubkey=swap.claim_pubkey,
+      claim_pubkey=claim_pubkey,
       expected_amount=expected_amount,
       lockup=lockup,
       pre_image=swap.pre_image,
-      refund_pubkey=swap.refund_pubkey,
+      refund_pubkey=refund_pubkey,
       swap_type="submarine",
     )
     background_tasks.add_task(swap_order.save)
