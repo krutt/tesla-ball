@@ -11,7 +11,8 @@
 # *************************************************************
 
 ### Standard packages ###
-from re import search
+from re import Match, search
+from typing import Optional
 
 ### Local modules ###
 from src.services import AddrResponse, WalletKit
@@ -23,6 +24,10 @@ def test_request_address(wallet_kit: WalletKit) -> None:
   assert addr_response.addr is not None
   assert isinstance(addr_response.addr, str)
   assert len(addr_response.addr) == 44
-  assert search(r"(?P<address>bcrt1\w{39})", addr_response.addr).group("address") is not None
-  assert isinstance(search(r"(?P<address>bcrt1\w{39})", addr_response.addr).group("address"), str)
-  assert search(r"(?P<address>bcrt1\w{40})", addr_response.addr) is None
+  found: Optional[Match[str]] = search(r"(?P<address>bcrt1\w{39})", addr_response.addr)
+  assert found is not None
+  address: Optional[str] = found.group("address")
+  assert address is not None
+  assert isinstance(address, str)
+  not_found: Optional[Match[str]] = search(r"(?P<address>bcrt1\w{40})", addr_response.addr)
+  assert not_found is None
