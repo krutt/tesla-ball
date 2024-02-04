@@ -23,7 +23,7 @@ from pytest import fixture, mark
 ### Local modules ###
 from src.schema import SwapOrder
 from src.services import AddrResponse, WalletKit
-from tests import test_tesla_ball
+from tests import tesla_ball
 from tests.grpc import wallet_kit
 from tests.routes import setup_teardown_database
 
@@ -36,12 +36,12 @@ def setup_teardown() -> Generator:
 
 
 @mark.asyncio
-async def test_01_submarine_swap(wallet_kit: WalletKit, test_tesla_ball: TestClient) -> None:
+async def test_01_submarine_swap(wallet_kit: WalletKit, tesla_ball: TestClient) -> None:
   addr_response: AddrResponse = wallet_kit.request_address()
   claim_address: str = addr_response.addr
   addr_response = wallet_kit.request_address()
   refund_address: str = addr_response.addr
-  response: Response = test_tesla_ball.post(
+  response: Response = tesla_ball.post(
     "/swap",
     content=dumps(
       {

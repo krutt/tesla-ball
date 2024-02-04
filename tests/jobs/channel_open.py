@@ -21,7 +21,7 @@ from tortoise import Tortoise, run_async
 ### Local modules ###
 from src.jobs.channel_open import job as channel_open_job
 from src.schema import InboundOrder, OrderState
-from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
+from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, tesla_ball
 
 
 ### Module-specific setup-teardown ###
@@ -38,13 +38,13 @@ def setup_teardown() -> Generator:
 
 
 @mark.asyncio
-async def test_01_open_channel(test_tesla_ball: TestClient) -> None:
+async def test_01_open_channel(tesla_ball: TestClient) -> None:
   body: Dict[str, Union[int, str]] = {
     "feeRate": 3,
     "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
     "remoteBalance": 200_000,
   }
-  test_tesla_ball.post("/inbound", content=dumps(body))
+  tesla_ball.post("/inbound", content=dumps(body))
   order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
   assert order is not None
 

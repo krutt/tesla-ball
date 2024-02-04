@@ -20,24 +20,24 @@ from pytest import mark
 
 ### Local modules ###
 from src.schema import InboundOrder, OrderState
-from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, test_tesla_ball
+from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, tesla_ball
 from tests.routes import setup_teardown_database
 
 
 @mark.asyncio
-async def test_00_precheck_empty_orders(test_tesla_ball: TestClient) -> None:
+async def test_00_precheck_empty_orders(tesla_ball: TestClient) -> None:
   """Pre-checks the table for InboundOrder and asserts count to be null or zero"""
   assert await InboundOrder.all().count() is 0
 
 
 @mark.asyncio
-async def test_01_create_inbound_order(test_tesla_ball: TestClient) -> None:
+async def test_01_create_inbound_order(tesla_ball: TestClient) -> None:
   body: Dict[str, Union[int, str]] = {
     "feeRate": 3,
     "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
     "remoteBalance": 200_000,
   }
-  response: Response = test_tesla_ball.post("/inbound", content=dumps(body))
+  response: Response = tesla_ball.post("/inbound", content=dumps(body))
   assert response.status_code == 200
   order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
   assert order is not None
@@ -49,10 +49,10 @@ async def test_01_create_inbound_order(test_tesla_ball: TestClient) -> None:
 
 
 @mark.asyncio
-async def test_02_check_inbound_request(test_tesla_ball: TestClient) -> None:
+async def test_02_check_inbound_request(tesla_ball: TestClient) -> None:
   order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
   assert order is not None
-  response: Response = test_tesla_ball.get(f"/inbound?orderId={ order.order_id }")
+  response: Response = tesla_ball.get(f"/inbound?orderId={ order.order_id }")
   assert response.status_code == 200
   assert response.json().get("bolt11", None) is not None
   assert isinstance(response.json().get("bolt11", None), str)

@@ -28,7 +28,7 @@ from tests import (
   LND_EXTERNAL_URL,
   LND_TARGET_HOST,
   LND_TARGET_PUBKEY,
-  test_tesla_ball,
+  tesla_ball,
 )
 
 
@@ -46,13 +46,13 @@ def setup_teardown() -> Generator:
 
 
 @mark.asyncio
-async def test_01_check_invoice(test_tesla_ball: TestClient) -> None:
+async def test_01_check_invoice(tesla_ball: TestClient) -> None:
   body: Dict[str, Union[int, str]] = {
     "feeRate": 3,
     "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
     "remoteBalance": 200_000,
   }
-  test_tesla_ball.post("/inbound", content=dumps(body))
+  tesla_ball.post("/inbound", content=dumps(body))
   order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
   assert order is not None
   assert order.state == OrderState.PENDING
@@ -66,13 +66,13 @@ async def test_01_check_invoice(test_tesla_ball: TestClient) -> None:
 
 
 @mark.asyncio
-async def test_02_check_invoice_after_paid(test_tesla_ball: TestClient) -> None:
+async def test_02_check_invoice_after_paid(tesla_ball: TestClient) -> None:
   body: Dict[str, Union[int, str]] = {
     "feeRate": 3,
     "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
     "remoteBalance": 200_000,
   }
-  test_tesla_ball.post("/inbound", content=dumps(body))
+  tesla_ball.post("/inbound", content=dumps(body))
   order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
   assert order is not None
   assert order.state == OrderState.PENDING

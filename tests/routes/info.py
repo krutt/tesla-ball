@@ -18,12 +18,12 @@ from httpx import Response
 from pytest import mark
 
 ### Local modules ###
-from tests import test_tesla_ball
+from tests import tesla_ball
 
 
 @mark.asyncio
-async def test_01_get_node_info(test_tesla_ball: TestClient) -> None:
-  response: Response = test_tesla_ball.get("/info")
+async def test_01_get_node_info(tesla_ball: TestClient) -> None:
+  response: Response = tesla_ball.get("/info")
   assert response.status_code == 200
   node_uri: Optional[str] = response.json().get("nodeUri", None)
   assert node_uri is not None

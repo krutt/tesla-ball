@@ -30,7 +30,7 @@ from tests import (
   LND_TARGET_HOST,
   LND_TARGET_PUBKEY,
   TEST_BLOCK_TIME,
-  test_tesla_ball,
+  tesla_ball,
 )
 
 
@@ -48,13 +48,13 @@ def setup_teardown() -> Generator:
 
 
 @mark.asyncio
-async def test_01_check_pending_channels(test_tesla_ball: TestClient) -> None:
+async def test_01_check_pending_channels(tesla_ball: TestClient) -> None:
   body: Dict[str, Union[int, str]] = {
     "feeRate": 3,
     "nodeUri": f"{ LND_TARGET_PUBKEY }@{ LND_TARGET_HOST }:9735",
     "remoteBalance": 200_000,
   }
-  test_tesla_ball.post("/inbound", content=dumps(body))
+  tesla_ball.post("/inbound", content=dumps(body))
   order: Optional[InboundOrder] = await InboundOrder.all().order_by("-id").first()
   assert order is not None
   lightning: Lightning = Lightning(

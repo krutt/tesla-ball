@@ -42,7 +42,7 @@ TEST_DB_PATH: str = environ.get("TEST_DB_PATH", "sqlite://./tests/test.db")
 
 
 @fixture
-def test_tesla_ball() -> TestClient:
+def tesla_ball() -> TestClient:
   """
   Sets up a FastAPI TestClient wrapped around Tesla Ball application
 
@@ -68,5 +68,5 @@ __all__ = [
   "LND_TLSCERT_PATH",
   "TEST_BLOCK_TIME",
   "TEST_DB_PATH",
-  "test_tesla_ball",
+  "tesla_ball",
 ]
