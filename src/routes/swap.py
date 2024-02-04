@@ -37,10 +37,12 @@ from bitcoin.wallet import P2WSHBitcoinAddress
 from fastapi.exceptions import HTTPException
 from fastapi.routing import APIRouter
 from pydantic import BaseModel, Field, PositiveInt, StrictInt, StrictStr
+from starlette.background import BackgroundTasks
 
 ### Local modules ###
 from src.configs import SWAP_FEERATE
 from src.helpers import encode_cltv
+from src.schema import SwapOrder
 from src.services import ChainKit, GetBestBlockResponse, Lightning, LnFeeEstimate
 
 ### Routing ###
@@ -76,7 +78,7 @@ class SwapTicket(BaseModel):
 
 ### Endpoint: routes ###
 @router.post("/", response_model=SwapTicket)
-async def create_swap(swap: SwapRequest) -> str:
+async def create_swap(background_tasks: BackgroundTasks, swap: SwapRequest) -> str:
   if swap.swap_type is SwapType.submarine:
     claim_buffer: List[int] = [
       int(swap.claim_pubkey[i : i + 2], 16) for i in range(0, len(swap.claim_pubkey), 2)
@@ -121,6 +123,15 @@ async def create_swap(swap: SwapRequest) -> str:
     fee_network: int = int(fee_estimate.fee_sat / fee_estimate.feerate_sat_per_byte)
     fee_service: int = int(swap.amount * SWAP_FEERATE / 100)
     expected_amount: int = fee_network + fee_service + swap.amount
+    swap_order: SwapOrder = SwapOrder(
+      claim_pubkey=swap.claim_pubkey,
+      expected_amount=expected_amount,
+      lockup=lockup,
+      pre_image=swap.pre_image,
+      refund_pubkey=swap.refund_pubkey,
+      swap_type="submarine",
+    )
+    background_tasks.add_task(swap_order.save)
     return {"expectedAmount": expected_amount, "lockup": lockup}
 
 
