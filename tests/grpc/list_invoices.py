@@ -33,7 +33,7 @@ def setup_teardown(external_lightning: Lightning, lightning: Lightning) -> Gener
 def test_01_list_invoices(lightning: Lightning) -> None:
   response: ListInvoiceResponse = lightning.list_invoices()
   assert response is not None
-  if response.invoices is None:
+  if response.invoices is not None:
     for invoice in response.invoices:
       assert invoice.state == 1  # SETTLED
 
