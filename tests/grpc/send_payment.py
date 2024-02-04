@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.9
-# Copyright (C) 2024 All rights reserved.
-# FILENAME:  ~~/tests/jobs/send_payment.py
+# coding:utf-8
+# Copyright (C) 2023-2024 All rights reserved.
+# FILENAME:  ~~/tests/grpc/send_payment.py
 # VERSION: 	 0.1.0
 # CREATED: 	 2024-01-29 18:43
 # AUTHOR: 	 Sitt Guruvanich <aekazitt+github@gmail.com>

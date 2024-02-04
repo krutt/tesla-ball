@@ -56,6 +56,8 @@ from src.protos.lightning_pb2 import (
   PayReqString,
   PendingChannelsRequest,
   PendingChannelsResponse,
+  SendCoinsRequest,
+  SendCoinsResponse,
   SendRequest,
   SendResponse,
   WalletBalanceRequest,
@@ -181,6 +183,11 @@ class Lightning(BaseModel):
   def pending_channels(self) -> PendingChannelsResponse:
     """Display information pertaining to pending channels"""
     return self.stub.PendingChannels(PendingChannelsRequest())
+
+  @validate_call
+  def send_coins(self, address: StrictStr, amount: StrictInt) -> SendCoinsResponse:
+    """Send bitcoin on-chain to a single address"""
+    return self.stub.SendCoins(SendCoinsRequest(addr=address, amount=amount))
 
   @validate_call
   def send_payment(

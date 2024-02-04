@@ -21,6 +21,7 @@ from src.protos.lightning_pb2 import (
   Invoice,
   ListChannelsResponse,
   PendingChannelsResponse,
+  SendCoinsResponse,
   SendResponse,
 )
 from src.protos.walletkit_pb2 import (
@@ -46,6 +47,7 @@ __all__ = [
   "ListChannelsResponse",
   "LnFeeEstimate",
   "MacaroonPlugin",
+  "SendCoinsResponse",
   "PendingChannelsResponse",
   "SendResponse",
   "WalletKit",
