@@ -15,6 +15,7 @@
 from datetime import datetime
 from enum import Enum
 from typing import List
+from typing_extensions import Self
 from uuid import UUID, uuid4 as uuid
 
 ### Third-party packages ###
@@ -50,23 +51,23 @@ class Order(Model):
   updated_at: datetime = DatetimeField(auto_now=True)
 
   @classmethod
-  async def completed(cls) -> List["Order"]:
+  async def completed(cls) -> List[Self]:
     return await cls.filter(state=OrderState.COMPLETED)
 
   @classmethod
-  async def paid(cls) -> List["Order"]:
+  async def paid(cls) -> List[Self]:
     return await cls.filter(state=OrderState.PAID)
 
   @classmethod
-  async def opening(cls) -> List["Order"]:
+  async def opening(cls) -> List[Self]:
     return await cls.filter(state=OrderState.OPENING)
 
   @classmethod
-  async def pending(cls) -> List["Order"]:
+  async def pending(cls) -> List[Self]:
     return await cls.filter(state=OrderState.PENDING)
 
   @classmethod
-  async def rejected(cls) -> List["Order"]:
+  async def rejected(cls) -> List[Self]:
     return await cls.filter(state=OrderState.REJECTED)
 
 
@@ -115,4 +116,4 @@ class SwapOrder(Order):
   txid: str = CharField(max_length=255, null=True)  # type: ignore[assignment]
 
 
-__all__ = ["EarnOrder", "InboundOrder", "Order", "OrderState", "SwapOrder", "SwapType"]
+__all__ = ["EarnOrder", "InboundOrder", Self, "OrderState", "SwapOrder", "SwapType"]

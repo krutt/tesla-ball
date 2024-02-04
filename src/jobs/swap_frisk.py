@@ -18,7 +18,7 @@ from src.schemas import SwapOrder
 
 
 async def job() -> None:
-  orders: List[SwapOrder] = await SwapOrder.pending()  # type: ignore[assignment]
+  orders: List[SwapOrder] = await SwapOrder.pending()
   for order in orders:
     print(order)
 

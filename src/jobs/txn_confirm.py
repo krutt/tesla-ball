@@ -20,7 +20,7 @@ from src.services.lightning import Lightning, ListChannelsResponse, PendingChann
 
 async def job() -> None:
   lightning: Lightning = Lightning()
-  orders: List[InboundOrder] = await InboundOrder.opening()  # type: ignore[assignment]
+  orders: List[InboundOrder] = await InboundOrder.opening()
   funding_txids: List[str] = list(map(lambda order: order.txid, orders))
   pending_response: PendingChannelsResponse = lightning.pending_channels()
   for channel in pending_response.pending_open_channels:
