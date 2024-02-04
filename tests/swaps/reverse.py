@@ -69,21 +69,20 @@ def test_reverse_submarine_swap(
 
   # fmt: off
   witness: bytes = CScript([
-    OP_SIZE,
-      encode_cltv(32),
+    OP_SIZE, encode_cltv(32),
     OP_EQUAL,
-      OP_IF,
-        OP_HASH160,
-          image,
-        OP_EQUALVERIFY,
-          claim,
-      OP_ELSE,
-        OP_DROP,
-          encode_cltv(timeout_blockheight),
-          OP_CHECKLOCKTIMEVERIFY,
-        OP_DROP,
-          refund,
-      OP_ENDIF,
+    OP_IF,
+      OP_HASH160,
+        image,
+      OP_EQUALVERIFY,
+        claim,
+    OP_ELSE,
+      OP_DROP,
+        encode_cltv(timeout_blockheight),
+        OP_CHECKLOCKTIMEVERIFY,
+      OP_DROP,
+        refund,
+    OP_ENDIF,
     OP_CHECKSIG
   ])
   # fmt: on
