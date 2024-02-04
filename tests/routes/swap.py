@@ -11,7 +11,7 @@
 
 ### Standard packages ###
 from random import choices
-from typing import Any, Dict, Generator
+from typing import Any, Dict, Optional, Generator
 
 ### Third-party packages ###
 from bitcoin import SelectParams
@@ -58,6 +58,7 @@ async def test_01_submarine_swap(wallet_kit: WalletKit, test_tesla_ball: TestCli
   assert isinstance(data["expectedAmount"], int)
   assert data.get("lockup", None) is not None
   assert isinstance(data["lockup"], str)
-  swap_order: SwapOrder = await SwapOrder.all().order_by("-id").first()
+  swap_order: Optional[SwapOrder] = await SwapOrder.all().order_by("-id").first()
+  assert swap_order is not None
   assert swap_order.expected_amount == data["expectedAmount"]
   assert swap_order.lockup == data["lockup"]
