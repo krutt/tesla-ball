@@ -19,7 +19,7 @@ from orjson import dumps
 from pytest import mark
 
 ### Local modules ###
-from src.schema import InboundOrder, OrderState
+from src.schemas import InboundOrder, OrderState
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, tesla_ball
 from tests.routes import setup_teardown_database
 

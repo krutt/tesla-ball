@@ -14,7 +14,7 @@
 from typing import List
 
 ### Local modules ###
-from src.schema import SwapOrder
+from src.schemas import SwapOrder
 
 
 async def job() -> None:

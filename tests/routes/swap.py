@@ -21,7 +21,7 @@ from orjson import dumps
 from pytest import fixture, mark
 
 ### Local modules ###
-from src.schema import SwapOrder
+from src.schemas import SwapOrder
 from src.services import AddrResponse, WalletKit
 from tests import tesla_ball
 from tests.grpc import wallet_kit

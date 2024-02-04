@@ -104,7 +104,7 @@ register_tortoise(
   app,
   db_url=f"{ DATABASE_URL }/{ DATABASE_NAME }",
   generate_schemas=True,  # If true, creates new database at first launch
-  modules={"models": ["src.schema"]},
+  modules={"models": ["src.schemas"]},
 )
 
 ### Exception Handlers ###

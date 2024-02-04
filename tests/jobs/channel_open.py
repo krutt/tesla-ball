@@ -20,14 +20,14 @@ from tortoise import Tortoise, run_async
 
 ### Local modules ###
 from src.jobs.channel_open import job as channel_open_job
-from src.schema import InboundOrder, OrderState
+from src.schemas import InboundOrder, OrderState
 from tests import LND_TARGET_HOST, LND_TARGET_PUBKEY, tesla_ball
 
 
 ### Module-specific setup-teardown ###
 @fixture(scope="module", autouse=True)
 def setup_teardown() -> Generator:
-  run_async(Tortoise.init(db_url="sqlite://./test.db", modules={"models": ["src.schema"]}))
+  run_async(Tortoise.init(db_url="sqlite://./test.db", modules={"models": ["src.schemas"]}))
   run_async(Tortoise.generate_schemas(True))
 
   yield

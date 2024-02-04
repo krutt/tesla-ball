@@ -42,7 +42,7 @@ from starlette.background import BackgroundTasks
 ### Local modules ###
 from src.configs import SWAP_FEERATE
 from src.helpers import encode_cltv
-from src.schema import SwapOrder
+from src.schemas import SwapOrder
 from src.services import ChainKit, GetBestBlockResponse, Lightning, LnFeeEstimate
 
 ### Routing ###

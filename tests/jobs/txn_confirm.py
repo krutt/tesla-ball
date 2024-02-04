@@ -21,7 +21,7 @@ from tortoise import Tortoise, run_async
 
 ### Local modules ###
 from src.jobs import channel_open_job, invoice_check_job, txn_confirm_job
-from src.schema import InboundOrder, OrderState
+from src.schemas import InboundOrder, OrderState
 from src.services.lightning import Lightning
 from tests import (
   LND_EXTERNAL_MACAROON,
@@ -37,7 +37,7 @@ from tests import (
 ### Module-specific setup-teardown ###
 @fixture(scope="module", autouse=True)
 def setup_teardown() -> Generator:
-  run_async(Tortoise.init(db_url="sqlite://./test.db", modules={"models": ["src.schema"]}))
+  run_async(Tortoise.init(db_url="sqlite://./test.db", modules={"models": ["src.schemas"]}))
   run_async(Tortoise.generate_schemas(True))
 
   yield
