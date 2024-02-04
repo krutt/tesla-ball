@@ -22,9 +22,11 @@ from orjson import dumps
 from pytest import fixture, mark
 
 ### Local modules ###
+from src.schema import SwapOrder
 from src.services import AddrResponse, WalletKit
 from tests import test_tesla_ball
 from tests.grpc import wallet_kit
+from tests.routes import setup_teardown_database
 
 
 @fixture(autouse=True, scope="module")
@@ -57,3 +59,6 @@ async def test_01_submarine_swap(wallet_kit: WalletKit, test_tesla_ball: TestCli
   assert isinstance(data["expectedAmount"], int)
   assert data.get("lockup", None) is not None
   assert isinstance(data["lockup"], str)
+  swap_order: SwapOrder = await SwapOrder.all().order_by("-id").first()
+  assert swap_order.expected_amount == data["expectedAmount"]
+  assert swap_order.lockup == data["lockup"]
