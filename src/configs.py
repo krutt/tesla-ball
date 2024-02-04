@@ -63,7 +63,6 @@ SWAP_FEERATE: float = float(environ.get("SWAP_FEERATE", "0.5"))
 __all__ = [
   "DATABASE_NAME",
   "DATABASE_URL",
-  "DEFAULT_TIMEZONE",
   "LND_HOST_URL",
   "LND_MACAROON_PATH",
   "LND_TLSCERT_PATH",
