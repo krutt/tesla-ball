@@ -25,7 +25,7 @@ from tests.routes import setup_teardown_database
 
 
 @mark.asyncio
-async def test_00_precheck_empty_orders(tesla_ball: TestClient) -> None:
+async def test_00_precheck_empty_orders() -> None:
   """Pre-checks the table for InboundOrder and asserts count to be null or zero"""
   assert await InboundOrder.all().count() is 0
 
