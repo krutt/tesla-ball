@@ -22,4 +22,5 @@ async def job() -> None:
   for order in orders:
     print(order)
 
+
 __all__ = ["job"]
