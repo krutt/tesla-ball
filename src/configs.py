@@ -14,6 +14,7 @@ Module detailing environment variables used by server and services
 """
 
 ### Standard packages ###
+from os import environ
 from typing import Optional
 
 ### Load dotenv envionment if `python-dotenv` is installed ###
@@ -23,10 +24,6 @@ try:
   load_dotenv()
 except ImportError:
   pass
-
-### Local modules ###
-from os import environ
-from typing import Optional
 
 DATABASE_NAME: str = environ.get("DATABASE_NAME", "tesladb")
 DATABASE_URL: Optional[str] = environ.get(
