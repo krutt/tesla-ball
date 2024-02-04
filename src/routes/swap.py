@@ -18,7 +18,7 @@ on the Lightning liquidity network
 import hashlib
 from enum import Enum
 from hashlib import sha256
-from typing import List
+from typing import Any, Dict, List
 
 ### Third-party packages ###
 from bitcoin.core.script import (
@@ -78,63 +78,62 @@ class SwapTicket(BaseModel):
 
 ### Endpoint: routes ###
 @router.post("/", response_model=SwapTicket)
-async def create_swap(background_tasks: BackgroundTasks, swap: SwapRequest) -> str:
+async def create_swap(background_tasks: BackgroundTasks, swap: SwapRequest) -> Dict[str, Any]:
   claim_pubkey: str = CBitcoinAddress(swap.claim_address).to_scriptPubKey().hex()
   refund_pubkey: str = CBitcoinAddress(swap.refund_address).to_scriptPubKey().hex()
+  claim_buffer: List[int] = [
+    int(claim_pubkey[i : i + 2], 16) for i in range(0, len(claim_pubkey), 2)
+  ]
+  claim: bytes = bytes(bytearray(claim_buffer))
+  image_buffer: List[int] = [
+    int(swap.pre_image[i : i + 2], 16) for i in range(0, len(swap.pre_image), 2)
+  ]
+  image: bytes = hashlib.new("ripemd160", bytearray(image_buffer)).digest()
+  refund_buffer: List[int] = [
+    int(refund_pubkey[i : i + 2], 16) for i in range(0, len(refund_pubkey), 2)
+  ]
+  refund: bytes = bytes(bytearray(refund_buffer))
+  chain_kit: ChainKit = ChainKit()
+  lightning: Lightning = Lightning()
+  best_block: GetBestBlockResponse = chain_kit.best_block()
+  timeout_blockheight: int = best_block.block_height + 6
+  witness: bytes
   if swap.swap_type is SwapType.submarine:
-    claim_buffer: List[int] = [
-      int(claim_pubkey[i : i + 2], 16) for i in range(0, len(claim_pubkey), 2)
-    ]
-    claim: bytes = bytes(bytearray(claim_buffer))
-    image_buffer: List[int] = [
-      int(swap.pre_image[i : i + 2], 16) for i in range(0, len(swap.pre_image), 2)
-    ]
-    image: bytes = hashlib.new("ripemd160", bytearray(image_buffer)).digest()
-    refund_buffer: List[int] = [
-      int(refund_pubkey[i : i + 2], 16) for i in range(0, len(refund_pubkey), 2)
-    ]
-    refund: bytes = bytes(bytearray(refund_buffer))
-    chain_kit: ChainKit = ChainKit()
-    lightning: Lightning = Lightning()
-    best_block: GetBestBlockResponse = chain_kit.best_block()
-    timeout_blockheight: int = best_block.block_height + 6
-    witness: bytes
-    if swap.swap_type == "submarine":
-      # fmt: off
-      witness = CScript([
-        OP_HASH160, image,
-        OP_EQUAL,
-        OP_IF,
-          claim,
-        OP_ELSE,
-          encode_cltv(timeout_blockheight),
-          OP_CHECKLOCKTIMEVERIFY,
-          OP_DROP,
-          refund,
-        OP_ENDIF,
-        OP_CHECKSIG,
-      ])
-      # fmt: on
-    else:
-      raise HTTPException(412, "Precondition failed")
+    # fmt: off
+    witness = CScript([
+      OP_HASH160, image,
+      OP_EQUAL,
+      OP_IF,
+        claim,
+      OP_ELSE,
+        encode_cltv(timeout_blockheight),
+        OP_CHECKLOCKTIMEVERIFY,
+        OP_DROP,
+        refund,
+      OP_ENDIF,
+      OP_CHECKSIG,
+    ])
+    # fmt: on
+  else:  # reverse submarine swap
+    raise HTTPException(412, "Precondition failed")
 
-    lockup: str = str(
-      P2WSHBitcoinAddress.from_scriptPubKey(CScript([OP_0, sha256(witness).digest()]))
-    )
-    fee_estimate: LnFeeEstimate = lightning.estimate_fee(lockup, swap.amount, confirmations=1)
-    fee_network: int = int(fee_estimate.fee_sat / fee_estimate.feerate_sat_per_byte)
-    fee_service: int = int(swap.amount * SWAP_FEERATE / 100)
-    expected_amount: int = fee_network + fee_service + swap.amount
-    swap_order: SwapOrder = SwapOrder(
-      claim_pubkey=claim_pubkey,
-      expected_amount=expected_amount,
-      lockup=lockup,
-      pre_image=swap.pre_image,
-      refund_pubkey=refund_pubkey,
-      swap_type="submarine",
-    )
-    background_tasks.add_task(swap_order.save)
-    return {"expectedAmount": expected_amount, "lockup": lockup}
+  lockup: str = str(
+    P2WSHBitcoinAddress.from_scriptPubKey(CScript([OP_0, sha256(witness).digest()]))
+  )
+  fee_estimate: LnFeeEstimate = lightning.estimate_fee(lockup, swap.amount, confirmations=1)
+  fee_network: int = int(fee_estimate.fee_sat / fee_estimate.feerate_sat_per_byte)
+  fee_service: int = int(swap.amount * SWAP_FEERATE / 100)
+  expected_amount: int = fee_network + fee_service + swap.amount
+  swap_order: SwapOrder = SwapOrder(
+    claim_pubkey=claim_pubkey,
+    expected_amount=expected_amount,
+    lockup=lockup,
+    pre_image=swap.pre_image,
+    refund_pubkey=refund_pubkey,
+    swap_type="submarine",
+  )
+  background_tasks.add_task(swap_order.save)
+  return {"expectedAmount": expected_amount, "lockup": lockup}
 
 
 __all__ = ["router"]
